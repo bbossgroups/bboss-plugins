@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/bboss/frameworkset-util.jar" sourcepath="/bboss-util"/>
 	<classpathentry kind="lib" path="lib/bboss/jakarta-oro-2.0.8.jar"/>
@@ -20,5 +21,6 @@
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/bboss/bboss-core.jar"/>
 	<classpathentry kind="lib" path="lib/bboss-velocity.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
