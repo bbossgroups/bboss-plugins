@@ -167,7 +167,7 @@ public abstract class AbstractSessionFactoryBean implements InitializingBean,Dis
 	 * transaction-aware proxy before it is exposed to the application)
 	 * @throws Exception in case of initialization failure
 	 */
-	protected abstract SessionFactory buildSessionFactory() throws Exception;
+	public abstract SessionFactory buildSessionFactory() throws Exception;
 
 	/**
 	 * Hook that allows post-processing after the SessionFactory has been

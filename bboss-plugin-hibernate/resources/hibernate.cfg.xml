@@ -16,8 +16,8 @@
 		<!-- 所有实体映射文件列表, 所有的 hbm.xml 文件 -->
 		<property name="mappingResources">
 			<array componentType="String">
-				<property
-					value="Account.hbm.xml" />
+<!-- 				<property -->
+<!-- 					value="Account.hbm.xml" /> -->
 				
 			</array>
 		</property>
@@ -26,7 +26,7 @@
 			<map componentType="String">
 				<!-- 指定数据库方言 -->
 				<property name="hibernate.dialect"
-					value="hibernate.dialect net.sf.hibernate.dialect.MySQLDialect" />
+					value="org.hibernate.dialect.MySQLDialect" />
 				<!-- 是否在日志中输出所有Hibernate与数据库交互的SQL语句 -->
 				<property name="hibernate.show_sql" value="true" />
 				<!-- 是否在日志中输出的SQL 语句格式化成易读形式 -->
@@ -50,8 +50,8 @@
 				<!--结果缓存配置：- 将ehcache.xml 置于 classpath 中- 如果不设置“查询缓存”， 那么hibernate只会缓存使用load()方法获得的单个持久化对象，如果想缓存使用findall()、 
 					list()、 Iterator()、createCriteria()、createQuery()等方法获得的数据结果集的话，就需要设置 hibernate.cache.use_query_cache 
 					true 才行- 在Hbm文件中添加<cache usage="read-only"/>- 如果需要“查询缓存”，还需要在使用Query或Criteria()时设置其setCacheable(true);属性 -->
-				<property name="hibernate.cache.use_query_cache" value="true" />
-				<property name="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider" />
+				<!--  <property name="hibernate.cache.use_query_cache" value="true" />
+				<property name="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider" />-->
 			</map>
 		</property>
 

@@ -388,7 +388,7 @@ public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected SessionFactory buildSessionFactory() throws Exception {
+	public SessionFactory buildSessionFactory() throws Exception {
 		// Create Configuration instance.
 		Configuration config = newConfiguration();
 

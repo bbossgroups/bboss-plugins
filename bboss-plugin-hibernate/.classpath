@@ -14,13 +14,19 @@
 	<classpathentry kind="lib" path="lib/hibernate/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-3.1.14-bin.jar"/>
-	<classpathentry kind="lib" path="lib/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/jakarta-oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="lib/bboss/frameworkset-pool.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/bboss/bboss-core.jar"/>
-	<classpathentry kind="lib" path="lib/bboss-velocity.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/bboss/bboss-velocity.jar"/>
+	<classpathentry kind="lib" path="lib/bboss/frameworkset-pool-sources.jar"/>
+	<classpathentry kind="lib" path="lib/cglib-nodep-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/java-uuid-generator-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
