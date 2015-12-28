@@ -27,6 +27,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.DefaultApplicationContext;
 import org.frameworkset.util.ClassUtils;
 import org.frameworkset.util.ReflectionUtils;
@@ -554,7 +555,17 @@ public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 			// Build SessionFactory instance.
 			logger.info("Building new Hibernate SessionFactory");
 			this.configuration = config;
-			return newSessionFactory(config);
+			final SessionFactory SessionFactory = newSessionFactory(config);
+			BaseApplicationContext.addShutdownHook(new Runnable(){
+
+				@Override
+				public void run() {
+					SessionFactory.close();
+					
+				}
+				
+			});
+			return SessionFactory;
 		}
 
 		finally {
