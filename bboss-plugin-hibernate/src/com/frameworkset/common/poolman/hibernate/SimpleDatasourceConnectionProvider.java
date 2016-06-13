@@ -33,7 +33,7 @@ import com.frameworkset.common.poolman.util.SQLManager;
  * <p> bboss workgroup </p>
  * <p> Copyright (c) 2009 </p>
  * 
- * @Date 2012-5-10 ионГ8:27:39
+ * @Date 2012-5-10 8:27:39
  * @author biaoping.yin
  * @version 1.0
  */

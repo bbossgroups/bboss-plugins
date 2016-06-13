@@ -17,10 +17,10 @@
     <password>40ebe1805f90ebf5</password> -->
     
     <encryptdbinfo>false</encryptdbinfo>
-     <url>jdbc:mysql://localhost:3306/cim</url> 
+     <url>jdbc:mysql://104.236.136.151:3306/bboss</url> 
 
-    <username>root</username>
-    <password>123456</password>
+    <username>biaoge</username>
+    <password> biaoge20150920</password>
 
     <txIsolationLevel>READ_COMMITTED</txIsolationLevel>
 

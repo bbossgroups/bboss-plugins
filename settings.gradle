@@ -1,0 +1,3 @@
+rootProject.name = 'bboss-plugins'
+include 'bboss-plugin-hibernate'
+
