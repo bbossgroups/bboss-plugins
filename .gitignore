@@ -1,1 +1,8 @@
 /build/
+
+.gradle/2.13-rc-1/taskArtifacts/cache.properties
+*.classpath
+*.project
+.gradle/2.13-rc-1/taskArtifacts/cache.properties.lock
+*.bin
+*.prefs
