@@ -6,3 +6,5 @@
 .gradle/2.13-rc-1/taskArtifacts/cache.properties.lock
 *.bin
 *.prefs
+.gradle/2.2.1/taskArtifacts/cache.properties
+*.lock
