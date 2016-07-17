@@ -9,6 +9,7 @@ public class NewPrinterController {
 	private String flashpaperWorkDir ;
 	private String swftoolWorkDir;
 	private String officeHome;
+	private String templatedir;
 	public @ResponseBody FileBlob getPDF() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
 		
@@ -27,11 +28,11 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		 
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\anjie_test.doc";
 		String pdftmp = "d:\\contracttemp.pdf";
 		String topdfpath = "d:\\contract.pdf";
-		String[] mergePdfFiles = new String[]{"D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\contract_part2.pdf" } ;
+		String[] mergePdfFiles = new String[]{templatedir+"\\plugin\\wordpdf\\contract_part2.pdf" } ;
 		long waittimes = 1000;
 		FileConvertor.realWordConvertorByFlashPager(flashpaperWorkDir, wordtemplate, wordfile, bookMarks, mapValue,pdftmp, waittimes);
 		FileConvertor.mergePdfFiles(mergePdfFiles, pdftmp, topdfpath, FileConvertor.MERGE_AFTER);
@@ -58,7 +59,7 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\anjie_test.doc";
 		String topdfpath = "d:\\contract.pdf";
 		long waittimes = 1000;
@@ -85,7 +86,7 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		String hetongbianhao="20121222";
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\test\\anjie_test.doc";
 		String toswfpath = "d:\\test\\contract_"+hetongbianhao+".swf";
 		File f = new File(toswfpath);
@@ -117,7 +118,7 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		String hetongbianhao="20121222";
-		String wordtemplate = "F:\\workspace\\bboss-plugins\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String pdfpath = "d:\\test\\anjieswftools_"+hetongbianhao+".pdf";
 		String wordfile = "d:\\test\\anjie_testswftools"+hetongbianhao+".doc";
 		String toswfpath = "d:\\test\\contractswftools_"+hetongbianhao+".swf";
@@ -146,7 +147,7 @@ public class NewPrinterController {
 		
 		String hetongbianhao = "123";
 		String newfilepath = "d:/test/";
-		String wordtemplate ="D:/workspace/bbossgroups-3.6.0/bboss-plugin-wordpdf/contract_mb.doc";
+		String wordtemplate =templatedir+"/contract_mb.doc";
 		File file=new File(newfilepath +hetongbianhao);
 		if(!file.exists()){
 			file.mkdirs();
@@ -286,7 +287,7 @@ public class NewPrinterController {
 	}
 	public @ResponseBody File returnFile()
 	{
-		return new File("D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc");
+		return new File(templatedir+"\\plugin\\wordpdf\\anjie.doc");
 	}
 	public @ResponseBody FileBlob downPDFTemp() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
@@ -305,11 +306,11 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\anjie_test.doc";
 		String pdftmp = "d:\\contracttemp.pdf";
 		String topdfpath = "d:\\contract.pdf";
-		String[] mergePdfFiles = new String[]{"D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\contract_part2.pdf" } ;
+		String[] mergePdfFiles = new String[]{templatedir+"\\plugin\\wordpdf\\contract_part2.pdf" } ;
 		long waittimes = 1000;
 		FileConvertor.realWordConvertorByFlashPager(flashpaperWorkDir, wordtemplate, wordfile, bookMarks, mapValue,pdftmp, waittimes);
 		FileConvertor.mergePdfFiles(mergePdfFiles, pdftmp, topdfpath, FileConvertor.MERGE_AFTER);
@@ -335,7 +336,7 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\anjie_test.doc";
 		FileConvertor.getRealWord(wordtemplate, wordfile, bookMarks,mapValue);
 	
@@ -361,7 +362,7 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\anjie_test.doc";
 		FileConvertor.getRealWord(wordtemplate, wordfile, bookMarks,mapValue);
 	
@@ -388,7 +389,7 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = "D:\\workspace\\bbossgroups-3.6.0\\bboss-plugin-wordpdf\\plugin\\wordpdf\\anjie.doc";
+		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
 		String wordfile = "d:\\anjie_test.doc";
 		FileConvertor.getRealWord(wordtemplate, wordfile, bookMarks,mapValue);
 	

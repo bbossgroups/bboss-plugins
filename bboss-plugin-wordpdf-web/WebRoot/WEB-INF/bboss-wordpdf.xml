@@ -6,7 +6,8 @@ bboss-wordpdf.xml
 <properties>
     <property name="/wordpdf/*.page"    		
 		f:flashpaperWorkDir="D:\FlashPaper\FlashPaper2.2\"   
-		f:swftoolWorkDir="D:/2_environment/SWFTools" 	
-		f:officeHome = "D:/2_environment/LibreOffice 5"	
+		f:templatedir="D:/d/workspace/bbossgroups/bboss-plugins/bboss-plugin-wordpdf"
+		f:swftoolWorkDir="c:/environment/SWFTools/" 	
+		f:officeHome = "c:/environment/LibreOffice 5"	
     	class="org.frameworkset.web.wordpdf.NewPrinterController"/>
 </properties>
