@@ -1,2 +1,4 @@
 distrib
 classes
+/build/
+/bin/
