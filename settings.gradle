@@ -1,3 +1,5 @@
 rootProject.name = 'bboss-plugins'
 include 'bboss-plugin-hibernate'
-
+include 'bboss-jodconverter-core'
+include 'bboss-plugin-wordpdf'
+include 'bboss-plugin-wordpdf-web'
