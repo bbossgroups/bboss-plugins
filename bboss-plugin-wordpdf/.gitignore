@@ -1,3 +1,5 @@
 /distrib
 /classes
 /.settings/
+/build/
+/bin/

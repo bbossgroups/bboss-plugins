@@ -37,86 +37,29 @@
 
    
 	<!-- 
-	
+	cacheSeconds:-1表示永远缓冲
 	 -->
-    <property name="messageSource" class="org.frameworkset.spi.support.HotDeployResourceBundleMessageSource" >
+    <property name="messageSource" class="org.frameworkset.spi.support.ReloadableResourceBundleMessageSource" singlable="true">
         <property name="basename" value="/WEB-INF/messages"/>
+        <property name="cacheSeconds" value="-1"/>
         <property name="useCodeAsDefaultMessage" value="true"/>
     </property>
     
-
-	<!-- 
-		beanNameHandlerMapping识别器，通过组件名称识别url和controller 的映射关系
-		所有的HandlerMapping识别器（url和controller 的映射关系识别）共用统一的url和Controller
-		映射注册表handlerUrlMappingRegisterTable
-	 -->
-    <property name="beanNameHandlerMapping" class="org.frameworkset.web.servlet.handler.BeanNameUrlHandlerMapping" singlable="true">
-        <property name="alwaysUseFullPath" value="true"/>
-        <property name="handlerMap" refid="attr:handlerUrlMappingRegisterTable"/>
-    </property>
-    <!-- 
-		beanNameHandlerMapping识别器，通过java注解识别url和controller 的映射关系
-		所有的HandlerMapping识别器（url和controller 的映射关系识别）共用统一的url和Controller
-		映射注册表handlerUrlMappingRegisterTable
-	 -->
-    <property name="annotationHandlerMapping" class="org.frameworkset.web.servlet.handler.annotations.DefaultAnnotationHandlerMapping" singlable="true">
-        <property name="alwaysUseFullPath" value="true"/>
-        <property name="handlerMap" refid="attr:handlerUrlMappingRegisterTable"/>
-    </property>
-    <!-- url和controller映射关系表，存储所有的url和controller之间的映射关系 -->
-     <property name="handlerUrlMappingRegisterTable"
-         class="org.frameworkset.web.servlet.handler.HandlerUrlMappingRegisterTable" singlable="true"/>        
-     
-    
-    <!-- 
-    	handlerMapping管理所有类型的url和Controller识别器（目前有beanNameUrl识别器和java注解识别器）
-     -->
-    <property name="handlerMapping" class="org.frameworkset.web.servlet.handler.HandlerMappingsTable" singlable="true">       
-        <property name="handlerMappings">
-        	<list>
-        		<property refid="attr:beanNameHandlerMapping"/>
-        		<property refid="attr:annotationHandlerMapping"/>
-        	</list>
-        	<editor class="org.frameworkset.web.servlet.handler.HandlerMappingsTableEditor"/>
-        </property>
-        <!-- 
-        	scanAllMappings:控制变量，设定是否搜索所有的url和Controller识别器来获取特定请求
-        	url对应的Controller
-        	  true搜索，默认值
-        	  false只所搜第一个maping
-        	由于beanNameHandlerMapping和annotationHandlerMapping共享一个映射关系表，所有设定为false
-         -->
-        <property name="scanAllMappings" value="false"/>
-    </property>
-    
-
-    
-     <property name="httpMessageConverters">
+ 
+      <property name="httpMessageConverters">
      	<list>
-     		
+
      		<property class="org.frameworkset.http.converter.json.MappingJacksonHttpMessageConverter"/>
      		<property class="org.frameworkset.http.converter.FileMessageConvertor"/>
      		<property class="org.frameworkset.http.converter.wordpdf.Word2PDFMessageConverter" 
 					     		f:openoffice="true"
 					     		f:tempDir="d:/"/>
-
-<!--     		<property class="org.frameworkset.http.converter.BufferedImageHttpMessageConverter"/>-->
-<!--     		<property class="org.frameworkset.http.converter.ByteArrayHttpMessageConverter"/>-->
-<!--     		<property class="org.frameworkset.http.converter.FormHttpMessageConverter"/>-->
-<!--     		<property class="org.frameworkset.http.converter.ResourceHttpMessageConverter"/>-->
-     		<property class="org.frameworkset.http.converter.StringHttpMessageConverter" f:responseCharset="UTF-8"/>
+     		<property class="org.frameworkset.http.converter.StringHttpMessageConverter"  f:responseCharset="UTF-8"/>
      		
      	</list>        
      </property> 
      
-     <!-- 配置全局控制器方法拦截器 -->
-     <property name="org.frameworkset.web.servlet.gloabel.HandlerInterceptors" >
-     	<list componentType="bean">
-     		
-     	</list>
-     </property>
-     
-     <property name="localeResolver" class="org.frameworkset.web.servlet.i18n.SessionLocalResolver"/>
+    
 </properties>
 
 

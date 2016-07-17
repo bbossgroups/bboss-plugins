@@ -3,18 +3,18 @@ sourceSets {
     main {
         java {
             srcDirs 'src'
-          
         }
       
         
     }
    
 }
+project.tasks.compileJava.dependsOn(project(':bboss-jodconverter-core').tasks.install)
 dependencies {
 	
     compile(
     				
-            [group: 'com.bbossgroups.plugins', name: 'bboss-plugin-wordpdf', version: "${PROJ_VERSION}", transitive: true],
+            [group: 'com.bbossgroups.plugins', name: 'bboss-jodconverter-core', version: "${PROJ_VERSION}", transitive: true],
              [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: false],
               [group: 'com.bbossgroups', name: 'bboss-persistent', version: "${PROJ_BBOSS_VERSION}", transitive: false],
@@ -29,11 +29,12 @@ dependencies {
               [group: 'com.bbossgroups.security', name: 'bboss-security', version: "${PROJ_BBOSS_VERSION}", transitive: false],
              [group: 'cglib', name: 'cglib-nodep', version: '3.1', transitive: false],
             [group: 'org.openoffice', name: 'bootstrap-connector', version: '0.1.1', transitive: false],
-            [group: 'com.lowagie', name: 'itext', version: '4.2.2', transitive: false],
+            [group: 'com.lowagie', name: 'itext', version: '4.2.1', transitive: false],
            [group: 'net.sf.jacob-project', name: 'jacob', version: '1.14.3', transitive: false],
           [group: 'pdfbox', name: 'pdfbox', version: '0.7.3', transitive: false],
           [group: 'org.apache.pdfbox', name: 'pdfbox-app', version: '2.0.2', transitive: false],
-         
+         [group: 'javax.servlet', name: 'jsp-api', version: '2.0', transitive: false],
+            [group: 'javax.servlet', name: 'javax.servlet-api', version: "3.0.1", transitive: false],
     )
 
  

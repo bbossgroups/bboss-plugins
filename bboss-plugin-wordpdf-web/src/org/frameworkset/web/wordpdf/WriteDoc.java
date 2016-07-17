@@ -28,11 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import ooo.connector.BootstrapSocketConnector;
-
 import org.frameworkset.http.converter.wordpdf.FileConvertor;
 import org.frameworkset.web.wordpdf.Chart.ChartInsertionModeEnum;
-import org.junit.Test;
 
 import com.frameworkset.util.Util;
 import com.sun.star.beans.Property;
@@ -62,6 +59,8 @@ import com.sun.star.text.XTextRange;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.xml.dom.XDocument;
+
+import ooo.connector.BootstrapSocketConnector;
 /**
  * http://wiki.swftools.org/wiki/Installation#How_to_compile.2Flink_swftools_on_Unix.2FLinux.2FBSD.3F
  * http://wiki.openoffice.org/wiki/Documentation
@@ -706,7 +705,7 @@ public class WriteDoc {
         public static ImageInsertionModeEnum[] getValues() { return values; }
     }
     
-    public @Test void getSWFTempAllUseOpenOffice() throws Exception  {
+    public  void getSWFTempAllUseOpenOffice() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
 		String[] bookMarks = new String[] { "DealerName", "Name", "CgName",
 				"TypeName", "OrderQty", "CoolCode", "ChassisCode", "CustPrice",
