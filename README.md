@@ -47,7 +47,7 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 
 安装完毕后，修改配置文件/bboss-plugins/bboss-plugin-wordpdf-web/WebRoot/WEB-INF/bboss-wordpdf.xml中相关属性对应路径swftoolWorkDir(swftool安装目录)、officeHome(libreoffice安装目录)、templatedir(word模板所在目录)：
 
-'
+```
 <properties>
     <property name="/wordpdf/*.page"    		
 		f:flashpaperWorkDir="D:\FlashPaper\FlashPaper2.2\"   
@@ -56,7 +56,7 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 		f:officeHome = "c:/environment/LibreOffice 5"	
     	class="org.frameworkset.web.wordpdf.NewPrinterController"/>
 </properties>
-'
+```
 
 
 
