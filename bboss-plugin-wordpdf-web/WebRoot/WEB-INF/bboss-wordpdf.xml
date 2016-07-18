@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!-- 
+bboss-wordpdf.xml
+描述：wordpdf插件演示demo
+-->
+<properties>
+    <property name="/wordpdf/*.page"    		
+		f:flashpaperWorkDir="D:\FlashPaper\FlashPaper2.2\"   
+		f:templatedir="F:/workspace/bboss-plugins/bboss-plugin-wordpdf/plugin/wordpdf"
+		f:swftoolWorkDir="d:/2_environment/SWFTools/" 	
+		f:officeHome = "d:/2_environment/LibreOffice 5"	
+		f:resultdir="d:/test"
+    	class="org.frameworkset.web.wordpdf.NewPrinterController"/>
+</properties>

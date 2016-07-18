@@ -63,8 +63,8 @@ configure(allprojects) { project ->
 	}
 
 	repositories {
-		mavenCentral()
 		mavenLocal()
+		mavenCentral()
 		
 	}
 	if(project.getProperty('skipTest').equals("true"))
