@@ -10,6 +10,7 @@ public class NewPrinterController {
 	private String swftoolWorkDir;
 	private String officeHome;
 	private String templatedir;
+	private String resultdir;
 	public @ResponseBody FileBlob getPDF() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
 		
@@ -28,11 +29,11 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		 
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\anjie_test.doc";
-		String pdftmp = "d:\\contracttemp.pdf";
-		String topdfpath = "d:\\contract.pdf";
-		String[] mergePdfFiles = new String[]{templatedir+"\\plugin\\wordpdf\\contract_part2.pdf" } ;
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile = resultdir+"/anjie_test.doc";
+		String pdftmp = resultdir+"/contracttemp.pdf";
+		String topdfpath = resultdir+"/contract.pdf";
+		String[] mergePdfFiles = new String[]{templatedir+"/contract_part2.pdf" } ;
 		long waittimes = 1000;
 		FileConvertor.realWordConvertorByFlashPager(flashpaperWorkDir, wordtemplate, wordfile, bookMarks, mapValue,pdftmp, waittimes);
 		FileConvertor.mergePdfFiles(mergePdfFiles, pdftmp, topdfpath, FileConvertor.MERGE_AFTER);
@@ -59,9 +60,9 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\anjie_test.doc";
-		String topdfpath = "d:\\contract.pdf";
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile =resultdir+"/anjie_test.doc";
+		String topdfpath =resultdir+"/contract.pdf";
 		long waittimes = 1000;
 		FileConvertor.realWordConvertorByFlashPager(flashpaperWorkDir, wordtemplate, wordfile, bookMarks, mapValue,topdfpath, waittimes);
 		FileBlob fileblob = new FileBlob(topdfpath,FileBlob.BROWSER);
@@ -86,9 +87,9 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		String hetongbianhao="20121222";
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\test\\anjie_test.doc";
-		String toswfpath = "d:\\test\\contract_"+hetongbianhao+".swf";
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile =resultdir+"/anjie_test.doc";
+		String toswfpath =resultdir+"/contract_"+hetongbianhao+".swf";
 		File f = new File(toswfpath);
 		if(!f.exists())
 		{
@@ -118,10 +119,10 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		String hetongbianhao="20121222";
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String pdfpath = "d:\\test\\anjieswftools_"+hetongbianhao+".pdf";
-		String wordfile = "d:\\test\\anjie_testswftools"+hetongbianhao+".doc";
-		String toswfpath = "d:\\test\\contractswftools_"+hetongbianhao+".swf";
+		String wordtemplate = templatedir+"/anjie.doc";
+		String pdfpath =resultdir+"/anjieswftools_"+hetongbianhao+".pdf";
+		String wordfile =resultdir+"/anjie_testswftools"+hetongbianhao+".doc";
+		String toswfpath =resultdir+"/contractswftools_"+hetongbianhao+".swf";
 //		String officeHome = "E:\\Program Files\\OpenOffice.org 3";
 		File f = new File(toswfpath);
 		if(!f.exists())
@@ -146,7 +147,7 @@ public class NewPrinterController {
 			throws Exception {
 		
 		String hetongbianhao = "123";
-		String newfilepath = "d:/test/";
+		String newfilepath = templatedir+"/";
 		String wordtemplate =templatedir+"/contract_mb.doc";
 		File file=new File(newfilepath +hetongbianhao);
 		if(!file.exists()){
@@ -214,10 +215,10 @@ public class NewPrinterController {
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
 		String hetongbianhao = "20121222";
-	    String wordtemplate = "/opt/tomcat/wordpdf/anjie.doc";
-	    String pdfpath = "/opt/tomcat/test/anjieswftools_" + hetongbianhao + ".pdf";
-	    String wordfile = "/opt/tomcat/test/anjie_testswftools" + hetongbianhao + ".doc";
-	    String toswfpath = "/opt/tomcat/test/contractswftools_" + hetongbianhao + ".swf";
+	    String wordtemplate = templatedir+"/anjie.doc";
+	    String pdfpath = resultdir+"/anjieswftools_" + hetongbianhao + ".pdf";
+	    String wordfile = resultdir+"/anjie_testswftools" + hetongbianhao + ".doc";
+	    String toswfpath = resultdir+"/contractswftools_" + hetongbianhao + ".swf";
 
 //		String officeHome = "E:\\Program Files\\OpenOffice.org 3";
 		File f = new File(toswfpath);
@@ -243,8 +244,8 @@ public class NewPrinterController {
 	public @ResponseBody FileBlob getWordToPDFByOpenOffice() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
 		String hetongbianhao="20131222";
-		String pdfpath = "/opt/tomcat/test/anjieswftools_"+hetongbianhao+".pdf";
-		String wordfile = "/opt/tomcat/wordpdf/anjie.doc";
+		String pdfpath = resultdir+"/anjieswftools_"+hetongbianhao+".pdf";
+		String wordfile = templatedir+"/anjie.doc";
 //		String officeHome = "E:\\Program Files\\OpenOffice.org 3";
 		{
 			System.out.println("officeHome__________:" + officeHome);
@@ -266,8 +267,8 @@ public class NewPrinterController {
 	public @ResponseBody FileBlob getWordToSWFByOpenOffice() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
 		String hetongbianhao="20131222";
-		String pdfpath = "/opt/tomcat/test/anjieswftools_"+hetongbianhao+".swf";
-		String wordfile = "/opt/tomcat/wordpdf/anjie.doc";
+		String pdfpath = resultdir+"/anjieswftools_"+hetongbianhao+".swf";
+		String wordfile = templatedir+"/anjie.doc";
 //		String officeHome = "E:\\Program Files\\OpenOffice.org 3";
 		{
 			System.out.println("officeHome__________:" + officeHome);
@@ -287,7 +288,7 @@ public class NewPrinterController {
 	}
 	public @ResponseBody File returnFile()
 	{
-		return new File(templatedir+"\\plugin\\wordpdf\\anjie.doc");
+		return new File(templatedir+"/anjie.doc");
 	}
 	public @ResponseBody FileBlob downPDFTemp() throws Exception  {
 		System.out.println("--------------程序执行到此处------------------");
@@ -306,11 +307,11 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\anjie_test.doc";
-		String pdftmp = "d:\\contracttemp.pdf";
-		String topdfpath = "d:\\contract.pdf";
-		String[] mergePdfFiles = new String[]{templatedir+"\\plugin\\wordpdf\\contract_part2.pdf" } ;
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile =resultdir+"/anjie_test.doc";
+		String pdftmp =resultdir+"/contracttemp.pdf";
+		String topdfpath =resultdir+"/contract.pdf";
+		String[] mergePdfFiles = new String[]{templatedir+"/contract_part2.pdf" } ;
 		long waittimes = 1000;
 		FileConvertor.realWordConvertorByFlashPager(flashpaperWorkDir, wordtemplate, wordfile, bookMarks, mapValue,pdftmp, waittimes);
 		FileConvertor.mergePdfFiles(mergePdfFiles, pdftmp, topdfpath, FileConvertor.MERGE_AFTER);
@@ -336,8 +337,8 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\anjie_test.doc";
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile =resultdir+"/anjie_test.doc";
 		FileConvertor.getRealWord(wordtemplate, wordfile, bookMarks,mapValue);
 	
 		FileBlob fileblob = new FileBlob(wordfile,FileBlob.BROWSER);
@@ -362,8 +363,8 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\anjie_test.doc";
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile =resultdir+"/anjie_test.doc";
 		FileConvertor.getRealWord(wordtemplate, wordfile, bookMarks,mapValue);
 	
 		FileBlob fileblob = new FileBlob(wordfile,FileBlob.BROWSER);
@@ -389,8 +390,8 @@ public class NewPrinterController {
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
 				"2012年8月31日", "琳", "430111199910102121", "13800138200", "琳","bboss" };
-		String wordtemplate = templatedir+"\\plugin\\wordpdf\\anjie.doc";
-		String wordfile = "d:\\anjie_test.doc";
+		String wordtemplate = templatedir+"/anjie.doc";
+		String wordfile =resultdir+"/anjie_test.doc";
 		FileConvertor.getRealWord(wordtemplate, wordfile, bookMarks,mapValue);
 	
 		FileBlob fileblob = new FileBlob(wordfile,FileBlob.DOWNLOAD);
@@ -403,5 +404,11 @@ public class NewPrinterController {
 	{
 		FileConvertor.init("E:\\Program Files\\LibreOffice 3.6");
 		FileConvertor.wordToPDFByOpenOffice("D:\\workspace\\SanyPDP\\文档\\二维条码\\GSP-MMS\\LmGzjMaterialBarcodeMaintAction.do.htm", "d:\\mms.pdf");
+	}
+	public String getResultdir() {
+		return resultdir;
+	}
+	public void setResultdir(String resultdir) {
+		this.resultdir = resultdir;
 	}
 }

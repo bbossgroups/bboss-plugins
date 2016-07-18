@@ -45,7 +45,7 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 
 注意：运行demo工程前，还需要安装liferoffice和swftool并启动soffice进程，安装方法请参考文档:[/bboss-plugin-wordpdf/文档转换部署文档.doc],
 
-安装完毕后，修改配置文件/bboss-plugins/bboss-plugin-wordpdf-web/WebRoot/WEB-INF/bboss-wordpdf.xml中相关属性对应路径swftoolWorkDir(swftool安装目录)、officeHome(libreoffice安装目录)、templatedir(word模板所在目录)：
+安装完毕后，修改配置文件/bboss-plugins/bboss-plugin-wordpdf-web/WebRoot/WEB-INF/bboss-wordpdf.xml中相关属性对应路径swftoolWorkDir(swftool安装目录)、officeHome(libreoffice安装目录)、templatedir(word模板所在目录),resultdir(转换文档存放目录)：
 
 ```
 <properties>
@@ -54,6 +54,7 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 		f:templatedir="D:/d/workspace/bbossgroups/bboss-plugins/bboss-plugin-wordpdf"
 		f:swftoolWorkDir="c:/environment/SWFTools/" 	
 		f:officeHome = "c:/environment/LibreOffice 5"	
+		f:resultdir="d:/test"
     	class="org.frameworkset.web.wordpdf.NewPrinterController"/>
 </properties>
 ```
