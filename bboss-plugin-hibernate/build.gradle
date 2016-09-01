@@ -35,8 +35,7 @@ dependencies {
              [group: 'javax.transaction', name: 'jta', version: "1.1", transitive: false],
                [group: 'hibernate', name: 'antlr', version: "2.7.5H3", transitive: false],
  
-             [group: 'mysql', name: 'mysql-connector-java', version: "3.1.14", transitive: false],
-             [group: 'commons-collections', name: 'commons-collections', version: "3.2.1", transitive: false],
+              [group: 'commons-collections', name: 'commons-collections', version: "3.2.1", transitive: false],
              [group: 'org.slf4j', name: 'slf4j-api', version: "1.7.2", transitive: false],
              [group: 'org.slf4j', name: 'slf4j-log4j12', version: "1.7.2", transitive: false],           
               [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
@@ -52,9 +51,9 @@ dependencies {
                 
                
     )
-    
+  
      testCompile (            
-            
+             [group: 'mysql', name: 'mysql-connector-java', version: "3.1.14", transitive: false],
             //fileTree(dir: 'lib-compile', include: '**/*.jar')
     )
 }

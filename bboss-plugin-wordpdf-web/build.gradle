@@ -50,13 +50,14 @@ dependencies {
            [group: 'net.sf.jacob-project', name: 'jacob', version: '1.14.3', transitive: false],
           [group: 'pdfbox', name: 'pdfbox', version: '0.7.3', transitive: false],
           [group: 'org.apache.pdfbox', name: 'pdfbox-app', version: '2.0.2', transitive: false],
-         [group: 'javax.servlet', name: 'jsp-api', version: '2.0', transitive: false],
-            [group: 'javax.servlet', name: 'javax.servlet-api', version: "3.0.1", transitive: false],
+        
     )
     
-    providedCompile (
-	    [group: 'javax.servlet', name: 'jsp-api', version: '2.0', transitive: false],
-        [group: 'javax.servlet', name: 'javax.servlet-api', version: "3.0.1", transitive: false],
+    compileOnly(
+    	    [group: 'javax.servlet', name: 'jsp-api', version: '2.0', transitive: false],
+            [group: 'javax.servlet', name: 'javax.servlet-api', version: "3.0.1", transitive: false],
+           
+           
     )
     
     
