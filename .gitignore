@@ -10,3 +10,5 @@
 *.lock
 /.gradle/
 /.settings/
+/build.gradle.bak
+/settings.gradle.bak
