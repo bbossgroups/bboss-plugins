@@ -1,18 +1,4 @@
-buildscript {
-	    repositories {	      
-	       mavenLocal()  
-	        
-			     mavenCentral()	
-	        //      
-	    }
-	
-	    dependencies {
-	        //classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
-	        classpath 'org.akhikhl.gretty:gretty:+'
-	        
-	    }
-	}
- 
+
 configure(allprojects) { project ->
 	group = PROJ_GROUP
 	version = PROJ_VERSION	
@@ -103,7 +89,7 @@ configure(subprojects) { subproject ->
 
 }
 
-configure([project(":bboss-plugin-hibernate"),project(":bboss-jodconverter-core"),project(":bboss-plugin-wordpdf")]) { subproject ->
+configure([project(":bboss-plugin-hibernate"),project(":bboss-jodconverter-core"),project(":bboss-plugin-wordpdf"),project(":bboss-plugin-dubbo")]) { subproject ->
 	ext.uploadtocenter=uploadArchivesToMavenCenter.equals("true")
 	if(uploadtocenter)
 	{

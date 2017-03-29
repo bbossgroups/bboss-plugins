@@ -1,5 +1,5 @@
  apply plugin: 'war'
-   
+  /** 
   if(enable_gretty.equals("true"))
   {
   
@@ -13,7 +13,7 @@
 	  //  servletContainer = 'jetty7'
 	  
 	  }
-  } 
+  } */
 sourceSets {
     main {
         java {

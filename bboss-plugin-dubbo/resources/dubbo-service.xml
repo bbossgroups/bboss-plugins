@@ -1,0 +1,13 @@
+<properties>
+	<!-- <property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo.DubboPluginConfig" 
+			f:applicationName="test"
+			f:applicationOwner="test"
+			f:registryAddress="zookeeper://localhost:2181"
+			f:registryUserName="test"
+			f:registryPassword="test"
+			f:protocolPort="12345"
+			f:protocolName="dubbo"
+			f:protocolThreads="200"
+			init-method="init"/> -->
+	<property name="testservice" class="org.frameworkset.spi.remote.dubbo.TestProvider" dubbo:enable="true"/>
+</properties>

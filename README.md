@@ -60,8 +60,8 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 ```
 
 
-
-
+# bboss dubbo插件工程
+提供dubbo服务发布功能和dubbo服务消费者配置功能
 
 
 ## License
