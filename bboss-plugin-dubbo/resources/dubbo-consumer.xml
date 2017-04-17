@@ -7,7 +7,7 @@
 			f:registryPassword="test"		
 			init-method="init"/> -->
 	<property name="testservice" 
-		factory-class="org.frameworkset.spi.remote.dubbo.DubboConsumerFactory"
+		 factory-class="org.frameworkset.spi.remote.dubbo.DubboConsumerFactory"
 		 factory-method="buildDubboConsumer"
 		 f:reference="org.frameworkset.spi.remote.dubbo.TestProviderInf"/>
 </properties>

@@ -67,11 +67,17 @@ service.export();
 					pro = context.getProBean(beanName);
 					if(pro == null)
 						continue;
-					boolean enabledubbo = pro.getBooleanExtendAttribute("dubbo:enable",false);
-					if(!enabledubbo){
+					String enabledubbo = pro.getStringExtendAttribute("dubbo:enable");
+					String interfaceClass = pro.getStringExtendAttribute("dubbo:interface");
+					if(enabledubbo == null ){
+						if(interfaceClass == null)
+							continue;
+					}
+					if(enabledubbo.equals("false") )
+					{
 						continue;
 					}
-					String interfaceClass = pro.getStringExtendAttribute("dubbo:interface");
+					
 					String version = pro.getStringExtendAttribute("dubbo:version");
 					Object _service = context.getBeanObject(beanName);
 					Class serviceapi = null;
