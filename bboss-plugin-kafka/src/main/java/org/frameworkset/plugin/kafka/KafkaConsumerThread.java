@@ -39,8 +39,11 @@ public class KafkaConsumerThread implements Runnable {
 				}
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("系统异常：",e);
+			}
+			catch (Throwable e) {
+				logger.error("系统异常：",e);
+				break;
 			}
 
 		}

@@ -49,7 +49,7 @@ public class KafkaConsumer extends ApplicationObjectSupport implements Runnable 
 	public void init(){
 		 consumerConfig = new ConsumerConfig(productorPropes);
 	}
-	
+	private StoreService storeService = null;
 
 	@Override
 	public void run() {
@@ -62,19 +62,30 @@ public class KafkaConsumer extends ApplicationObjectSupport implements Runnable 
 	    	String[] infos = t.split(":");
 	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
 	    }
-		ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
+		final ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
 	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-	    ExecutorService executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10);
-	    for(String t:topics)
+	    final ExecutorService executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10);
+
+		for(String t:topics)
 	    {
 	    	String[] infos = t.split(":");
 		    List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(infos[0]);
 		    System.out.println("-----------------------------------------:"+infos[0]+"-------------"+streams);
 		    for (final KafkaStream<byte[], byte[]> stream : streams) {
-				StoreService storeService = this.getApplicationContext().getTBeanObject("storeService",StoreService.class);
+//				StoreService storeService = this.getApplicationContext().getTBeanObject("storeService",StoreService.class);
+//				if(this.storeService == null)
+//					this.storeService = storeService;
 		        executor.submit(new KafkaConsumerThread(stream,storeService));
 		    }
 	    }
+	    BaseApplicationContext.addShutdownHook(new Runnable() {
+			@Override
+			public void run() {
+				executor.shutdown();
+				consumer.shutdown();
+				storeService.closeService();
+			}
+		});
 
 	}
 	
