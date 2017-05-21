@@ -89,7 +89,7 @@ configure(subprojects) { subproject ->
 
 }
 
-configure([project(":bboss-plugin-hibernate"),project(":bboss-jodconverter-core"),project(":bboss-plugin-wordpdf"),project(":bboss-plugin-dubbo")]) { subproject ->
+configure([project(":bboss-plugin-hibernate"),project(":bboss-jodconverter-core"),project(":bboss-plugin-wordpdf"),project(":bboss-plugin-dubbo"),project(":bboss-plugin-kafka")]) { subproject ->
 	ext.uploadtocenter=uploadArchivesToMavenCenter.equals("true")
 	if(uploadtocenter)
 	{
