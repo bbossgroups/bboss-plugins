@@ -360,6 +360,7 @@ public class JMSTemplateTest
     
     public static void main(String[] args)
     {
+    	
         JMSTemplateTest JMSTemplateTest = new JMSTemplateTest();
         JMSTemplateTest.init();
         JMSTemplateTest.test();
@@ -375,7 +376,7 @@ public class JMSTemplateTest
 //        testAllparamsMessage();
 //        testReceiveMessage();
 ////        System.exit(0);
-//        JMSTemplateTest.testMessageListener();
+        JMSTemplateTest.testMessageListener();
 //        testTopicSend();
 //        testsubscriberSend();
 //        testSubscriber();

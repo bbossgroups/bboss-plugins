@@ -199,10 +199,7 @@
 					value="100">
 					<description> <![CDATA[  The maximum number of messages sent to a consumer on a durable topic until acknowledgements are received   ]]></description>
 				</property>
-				<property label="inputStreamPrefetch" class="int" name="inputStreamPrefetch"
-					value="100">
-					<description> <![CDATA[  The maximum number of messages sent to a consumer on a JMS stream until acknowledgements are received    ]]></description>
-				</property>
+				 
 				<property label="maximumPendingMessageLimit" class="int" name="maximumPendingMessageLimit"
 					value="0">
 					<description> <![CDATA[  Sets how many messages a broker will keep around, above the prefetch limit, for non-durable topics before starting to discard older messages   ]]></description>

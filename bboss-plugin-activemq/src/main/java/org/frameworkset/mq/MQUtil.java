@@ -26,7 +26,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
-import org.frameworkset.spi.BaseSPIManager;
 
 /**
  * <p>Title: MQUtil.java</p> 
@@ -327,13 +326,7 @@ public class MQUtil
             return maxLength;
     }
     
-    /**
-     *<!-- 
-        是否启用rpc服务的jms协议
-        true--启用，框架将启动接收服务调用的jms队列和接收响应的jms目标队列
-     -->
-     */
-    public static boolean rpc_jms_enable = BaseSPIManager.getBooleanProperty("rpc.jms.enable",false);
+
     
     public static Destination createDestination(Session session, String name, int defaultType) throws JMSException
     {
