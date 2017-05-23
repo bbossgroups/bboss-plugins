@@ -1,0 +1,54 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDir 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+           
+        }
+        resources {
+			srcDir 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+}
+
+dependencies {
+    compile (
+
+
+            // https://mvnrepository.com/artifact/org.apache.activemq/activemq-client
+// https://mvnrepository.com/artifact/org.apache.activemq/activemq-pool
+
+                    [group: 'org.apache.activemq', name: 'activemq-jms-pool', version: "5.14.5", transitive: false],
+            [group: 'org.apache.activemq', name: 'activemq-pool', version: "5.14.5", transitive: false],
+            [group: 'org.apache.activemq', name: 'activemq-client', version: "5.14.5", transitive: true],
+   			[group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true],
+    
+         
+                
+               
+    )
+    testCompile(
+   		//test
+         	 [group: 'org.slf4j', name: 'jcl-over-slf4j', version: "1.7.21", transitive: false],
+        
+        
+        [group: 'org.slf4j', name: 'slf4j-log4j12', version: "1.7.21", transitive: false],
+        
+        [group: 'log4j', name: 'log4j', version: "1.2.16", transitive: false],
+    )
+  
+     
+}
