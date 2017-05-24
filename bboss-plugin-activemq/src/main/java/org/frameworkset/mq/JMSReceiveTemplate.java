@@ -35,67 +35,18 @@ public class JMSReceiveTemplate extends AbstractTemplate
 {
 
    
-    public JMSReceiveTemplate(ConnectionFactory connectionFactory,String destination)
+    public JMSReceiveTemplate(ConnectionFactory connectionFactory)
             throws JMSException
     {
-        super(connectionFactory,destination);
+        super(connectionFactory);
         // TODO Auto-generated constructor stub
     } 
     
 
    
-    public JMSReceiveTemplate(JMSConnectionFactory connectionFactory,boolean transactioned,
-            int destinationType, String destination,boolean persistent,int prior,long timeToLive,String clientid) throws JMSException
-    {
-        super(connectionFactory, transactioned, destinationType,  destination, persistent, prior, timeToLive,clientid);
-        // TODO Auto-generated constructor stub
-    }
-    
-    public JMSReceiveTemplate(ConnectionFactory connectionFactory,boolean transactioned,
-            int destinationType, String destination,boolean persistent,int prior,long timeToLive,String clientid) throws JMSException
-    {
-        super(connectionFactory, transactioned, destinationType,  destination, persistent, prior, timeToLive,clientid);
-        // TODO Auto-generated constructor stub
-    }
-    public JMSReceiveTemplate(ConnectionFactory connectionFactory) throws JMSException
-    {
-        super(connectionFactory);
-        // TODO Auto-generated constructor stub
-    }
+   
 
-    public JMSReceiveTemplate(JMSConnectionFactory connectionFactory, String destination) throws JMSException
-    {
-        super(connectionFactory, destination);
-        // TODO Auto-generated constructor stub
-    }
-    
-    public JMSReceiveTemplate(String clientid,JMSConnectionFactory connectionFactory) throws JMSException
-    {
-    	//AbstractTemplate(JMSConnectionFactory connectionFactory,boolean transactioned,
-//        int destinationType, String destination,boolean persistent,int prior,long timeToLive,String clientid)
-    	this( connectionFactory,false,
-    	      MQUtil.TYPE_TOPIC,null,false,4,0,clientid);
-        // TODO Auto-generated constructor stub
-    }
-    
-    public JMSReceiveTemplate(String clientid,boolean persisent,JMSConnectionFactory connectionFactory) throws JMSException
-    {
-    	//AbstractTemplate(JMSConnectionFactory connectionFactory,boolean transactioned,
-//        int destinationType, String destination,boolean persistent,int prior,long timeToLive,String clientid)
-    	this( connectionFactory,false,
-    	      MQUtil.TYPE_TOPIC,null,persisent,4,0,clientid);
-        // TODO Auto-generated constructor stub
-    }
-    
-    public JMSReceiveTemplate(String clientid,boolean persisent,int prior,long timetolive,JMSConnectionFactory connectionFactory) throws JMSException
-    {
-    	//AbstractTemplate(JMSConnectionFactory connectionFactory,boolean transactioned,
-//        int destinationType, String destination,boolean persistent,int prior,long timeToLive,String clientid)
-    	this( connectionFactory,false,
-    	      MQUtil.TYPE_TOPIC,null,persisent,prior,timetolive,clientid);
-        // TODO Auto-generated constructor stub
-    }
-
+   
     public JMSReceiveTemplate(JMSConnectionFactory connectionFactory) throws JMSException
     {
         super(connectionFactory);
@@ -119,10 +70,7 @@ public class JMSReceiveTemplate extends AbstractTemplate
         getTopicSubscriberWithSelector(destination, name, selector).setMessageListener(listener);
     }
     
-    public void subscribeTopicWithSelector(String name,String selector,MessageListener listener) throws JMSException
-    {
-        this.requestDispatcher.getTopicSubscriberWithSelector(this.destination,name, selector).setMessageListener(listener);
-    }
+  
     public TopicSubscriber getTopicSubscriber(Topic destination, String name) throws JMSException
     {
         return getTopicSubscriber(destination, name, null);
@@ -171,9 +119,20 @@ public class JMSReceiveTemplate extends AbstractTemplate
     
     
 
-    public void unsubscribe(String unsubscribename) throws JMSException
+    public void unsubscribe(String destination ,String unsubscribename) throws JMSException
     {
-        this.requestDispatcher.unsubscribe(unsubscribename);
+    	RequestDispatcher requestDispatcher = null;
+         try
+         {
+        	 requestDispatcher = new RequestDispatcher(this.connection);
+        	 requestDispatcher.unsubscribe(unsubscribename);
+         }
+        
+         finally
+         {
+        	 if(requestDispatcher != null)
+            	 requestDispatcher.stop();
+         }
     }
    
 

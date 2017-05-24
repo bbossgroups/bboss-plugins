@@ -41,36 +41,12 @@ import javax.jms.JMSException;
 public class JMSTemplate extends AbstractTemplate
 { 
 
-    public JMSTemplate(ConnectionFactory connectionFactory, String destination) throws JMSException
-    {
-        super(connectionFactory,destination);
-    }
     
-    public JMSTemplate(JMSConnectionFactory connectionFactory, String destination) throws JMSException
-    {
-        super(connectionFactory,destination);
-    }
  
     
 
     
-
-    public JMSTemplate(JMSConnectionFactory connectionFactory,boolean transactioned,
-            int destinationType, String destination,boolean persistent,int prior,long timeToLive) throws JMSException
-    {
-        super(connectionFactory, transactioned, destinationType,  destination, persistent, prior, timeToLive,null);
-        // TODO Auto-generated constructor stub
-    }
-    
-    public JMSTemplate(ConnectionFactory connectionFactory,boolean transactioned,
-            int destinationType, String destination,boolean persistent,int prior,long timeToLive) throws JMSException
-    {
-        super(connectionFactory,transactioned,  destinationType,  destination, persistent, prior, timeToLive,null);
-        // TODO Auto-generated constructor stub
-    }  
-
-    
-
+ 
     public JMSTemplate(ConnectionFactory connectionFactory) throws JMSException
     {
         super(connectionFactory);
