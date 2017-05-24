@@ -366,7 +366,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 					null, persistent);
 			dispatcher.send(message, (JMSProperties) null);
 		} finally {
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 		// session.createProducer(arg0)
 	}
@@ -379,7 +380,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 					null, persistent);
 			dispatcher.send(message, properties);
 		} finally {
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 		// session.createProducer(arg0)
 	}
@@ -646,7 +648,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 					(JMSProperties) null);
 		} finally {
 			// dispatcher = null;
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 	}
 
@@ -658,7 +661,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, properties);
 		} finally {
 			// dispatcher = null;
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 	}
 
