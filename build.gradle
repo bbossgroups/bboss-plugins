@@ -107,7 +107,7 @@ configure([project(":bboss-plugin-hibernate"),project(":bboss-jodconverter-core"
 			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 	     	repository(url: sonatype_url) {
 	     		
-			         authentication(userName: ${sonatype_username}, password: ${sonatype_password})
+			         authentication(userName: sonatype_username, password: sonatype_password)
 			}
 				
 				
