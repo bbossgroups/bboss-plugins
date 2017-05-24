@@ -16,12 +16,22 @@
 
 package org.frameworkset.mq;
 
-import org.slf4j.Logger;
-
-import javax.jms.*;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import javax.jms.StreamMessage;
+import javax.jms.TextMessage;
+
+import org.slf4j.Logger;
 
 /**
  * <p>
@@ -49,20 +59,13 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 	// protected String requestMessageSelector;
 
 	// protected String responseMessageSelector;
-	protected int destinationType;
-	protected String destination;
-	protected boolean stoped;
-
-	protected int prior;
-	protected long timeToLive = 0;
-
-	protected String clientid;
+ 
 
 	protected ConnectionFactory connectionFactory;
 
 	protected Connection connection;
 
-	protected RequestDispatcher requestDispatcher;
+	 
 
 	// protected RequestDispatcher responseDispatcher;
 
@@ -70,28 +73,17 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 
 	// protected int acknowledgeMode = Session.AUTO_ACKNOWLEDGE;
 
-	protected boolean persistent;
+ 
 	protected List<ReceiveDispatcher> tempdispatcher = new ArrayList<ReceiveDispatcher>();
 
 	public AbstractTemplate(JMSConnectionFactory connectionFactory) throws JMSException {
-		this(connectionFactory, null);
+		this(connectionFactory.getConectionFactory());
 
 	}
 
-	public AbstractTemplate(JMSConnectionFactory connectionFactory, String destination) throws JMSException {
-		this(connectionFactory, false, MQUtil.TYPE_QUEUE, destination, false, 4, 0, null);
-	}
-
-	public AbstractTemplate(ConnectionFactory connectionFactory, boolean transactioned, int destinationType,
-			String destination, boolean persistent, int prior, long timeToLive, String clientid) throws JMSException {
-		this.destinationType = destinationType;
-
-		this.destination = destination;
-		this.clientid = clientid;
-		this.persistent = persistent;
-		this.prior = prior;
-		this.timeToLive = timeToLive;
-
+ 
+	public AbstractTemplate(ConnectionFactory connectionFactory) throws JMSException {
+		 
 		// this.replyto = replyto;
 
 		// this.responseMessageSelector = responseMessageSelector;
@@ -101,35 +93,15 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 		else
 			this.connectionFactory = new ConnectionFactoryWrapper(connectionFactory, null);
 
-		connection = this.connectionFactory.createConnection();
-		if (this.clientid != null && !this.clientid.equals(""))
-			this.connection.setClientID(clientid);
+		connection = this.connectionFactory.createConnection();	
 		connection.start();
-		// if(this.destination != null)
-		this.requestDispatcher = new RequestDispatcher(this.connection, transactioned, Session.AUTO_ACKNOWLEDGE,
-				this.destinationType, this.destination, this.persistent, this.prior, this.timeToLive);
-	}
-
-	public AbstractTemplate(JMSConnectionFactory connectionFactory, boolean transactioned, int destinationType,
-			String destination, boolean persistent, int prior, long timeToLive, String clientid) throws JMSException {
-
-		this(connectionFactory.getConectionFactory(), transactioned, destinationType, destination, persistent, prior,
-				timeToLive, clientid);
-	}
-
-	public AbstractTemplate(ConnectionFactory connectionFactory) throws JMSException {
-		this(connectionFactory, null);
-	}
-
-	public AbstractTemplate(ConnectionFactory connectionFactory, String destination) throws JMSException {
-		this(connectionFactory, false, MQUtil.TYPE_QUEUE, destination, false, 4, 0, null);
 	}
 
 	public void destroy() throws Exception {
 		this.stop();
 
 	}
-
+	private boolean stoped;
 	public void stop() {
 		if(stoped)
 			return;
@@ -142,9 +114,7 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 				}
 			}
 		}
-		if (this.requestDispatcher != null) {
-			this.requestDispatcher.stop();
-		}
+		
 		// if(this.responseDispatcher != null)
 		// {
 		// this.responseDispatcher.stop();
@@ -189,18 +159,9 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 		}
 	}
 
-	public javax.jms.Message receive() throws javax.jms.JMSException {
-
-		return this.requestDispatcher.receive();
-	}
-
-	public javax.jms.Message receive(long timeout) throws javax.jms.JMSException {
-		return this.requestDispatcher.receive(timeout);
-	}
-
-	public javax.jms.Message receiveNoWait() throws javax.jms.JMSException {
-		return this.requestDispatcher.receiveNoWait();
-	}
+ 
+ 
+ 
 
 	public javax.jms.Message receive(String destination) throws javax.jms.JMSException {
 
@@ -231,88 +192,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 		}
 	}
 
-	public BytesMessage createBytesMessage() throws JMSException {
-		return this.requestDispatcher.createBytesMessage();
+	 
 
-	}
-
-	public ObjectMessage createObjectMessage() throws JMSException {
-		return this.requestDispatcher.createObjectMessage();
-
-	}
-
-	public ObjectMessage createObjectMessage(java.io.Serializable object) throws JMSException {
-		return this.requestDispatcher.createObjectMessage(object);
-
-	}
-
-	public TextMessage createTextMessage() throws JMSException {
-		return this.requestDispatcher.createTextMessage();
-
-	}
-
-	public TextMessage createTextMessage(String msg) throws JMSException {
-		return this.requestDispatcher.createTextMessage(msg);
-
-	}
-
-	public MapMessage createMapMessage() throws JMSException {
-		return this.requestDispatcher.createMapMessage();
-
-	}
-
-	public StreamMessage createStreamMessage() throws JMSException {
-		return this.requestDispatcher.createStreamMessage();
-
-	}
-
-	public MessageConsumer getConsumer() throws JMSException {
-		return this.requestDispatcher.getConsumer();
-	}
-
-	public MessageConsumer getConsumer(Destination destination) throws JMSException {
-		return requestDispatcher.getConsumer(destination);
-	}
-
-	public MessageConsumer getConsumer(Destination destination, String messageSelector, boolean noLocal)
-			throws JMSException {
-		return this.requestDispatcher.getConsumer(destination, messageSelector, noLocal);
-	}
-
-	public MessageConsumer getConsumer(int destinationType, String destination_) throws JMSException {
-		return this.requestDispatcher.getConsumer(destinationType, destination);
-	}
-
-	public MessageConsumer getConsumer(int destinationType, String destination_, String messageSelector)
-			throws JMSException {
-
-		return getConsumer(destinationType, destination_, messageSelector, false);
-	}
-
-	public MessageConsumer getConsumer(int destinationType, String destination_, String messageSelector,
-			boolean noLocal) throws JMSException {
-		return this.requestDispatcher.getConsumer(destinationType, destination_, messageSelector);
-	}
-
-	public MessageConsumer getConsumerWithSelector(String selector) throws JMSException {
-
-		return this.requestDispatcher.getConsumerWithSelector(selector);
-	}
-
-	public javax.jms.MessageListener getMessageListener() throws javax.jms.JMSException {
-
-		return this.requestDispatcher.getMessageListener();
-	}
-
-	public java.lang.String getMessageSelector() throws javax.jms.JMSException {
-		// assertConsumerNull();
-		return requestDispatcher.getMessageSelector();
-	}
-
-	// Method descriptor #10 (Ljavax/jms/MessageListener;)V
-	public void setMessageListener(javax.jms.MessageListener listener) throws javax.jms.JMSException {
-		this.requestDispatcher.setMessageListener(listener);
-	}
 
 	public void setMessageListener(String destination, javax.jms.MessageListener listener)
 			throws javax.jms.JMSException {
@@ -338,9 +219,9 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 
 	}
 
-	public boolean isClientAcknowledge() throws JMSException {
+	public boolean isClientAcknowledge(RequestDispatcher requestDispatcher) throws JMSException {
 
-		return this.requestDispatcher.isClientAcknowledge();
+		return requestDispatcher.isClientAcknowledge();
 	}
 
 	public void send(String destination, String message) throws JMSException {
@@ -366,7 +247,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 					null, persistent);
 			dispatcher.send(message, (JMSProperties) null);
 		} finally {
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 		// session.createProducer(arg0)
 	}
@@ -379,7 +261,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 					null, persistent);
 			dispatcher.send(message, properties);
 		} finally {
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 		// session.createProducer(arg0)
 	}
@@ -396,9 +279,9 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 	// this.responseDispatcher.commit();
 	// }
 
-	public void commit() throws JMSException {
-		if (this.requestDispatcher != null)
-			this.requestDispatcher.commit();
+	public void commit(RequestDispatcher requestDispatcher) throws JMSException {
+		if (requestDispatcher != null)
+			requestDispatcher.commit();
 	}
 	// public void rollbackRequest() throws JMSException
 	// {
@@ -411,69 +294,15 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 	// this.responseDispatcher.rollback();
 	// }
 
-	public void rollback() throws JMSException {
-		if (this.requestDispatcher != null)
-			this.requestDispatcher.rollback();
+	public void rollback(RequestDispatcher requestDispatcher) throws JMSException {
+		if (requestDispatcher != null)
+			requestDispatcher.rollback();
 	}
 
-	public void send(String msg) throws JMSException {
-		this.requestDispatcher.send(msg, (JMSProperties) null);
-	}
+	
 
-	// public void sendReply(String msg) throws JMSException
-	// {
-	// this.responseDispatcher.send(msg);
-	// }
-
-	public void send(Message msg) throws JMSException {
-		this.requestDispatcher.send(msg, (JMSProperties) null);
-	}
-
-	public void send(String msg, JMSProperties properties) throws JMSException {
-		this.requestDispatcher.send(msg, properties);
-	}
-
-	// public void sendReply(String msg) throws JMSException
-	// {
-	// this.responseDispatcher.send(msg);
-	// }
-
-	public void send(Message msg, JMSProperties properties) throws JMSException {
-		this.requestDispatcher.send(msg, properties);
-	}
-
-	// public void sendReply(Message msg) throws JMSException
-	// {
-	// this.responseDispatcher.send(msg);
-	// }
-
-	public void send(InputStream in, JMSProperties properties) throws JMSException {
-		this.requestDispatcher.send(in, properties);
-	}
-
-	// public void sendReply(InputStream in,JMSProperties properties) throws
-	// JMSException
-	// {
-	// this.responseDispatcher.send(in, properties);
-	// }
-
-	public void send(InputStream in, JMSProperties properties, Logger log) throws JMSException {
-		this.requestDispatcher.send(in, properties, log);
-	}
-
-	// public void sendReply(InputStream in,JMSProperties properties,Logger log)
-	// throws JMSException
-	// {
-	// this.responseDispatcher.send(in, properties,log);
-	// }
-
-	public void send(Message msg, Logger logger) throws JMSException {
-		this.requestDispatcher.send(msg, logger, (JMSProperties) null);
-	}
-
-	public void send(Message msg, Logger logger, JMSProperties properties) throws JMSException {
-		this.requestDispatcher.send(msg, logger, properties);
-	}
+	
+	
 
 	// public void sendReply(Message msg,Logger logger) throws JMSException
 	// {
@@ -494,8 +323,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, step,
 					(JMSProperties) null);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 
 	}
@@ -508,12 +337,37 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, step, properties);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 
 	}
 
+	public void send( String destination_, boolean persistent, int priority, long timeToLive,
+			Message message) throws JMSException {
+
+		RequestDispatcher dispatcher = null;
+		try {
+			dispatcher = new RequestDispatcher(this.connection);
+			dispatcher.send(MQUtil.TYPE_QUEUE, destination_, persistent, priority, timeToLive, message,
+					(JMSProperties) null);
+		} finally {
+			if(dispatcher != null)
+				 dispatcher.stop();
+		}
+	}
+	public void send( String destination_, String message,boolean persistent, int priority, long timeToLive) throws JMSException {
+
+		RequestDispatcher dispatcher = null;
+		try {
+			dispatcher = new RequestDispatcher(this.connection);
+			dispatcher.send(MQUtil.TYPE_QUEUE, destination_, persistent, priority, timeToLive, message,
+					(JMSProperties) null);
+		} finally {
+			if(dispatcher != null)
+				 dispatcher.stop();
+		}
+	}
 	public void send(int destinationType, String destination_, boolean persistent, int priority, long timeToLive,
 			Message message) throws JMSException {
 
@@ -523,8 +377,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message,
 					(JMSProperties) null);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -536,8 +390,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, properties);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -548,8 +402,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, message, logger, (JMSProperties) null);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -560,8 +414,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, message, logger, properties);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -572,8 +426,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, message, (JMSProperties) null);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -584,8 +438,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, message, properties);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -595,8 +449,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, message, (JMSProperties) null);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -607,8 +461,9 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, persistent, message, properties);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+//			dispatcher = null;
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -620,8 +475,9 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher.send(destinationType, destination_, message, persistent, priority, timeToLive,
 					(JMSProperties) null);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+//			dispatcher = null;
+			if(dispatcher != null)
+				 dispatcher.stop();
 		}
 	}
 
@@ -632,8 +488,9 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection);
 			dispatcher.send(destinationType, destination_, message, persistent, priority, timeToLive, properties);
 		} finally {
-			dispatcher = null;
-			// dispatcher.stop();
+//			dispatcher = null;
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 	}
 
@@ -646,7 +503,8 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 					(JMSProperties) null);
 		} finally {
 			// dispatcher = null;
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 	}
 
@@ -658,12 +516,10 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, properties);
 		} finally {
 			// dispatcher = null;
-			dispatcher.stop();
+			if(dispatcher != null)
+				dispatcher.stop();
 		}
 	}
 
-	public void send(String destination_, String message, boolean persistent, int priority, long timeToLive)
-			throws JMSException {
-		send(this.destinationType, destination_, message, persistent, priority, timeToLive);
-	}
+	
 }

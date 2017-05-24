@@ -113,10 +113,13 @@ public class JMSTemplateTest
         {
             Connection connection = factory.getConnection();
             connection.start();
+            connection.stop();
             connection.close();
             
             connection = factory.getConnection();
-            connection.start();            
+           
+            connection.start();   
+            connection.stop();
         }
         catch (JMSException e)
         {
@@ -344,7 +347,7 @@ public class JMSTemplateTest
 	        JMSReceiveTemplate template = context.getTBeanObject("test.topic1.receive.jmstemplate",JMSReceiveTemplate.class);
 	        try
 	        {
-	            template.unsubscribe("subscribename");
+	            template.unsubscribe("topic1","subscribename");
 	            
 	        }
 	        catch (Exception e)

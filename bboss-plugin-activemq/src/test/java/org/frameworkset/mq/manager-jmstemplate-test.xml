@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <properties>
-	<property name="test.jmstemplate" class="org.frameworkset.mq.JMSTemplate">
+	<property name="test.jmstemplate" singlable="false"  class="org.frameworkset.mq.JMSTemplate">
 			<construction>		
 				<property name="connectionfactory" 
 		      			refid="attr:test.amq.PooledConnectionFactory"/>	        
 			</construction>		
 	</property>
 	
-	<property name="test.jms.receive.template" singlable="true" class="org.frameworkset.mq.JMSReceiveTemplate">
+	<property name="test.jms.receive.template" singlable="false" class="org.frameworkset.mq.JMSReceiveTemplate">
 		<construction>		
 			<property name="connectionfactory" 
 	      			refid="attr:test.amq.PooledConnectionFactory"/>
@@ -15,18 +15,18 @@
 	</property>
 	
 	
-	<property name="test.topic.receive.jmstemplate" singlable="true" class="org.frameworkset.mq.JMSReceiveTemplate">
+	<property name="test.topic.receive.jmstemplate" singlable="false" class="org.frameworkset.mq.JMSReceiveTemplate">
 		<construction>	
-		<property>mytopic</property>	
+		 
 			<property name="connectionfactory" 
 	      			refid="attr:test.amq.ConnectionFactory"/>	
 	      	
 		</construction>		
 	</property>
 	
-	<property name="test.topic1.receive.jmstemplate" singlable="true" class="org.frameworkset.mq.JMSReceiveTemplate">
+	<property name="test.topic1.receive.jmstemplate" singlable="false" class="org.frameworkset.mq.JMSReceiveTemplate">
 		<construction>		
-			<property>mytopic1</property>
+			 
 			<property name="connectionfactory" 
 	      			refid="attr:test.amq.ConnectionFactory"/>	
 	      	
@@ -46,7 +46,7 @@
 			<property name="password" 
 				      value="manager" />			
 			<property name="usepool"
-				      value="false" />
+				      value="true" />
 				      
 			<!-- ssl协议配置 -->	      
 			<!-- 	      
@@ -79,13 +79,13 @@
 	<property name="test.amq.ConnectionFactory" singlable="true" class="org.frameworkset.mq.AMQConnectionFactory">	
 		<construction>		
 			<property name="connectURL" 
-				      value="tcp://149.16.20.162:61616"/>				
+				      value="tcp://localhost:61616"/>				
 			<property name="username" 
 				      value="system" />	
 			<property name="password" 
 				      value="manager" />			
 			<property name="usepool"
-				      value="false" />
+				      value="true" />
 				      
 			<!-- ssl协议配置 -->	      
 			<!-- 	      
