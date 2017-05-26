@@ -48,7 +48,7 @@ public class JMSTemplateTest
         JMSTemplate template = context.getTBeanObject("test.jmstemplate",JMSTemplate.class);
         try
         {
-        	for(int i =0 ; i < 10000; i ++)
+        	for(int i =0 ; i < 10; i ++)
         		template.send("atest", "ahello "+ i);
             
         }

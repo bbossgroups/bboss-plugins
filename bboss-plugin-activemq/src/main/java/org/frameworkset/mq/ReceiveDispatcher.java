@@ -91,7 +91,7 @@ public class ReceiveDispatcher
 //        if (this.clientid != null && !this.clientid.equals(""))
 //            this.connection.setClientID(clientid);
         // connection.start();
-        session = connection.createSession(this.transacted, acknowledgeMode);
+
 
     }
 
@@ -125,7 +125,7 @@ public class ReceiveDispatcher
             this.connection = (JMSConnection )connection;
         else
             this.connection = new JMSConnection (connection,null);
-        session = connection.createSession(this.transacted, acknowledgeMode);
+//        session = connection.createSession(this.transacted, acknowledgeMode);
     }
 
     private void assertStarted() throws JMSException
@@ -136,7 +136,10 @@ public class ReceiveDispatcher
         }
 
     }
-
+    protected void initSession(boolean transacted,int acknowledgeMode) throws JMSException {
+        if(session == null)
+            session = connection.createSession(transacted, acknowledgeMode);
+    }
     private Object consumerLock = new Object();
 
     public MessageConsumer getConsumer() throws JMSException
@@ -190,7 +193,8 @@ public class ReceiveDispatcher
     public MessageConsumer getConsumer(Destination destination, String messageSelector, boolean noLocal)
             throws JMSException
     {
-        assertStarted();
+        initSession( transacted,acknowledgeMode);
+//        assertStarted();
         MessageConsumer consumer = null;
         // String key = destination.toString() + "$" + noLocal;
         //
@@ -222,7 +226,7 @@ public class ReceiveDispatcher
     public MessageConsumer getConsumer(int destinationType, String destination_, String messageSelector, boolean noLocal)
             throws JMSException
     {
-        assertStarted();
+        initSession( transacted,acknowledgeMode);
         Destination destination = null;
 //        if (destinationType == MQUtil.TYPE_QUEUE)
 //        {
@@ -258,7 +262,7 @@ public class ReceiveDispatcher
 
     public TopicSubscriber getTopicSubscriber(Topic destination, String name, String selector) throws JMSException
     {
-        assertStarted();
+        initSession( transacted,acknowledgeMode);
         // String key = destination + "$" + name;
         TopicSubscriber consumer = null;
         // topicSubscribers.get(key);
@@ -287,7 +291,7 @@ public class ReceiveDispatcher
     public TopicSubscriber getTopicSubscriberWithSelector(String destination, String name, String selector)
             throws JMSException
     {
-        assertStarted();
+        initSession( transacted,acknowledgeMode);
 
         // String key = destination + "$" + name;
         TopicSubscriber consumer = null;// topicSubscribers.get(key);
@@ -313,7 +317,7 @@ public class ReceiveDispatcher
     public TopicSubscriber getTopicSubscriberWithSelector(Topic topic, String name, String selector)
             throws JMSException
     {
-        assertStarted();
+        initSession( transacted,acknowledgeMode);
 
         // String key = destination + "$" + name;
         TopicSubscriber consumer = null;// topicSubscribers.get(key);
@@ -494,12 +498,13 @@ public class ReceiveDispatcher
     
     public boolean isClientAcknowledge() throws JMSException
     {
-        
+        initSession( transacted,acknowledgeMode);
         return session.getAcknowledgeMode() == Session.CLIENT_ACKNOWLEDGE;
     }
     
     public void unsubscribe(String unsubscribename) throws JMSException
     {
+        initSession( transacted,acknowledgeMode);
         this.session.unsubscribe(unsubscribename);
     }
 

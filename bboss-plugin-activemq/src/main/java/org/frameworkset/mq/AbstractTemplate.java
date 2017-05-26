@@ -16,22 +16,11 @@
 
 package org.frameworkset.mq;
 
+import org.slf4j.Logger;
+
+import javax.jms.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
-import javax.jms.StreamMessage;
-import javax.jms.TextMessage;
-
-import org.slf4j.Logger;
 
 /**
  * <p>
@@ -246,6 +235,35 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 			dispatcher = new RequestDispatcher(this.connection, false, Session.AUTO_ACKNOWLEDGE, desttype, destination,
 					null, persistent);
 			dispatcher.send(message, (JMSProperties) null);
+		} finally {
+			if(dispatcher != null)
+				dispatcher.stop();
+		}
+		// session.createProducer(arg0)
+	}
+
+	/**
+	 * 单/批处理发送消息api
+	 * @param destination
+	 * @param callback
+	 * @throws JMSException
+	 */
+	public void send(String destination,SendCallback callback) throws JMSException {
+		send(MQUtil.TYPE_QUEUE,   destination,  callback);
+	}
+	/**
+	 * 单/批处理发送消息api
+	 * @param desttype
+	 * @param destination
+	 * @param callback
+	 * @throws JMSException
+	 */
+	public void send(int desttype, String destination,SendCallback callback) throws JMSException {
+		RequestDispatcher dispatcher = null;
+		try {
+			dispatcher = new RequestDispatcher(this.connection, callback.autocommit(), callback.ackMode(), desttype, destination,
+					null, false);
+			dispatcher.send(callback);
 		} finally {
 			if(dispatcher != null)
 				dispatcher.stop();
