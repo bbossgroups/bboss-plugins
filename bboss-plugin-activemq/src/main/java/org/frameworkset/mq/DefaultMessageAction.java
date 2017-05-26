@@ -1,5 +1,6 @@
 package org.frameworkset.mq;
 
+import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
@@ -12,7 +13,7 @@ public class DefaultMessageAction extends MessageAction {
     }
 
     @Override
-    public void sendMessage(MessageSession session, MessageProducer producer) {
+    public void sendMessage(MessageSession session, MessageProducer producer) throws JMSException {
         callback.sendMessage(session,producer);
     }
 

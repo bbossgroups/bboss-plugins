@@ -99,7 +99,6 @@ public abstract class MessageAction implements SendCallback,MessageSession{
     }
 
 
-    public abstract void sendMessage(MessageSession session,MessageProducer producer);
 
     public void commit() throws JMSException {
         this.assertStarted();
