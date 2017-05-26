@@ -117,8 +117,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 
 	public BytesMessage createBytesMessage() throws JMSException
 	{
-
-		this.assertStarted();
+		initSession( transacted,acknowledgeMode);
 		BytesMessage msg = session.createBytesMessage();
 		return msg;
 
@@ -127,13 +126,13 @@ public class RequestDispatcher extends ReceiveDispatcher
 	public ObjectMessage createObjectMessage() throws JMSException
 	{
 
-		this.assertStarted();
+		initSession( transacted,acknowledgeMode);
 		ObjectMessage msg = session.createObjectMessage();
 		return msg;
 
 	}
 
-	private void assertStarted() throws JMSException
+	private void assertStarted( ) throws JMSException
 	{
 
 		if (this.session == null)
@@ -147,7 +146,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 			throws JMSException
 	{
 
-		this.assertStarted();
+		this.initSession( transacted,acknowledgeMode);
 		ObjectMessage msg = session.createObjectMessage(object);
 		return msg;
 
@@ -156,7 +155,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 	public TextMessage createTextMessage() throws JMSException
 	{
 
-		this.assertStarted();
+		this.initSession( transacted,acknowledgeMode);
 		TextMessage msg = session.createTextMessage();
 		return msg;
 
@@ -165,7 +164,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 	public TextMessage createTextMessage(String msg) throws JMSException
 	{
 
-		this.assertStarted();
+		this.initSession( transacted,acknowledgeMode);
 		TextMessage msg_ = session.createTextMessage(msg);
 		return msg_;
 
@@ -174,7 +173,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 	public MapMessage createMapMessage() throws JMSException
 	{
 
-		this.assertStarted();
+		this.initSession( transacted,acknowledgeMode);
 		MapMessage msg = session.createMapMessage();
 
 		return msg;
@@ -184,7 +183,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 	public StreamMessage createStreamMessage() throws JMSException
 	{
 
-		this.assertStarted();
+		this.initSession( transacted,acknowledgeMode);
 		StreamMessage msg = session.createStreamMessage();
 
 		return msg;
@@ -194,7 +193,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 	// public Destination createDestination(String Destination) throws
 	// JMSException
 	// {
-	// assertStarted();
+	// initSession( transacted,acknowledgeMode);
 	// return session.createQueue(Destination);
 	//
 	// }
@@ -205,8 +204,8 @@ public class RequestDispatcher extends ReceiveDispatcher
 	{
 	    if(step != null && step.isDebugEnabled())
     		step.debug("send message to " + destination_
-    				+ " assertStarted(),message=" + message);
-		assertStarted();
+    				+ " initSession( transacted,acknowledgeMode),message=" + message);
+		initSession( transacted,acknowledgeMode);
 		MessageProducer producer = null;
 		try
 		{
@@ -288,11 +287,12 @@ public class RequestDispatcher extends ReceiveDispatcher
 	{
 
 		LOG.debug("send message to " + destination_
-				+ " assertStarted(),message=" + message);
-		assertStarted();
+				+ " initSession( transacted,acknowledgeMode),message=" + message);
+
 		MessageProducer producer = null;
 		try
 		{
+			initSession( transacted,acknowledgeMode);
 			Destination destination = null;
 //			destinationType = JMSConnectionFactory.evaluateDestinationType(destination_, destinationType);
 	        
@@ -413,10 +413,10 @@ public class RequestDispatcher extends ReceiveDispatcher
 		send(destinationType, this.destination, persistent, message,properties);
 	}
 
-	public void send(String msg, JMSProperties properties) throws JMSException
+	public void send(SendCallback callback) throws JMSException
 	{
 
-		assertStarted();
+		initSession( transacted,acknowledgeMode);
 		MessageProducer producer = null;
 		try
 		{
@@ -436,6 +436,60 @@ public class RequestDispatcher extends ReceiveDispatcher
             destination = connection.createDestination(session, this.destination, destinationType);
             LOG.debug("send message to " + this.destination
                       + " build destination end.");
+
+
+			producer = session.createProducer(destination);
+
+			DefaultMessageAction defaultMessageAction = new DefaultMessageAction(this.session,callback);
+			defaultMessageAction.sendMessage(defaultMessageAction,producer);
+		}
+		catch (JMSException e)
+		{
+			throw e;
+		}
+		catch (Exception e)
+		{
+			throw new JMSException(e.getMessage());
+		}
+		finally
+		{
+			if (producer != null)
+				try
+				{
+					producer.close();
+				}
+				catch (Exception e)
+				{
+
+				}
+
+		}
+
+	}
+
+	public void send(String msg, JMSProperties properties) throws JMSException
+	{
+
+		initSession( transacted,acknowledgeMode);
+		MessageProducer producer = null;
+		try
+		{
+			Destination destination = null;
+
+//			if (this.destinationType == MQUtil.TYPE_QUEUE)
+//			{
+//				destination = session.createQueue(this.destination);
+//			}
+//			else
+//			{
+//				destination = session.createTopic(this.destination);
+//			}
+
+			LOG.debug("send message to " + this.destination
+					+ " build destination");
+			destination = connection.createDestination(session, this.destination, destinationType);
+			LOG.debug("send message to " + this.destination
+					+ " build destination end.");
 
 			int deliveryMode = this.persistent ? DeliveryMode.PERSISTENT
 					: DeliveryMode.NON_PERSISTENT;
@@ -480,7 +534,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 			throws JMSException
 	{
 
-		assertStarted();
+		initSession( transacted,acknowledgeMode);
 		MessageProducer producer = null;
 		try
 		{
