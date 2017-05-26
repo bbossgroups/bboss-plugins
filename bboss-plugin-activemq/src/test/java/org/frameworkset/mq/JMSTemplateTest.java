@@ -20,10 +20,7 @@ import org.frameworkset.spi.DefaultApplicationContext;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
+import javax.jms.*;
 
 /**
  * <p>Title: JMSTemplateTest.java</p> 
@@ -62,6 +59,49 @@ public class JMSTemplateTest
             template.stop();
         }
         
+    }
+
+    @Test
+    public void testSendCallback()
+    {
+        JMSTemplate template = context.getTBeanObject("test.jmstemplate",JMSTemplate.class);
+        try
+        {
+            template.send("atest", new SendCallback() {
+                @Override
+                public void sendMessage(MessageSession session, MessageProducer producer) throws JMSException {
+                    for(int i =0 ; i < 10; i ++)
+                        producer.send(session.createTextMessage("ahello "+ i));
+                }
+
+                @Override
+                public boolean autocommit() {
+                    return false;
+                }
+
+                @Override
+                /**
+                 *      * Session.AUTO_ACKNOWLEDGE
+                 *  int AUTO_ACKNOWLEDGE = 1;
+                 int CLIENT_ACKNOWLEDGE = 2;
+                 int DUPS_OK_ACKNOWLEDGE = 3;
+                 */
+                public int ackMode() {
+                    return Session.AUTO_ACKNOWLEDGE;
+                }
+            });
+
+
+        }
+        catch (JMSException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        finally
+        {
+            template.stop();
+        }
     }
 	 
 	 @Test
