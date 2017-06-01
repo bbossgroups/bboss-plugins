@@ -58,16 +58,7 @@ public abstract class JMSMessageListener implements MessageListener
     {
         
     }    
-    protected void commit() throws JMSException
-    {
-        this.receivor.commit();
-    }
-    
-    
-    protected void rollback() throws JMSException
-    {
-        this.receivor.rollback();
-    }
+   
     
     protected boolean isClientAknownledge() throws JMSException
     {

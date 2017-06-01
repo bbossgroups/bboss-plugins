@@ -42,20 +42,16 @@ public class ReceiveDispatcher
 {
     private static final Logger LOG = LoggerFactory.getLogger(ReceiveDispatcher.class);
 
-    protected Session session;
+    protected MessageSession session;
 
-    protected boolean transacted = false;
+
 
     protected MessageConsumer consumer;
-
-    protected int destinationType = MQUtil.TYPE_QUEUE;
-
-    protected String destination;
 
     // protected ConnectionFactory connectionFactory;
 //    protected Connection connection;
     
-    protected JMSConnection connection;
+
 
     // /**
     // * 请求消息选择器
@@ -67,27 +63,9 @@ public class ReceiveDispatcher
     // protected String responseMessageSelector;
     protected String messageSelector;
 
-    protected String clientid;
-
-    protected int acknowledgeMode = Session.AUTO_ACKNOWLEDGE;
-
-    public ReceiveDispatcher(Connection connection, boolean transacted, int acknowledgeMode, int destinationType,
-            String destination, String messageSelector, String clientid) throws JMSException
+    public ReceiveDispatcher(MessageSession session) throws JMSException
     {
-        this.transacted = transacted;
-        this.destinationType = destinationType;
-//        this.destinationType = JMSConnectionFactory.evaluateDestinationType(destination, destinationType);
-        this.destination = destination;
-//        this.destination = JMSConnectionFactory.evaluateDestination(destination);
-        
-        this.clientid = clientid;
-        this.messageSelector = messageSelector;
-        // this.connectionFactory = connectionFactory;
-        if(connection instanceof JMSConnection )
-            this.connection = (JMSConnection )connection;
-        else
-            this.connection = new JMSConnection (connection,null);
-
+        this.session = session;
 //        if (this.clientid != null && !this.clientid.equals(""))
 //            this.connection.setClientID(clientid);
         // connection.start();
@@ -95,38 +73,7 @@ public class ReceiveDispatcher
 
     }
 
-    public ReceiveDispatcher(Connection connection, boolean transacted, int acknowledgeMode, int destinationType,
-            String destination) throws JMSException
-    {
-        this(connection, transacted, acknowledgeMode, destinationType, destination, null, null);
-    }
 
-    public ReceiveDispatcher(Connection connection, boolean transacted, int acknowledgeMode, int destinationType,
-            String destination, String messageSelector) throws JMSException
-    {
-        this(connection, transacted, acknowledgeMode, destinationType, destination, messageSelector, null);
-    }
-
-    public ReceiveDispatcher(Connection connection, boolean transacted, int acknowledgeMode, String destination)
-            throws JMSException
-    {
-        this(connection, transacted, acknowledgeMode, MQUtil.TYPE_QUEUE, destination);
-    }
-
-    public ReceiveDispatcher(Connection connection, String destination) throws JMSException
-    {
-        this(connection, false, Session.AUTO_ACKNOWLEDGE, MQUtil.TYPE_QUEUE, destination);
-    }
-
-    public ReceiveDispatcher(Connection connection) throws JMSException
-    {
-
-        if(connection instanceof JMSConnection )
-            this.connection = (JMSConnection )connection;
-        else
-            this.connection = new JMSConnection (connection,null);
-//        session = connection.createSession(this.transacted, acknowledgeMode);
-    }
 
     private void assertStarted() throws JMSException
     {
@@ -136,45 +83,33 @@ public class ReceiveDispatcher
         }
 
     }
-    protected void initSession(boolean transacted,int acknowledgeMode) throws JMSException {
-        if(session == null)
-            session = connection.createSession(transacted, acknowledgeMode);
-    }
-    private Object consumerLock = new Object();
 
-    public MessageConsumer getConsumer() throws JMSException
+
+    public MessageConsumer getConsumer(String destination,int destinationType) throws JMSException
     {
-        if (this.destinationType == MQUtil.TYPE_ROUTER)
+        if (destinationType == MQUtil.TYPE_ROUTER)
             throw new JMSException("对不起,不能对路由节点发送消息.type=" + MQUtil.getTypeDesc(destinationType));
         if (consumer != null)
             return consumer;
-        synchronized (consumerLock)
-        {
-            if (consumer != null)
-                return consumer;
-            return consumer = getConsumer(destinationType, destination);
-        }
+
+        return consumer = getConsumer(destinationType, destination);
+
     }
 
-    public MessageConsumer getConsumerWithSelector(String selector) throws JMSException
+    public MessageConsumer getConsumerWithSelector(String destination,int destinationType,String selector) throws JMSException
     {
 
-        if (this.destinationType == MQUtil.TYPE_ROUTER)
+        if (destinationType == MQUtil.TYPE_ROUTER)
             throw new JMSException("对不起,不能对路由节点发送消息.type=" + MQUtil.getTypeDesc(destinationType));
         if (this.messageSelector != null && this.messageSelector.equals(selector))// 如果已经指定了本类代表的目标地址的选择器目标，则直接返回该地址
             return this.consumer;
         if (this.consumer != null)
             throw new JMSException("对不起目标地址已经被其他的选择器使用。other selector is " + this.messageSelector);
-        synchronized (consumerLock)
-        {
-            if (this.messageSelector != null && this.messageSelector.equals(selector))// 如果已经指定了本类代表的目标地址的选择器目标，则直接返回该地址
-                return this.consumer;
-            if (this.consumer != null)
-                throw new JMSException("对不起目标地址已经被其他的选择器使用。other selector is " + this.messageSelector);
-            this.consumer = getConsumer(destinationType, destination, selector, false);
-            this.messageSelector = selector;
 
-        }
+        this.consumer = getConsumer(destinationType, destination, selector, false);
+        this.messageSelector = selector;
+
+
         return this.consumer;
     }
 
@@ -193,8 +128,8 @@ public class ReceiveDispatcher
     public MessageConsumer getConsumer(Destination destination, String messageSelector, boolean noLocal)
             throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
-//        assertStarted();
+
+        assertStarted();
         MessageConsumer consumer = null;
         // String key = destination.toString() + "$" + noLocal;
         //
@@ -226,7 +161,7 @@ public class ReceiveDispatcher
     public MessageConsumer getConsumer(int destinationType, String destination_, String messageSelector, boolean noLocal)
             throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
+        assertStarted();
         Destination destination = null;
 //        if (destinationType == MQUtil.TYPE_QUEUE)
 //        {
@@ -239,7 +174,7 @@ public class ReceiveDispatcher
         
         LOG.debug("send message to " + destination_
                 + " build destination");
-      destination = connection.createDestination(session, destination_, destinationType);
+      destination = session.createDestination( destination_, destinationType);
       LOG.debug("send message to " + destination_
                 + " build destination end.");
 
@@ -262,7 +197,7 @@ public class ReceiveDispatcher
 
     public TopicSubscriber getTopicSubscriber(Topic destination, String name, String selector) throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
+        assertStarted();
         // String key = destination + "$" + name;
         TopicSubscriber consumer = null;
         // topicSubscribers.get(key);
@@ -291,7 +226,7 @@ public class ReceiveDispatcher
     public TopicSubscriber getTopicSubscriberWithSelector(String destination, String name, String selector)
             throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
+        assertStarted();
 
         // String key = destination + "$" + name;
         TopicSubscriber consumer = null;// topicSubscribers.get(key);
@@ -307,7 +242,7 @@ public class ReceiveDispatcher
             // if (consumer == null)
             {
                 consumer = session.createDurableSubscriber(topic, name, selector, false);
-                 consumer = new JMSTopicSubscriber(consumer,this);
+                consumer = new JMSTopicSubscriber(consumer,this);
                 
             }
         }
@@ -317,7 +252,7 @@ public class ReceiveDispatcher
     public TopicSubscriber getTopicSubscriberWithSelector(Topic topic, String name, String selector)
             throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
+        assertStarted();
 
         // String key = destination + "$" + name;
         TopicSubscriber consumer = null;// topicSubscribers.get(key);
@@ -366,79 +301,79 @@ public class ReceiveDispatcher
     // (TopicSubscriber)consumer;//getTopicSubscriberWithSelector(this.client.getDestination(),
     // name, selector);
     // }
-    private boolean stopped = false;
-
-    public void stop()
-    {
-        stop(true);
-    }
-
-    public void stop(boolean remove)
-    // throws JMSException
-    {
-        if (stopped)
-            return;
-        if (this.session != null)
-        {
-            if (this.transacted
-            // && !this.rollbacked
-            // && !this.commited
-            )
-            {
-                try
-                {
-                    this.rollback();
-                }
-                catch (JMSException e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            try
-            {
-                session.close();
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        // this.mqclient.removeReceivor(this);
-        this.stopped = true;
-    }
-
-    boolean rollbacked = false;
-
-    public void rollback() throws JMSException
-    {
-        // if(commited || this.rollbacked)
-        // return;
-        if (this.transacted)
-        {
-
-            session.rollback();
-
-            rollbacked = true;
-        }
-
-    }
-
-    boolean commited = false;
-
-    public void commit() throws JMSException
-    {
-        // if(commited || this.rollbacked)
-        // return;
-        if (this.transacted)
-        {
-
-            this.session.commit();
-
-            this.commited = true;
-        }
-
-    }
+//    private boolean stopped = false;
+//
+//    public void stop()
+//    {
+//        stop(true);
+//    }
+//
+//    public void stop(boolean remove)
+//    // throws JMSException
+//    {
+//        if (stopped)
+//            return;
+//        if (this.session != null)
+//        {
+//            if (this.transacted
+//            // && !this.rollbacked
+//            // && !this.commited
+//            )
+//            {
+//                try
+//                {
+//                    this.rollback();
+//                }
+//                catch (JMSException e)
+//                {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//            }
+//            try
+//            {
+//                session.close();
+//            }
+//            catch (Exception e)
+//            {
+//
+//            }
+//        }
+//        // this.mqclient.removeReceivor(this);
+//        this.stopped = true;
+//    }
+//
+//    boolean rollbacked = false;
+//
+//    public void rollback() throws JMSException
+//    {
+//        // if(commited || this.rollbacked)
+//        // return;
+//        if (this.transacted)
+//        {
+//
+//            session.rollback();
+//
+//            rollbacked = true;
+//        }
+//
+//    }
+//
+//    boolean commited = false;
+//
+//    public void commit() throws JMSException
+//    {
+//        // if(commited || this.rollbacked)
+//        // return;
+//        if (this.transacted)
+//        {
+//
+//            this.session.commit();
+//
+//            this.commited = true;
+//        }
+//
+//    }
 
     private void assertConsumerNull() throws JMSException
     {
@@ -448,23 +383,21 @@ public class ReceiveDispatcher
         }
     }
 
-    public java.lang.String getMessageSelector() throws javax.jms.JMSException
-    {
-        // assertConsumerNull();
-        return this.getMessageSelector();
-    }
+  
 
-    // Method descriptor #8 ()Ljavax/jms/MessageListener;
-    public javax.jms.MessageListener getMessageListener() throws javax.jms.JMSException
-    {
-        assertConsumerNull();
-        return this.consumer.getMessageListener();
-    }
+    
 
     // Method descriptor #10 (Ljavax/jms/MessageListener;)V
-    public void setMessageListener(javax.jms.MessageListener listener) throws javax.jms.JMSException
+    public void setMessageListener(String dest,javax.jms.MessageListener listener) throws javax.jms.JMSException
     {
-        this.getConsumer();
+        this.getConsumer(dest,MQUtil.TYPE_QUEUE);
+        assertConsumerNull();
+        this.consumer.setMessageListener(listener);
+
+    }
+    public void setMessageListener(String dest,int desttype,javax.jms.MessageListener listener) throws javax.jms.JMSException
+    {
+        this.getConsumer(dest,desttype);
         assertConsumerNull();
         this.consumer.setMessageListener(listener);
 
@@ -473,39 +406,50 @@ public class ReceiveDispatcher
    
 
     // Method descriptor #12 ()Ljavax/jms/Message;
-    public javax.jms.Message receive() throws javax.jms.JMSException
+    public javax.jms.Message receive(String dest) throws javax.jms.JMSException
     {
-        this.getConsumer();
+        this.getConsumer(dest,MQUtil.TYPE_QUEUE);
         assertConsumerNull();
 
         return this.consumer.receive();
     }
 
-    public javax.jms.Message receive(long timeout) throws javax.jms.JMSException
+    public javax.jms.Message receive(String dest,long timeout) throws javax.jms.JMSException
     {
-        this.getConsumer();
+        this.getConsumer(dest,MQUtil.TYPE_QUEUE);
         assertConsumerNull();
 
         return this.consumer.receive(timeout);
     }
 
-    public javax.jms.Message receiveNoWait() throws javax.jms.JMSException
+    public javax.jms.Message receiveNoWait(String dest) throws javax.jms.JMSException
     {
-        this.getConsumer();
+        this.getConsumer(dest,MQUtil.TYPE_QUEUE);
         assertConsumerNull();
         return this.consumer.receiveNoWait();
     }
     
     public boolean isClientAcknowledge() throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
+        assertStarted();
         return session.getAcknowledgeMode() == Session.CLIENT_ACKNOWLEDGE;
     }
     
     public void unsubscribe(String unsubscribename) throws JMSException
     {
-        initSession( transacted,acknowledgeMode);
+        assertStarted();
         this.session.unsubscribe(unsubscribename);
+    }
+    
+    public void stop() {
+    	try {
+    		if(consumer != null)
+    			this.consumer.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	 
     }
 
 }

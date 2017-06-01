@@ -36,7 +36,7 @@ import java.io.InputStream;
  * <p>
  * Copyright (c) 2009
  * </p>
- * 
+ * @deprecated
  * @Date 2009-11-15
  * @author biaoping.yin
  * @version 1.0
@@ -44,151 +44,150 @@ import java.io.InputStream;
 public class RequestDispatcher extends ReceiveDispatcher
 {
 
-	public RequestDispatcher(JMSConnectionFactory connectionFactory, Connection connection, boolean transacted,
-			int acknowledgeMode) throws JMSException
+	public RequestDispatcher(MessageSession session) throws JMSException
 	{
 	    
-		super(connection, transacted, acknowledgeMode, null);
+		super(session);
 		
 	}
 
-	protected boolean	persistent	= false;
-
-	protected int		priovity	= 4;
-
-	protected long		timetolive	= 0L;
-
-	public RequestDispatcher(Connection connection, boolean transacted,
-			int acknowledgeMode, int destinationType, String destination,
-			boolean persistent, int priovity, long timetolive)
-			throws JMSException
-	{
-
-		super(connection, transacted, acknowledgeMode, destinationType,
-				destination);
-		this.persistent = persistent;
-		this.priovity = priovity;
-		this.timetolive = timetolive;
-	}
-
-	public RequestDispatcher(Connection connection, boolean transation,
-			int autoAcknowledge, String destination) throws JMSException
-	{
-
-		super(connection, transation, autoAcknowledge, destination);
-	}
-
-	public RequestDispatcher(Connection connection, boolean transation,
-			int autoAcknowledge, int destType, String destination)
-			throws JMSException
-	{
-
-		super(connection, transation, autoAcknowledge, destType, destination);
-	}
-
-	public RequestDispatcher(Connection connection, boolean transation,
-			int autoAcknowledge, int destType, String destination,
-			String messageSelector) throws JMSException
-	{
-
-		super(connection, transation, autoAcknowledge, destType, destination,
-				messageSelector);
-	}
-	
-	public RequestDispatcher(Connection connection, boolean transation,
-            int autoAcknowledge, int destType, String destination,
-            String messageSelector,boolean persistent) throws JMSException
-    {
-
-        super(connection, transation, autoAcknowledge, destType, destination,
-                messageSelector);
-        this.persistent = persistent;
-    }
-
-	public RequestDispatcher(Connection connection) throws JMSException
-	{
-
-		super(connection);
-//		this.connection = connection;
-		    
-	}
+//	protected boolean	persistent	= false;
+//
+//	protected int		priovity	= 4;
+//
+//	protected long		timetolive	= 0L;
+//
+//	public RequestDispatcher(Connection connection, boolean transacted,
+//			int acknowledgeMode, int destinationType, String destination,
+//			boolean persistent, int priovity, long timetolive)
+//			throws JMSException
+//	{
+//
+//		super(connection, transacted, acknowledgeMode, destinationType,
+//				destination);
+//		this.persistent = persistent;
+//		this.priovity = priovity;
+//		this.timetolive = timetolive;
+//	}
+//
+//	public RequestDispatcher(Connection connection, boolean transation,
+//			int autoAcknowledge, String destination) throws JMSException
+//	{
+//
+//		super(connection, transation, autoAcknowledge, destination);
+//	}
+//
+//	public RequestDispatcher(Connection connection, boolean transation,
+//			int autoAcknowledge, int destType, String destination)
+//			throws JMSException
+//	{
+//
+//		super(connection, transation, autoAcknowledge, destType, destination);
+//	}
+//
+//	public RequestDispatcher(Connection connection, boolean transation,
+//			int autoAcknowledge, int destType, String destination,
+//			String messageSelector) throws JMSException
+//	{
+//
+//		super(connection, transation, autoAcknowledge, destType, destination,
+//				messageSelector);
+//	}
+//
+//	public RequestDispatcher(Connection connection, boolean transation,
+//            int autoAcknowledge, int destType, String destination,
+//            String messageSelector,boolean persistent) throws JMSException
+//    {
+//
+//        super(connection, transation, autoAcknowledge, destType, destination,
+//                messageSelector);
+//        this.persistent = persistent;
+//    }
+//
+//	public RequestDispatcher(Connection connection) throws JMSException
+//	{
+//
+//		super(connection);
+////		this.connection = connection;
+//
+//	}
 
 	private static final Logger LOG = LoggerFactory.getLogger(RequestDispatcher.class);
-
-	public BytesMessage createBytesMessage() throws JMSException
-	{
-		initSession( transacted,acknowledgeMode);
-		BytesMessage msg = session.createBytesMessage();
-		return msg;
-
-	}
-
-	public ObjectMessage createObjectMessage() throws JMSException
-	{
-
-		initSession( transacted,acknowledgeMode);
-		ObjectMessage msg = session.createObjectMessage();
-		return msg;
-
-	}
-
-	private void assertStarted( ) throws JMSException
-	{
-
-		if (this.session == null)
-		{
-			throw new JMSException("MQClient has not been started.");
-		}
-
-	}
-
-	public ObjectMessage createObjectMessage(java.io.Serializable object)
-			throws JMSException
-	{
-
-		this.initSession( transacted,acknowledgeMode);
-		ObjectMessage msg = session.createObjectMessage(object);
-		return msg;
-
-	}
-
-	public TextMessage createTextMessage() throws JMSException
-	{
-
-		this.initSession( transacted,acknowledgeMode);
-		TextMessage msg = session.createTextMessage();
-		return msg;
-
-	}
-
-	public TextMessage createTextMessage(String msg) throws JMSException
-	{
-
-		this.initSession( transacted,acknowledgeMode);
-		TextMessage msg_ = session.createTextMessage(msg);
-		return msg_;
-
-	}
-
-	public MapMessage createMapMessage() throws JMSException
-	{
-
-		this.initSession( transacted,acknowledgeMode);
-		MapMessage msg = session.createMapMessage();
-
-		return msg;
-
-	}
-
-	public StreamMessage createStreamMessage() throws JMSException
-	{
-
-		this.initSession( transacted,acknowledgeMode);
-		StreamMessage msg = session.createStreamMessage();
-
-		return msg;
-
-	}
+//
+//	public BytesMessage createBytesMessage() throws JMSException
+//	{
+//		initSession( transacted,acknowledgeMode);
+//		BytesMessage msg = session.createBytesMessage();
+//		return msg;
+//
+//	}
+//
+//	public ObjectMessage createObjectMessage() throws JMSException
+//	{
+//
+//		initSession( transacted,acknowledgeMode);
+//		ObjectMessage msg = session.createObjectMessage();
+//		return msg;
+//
+//	}
+//
+//	private void assertStarted( ) throws JMSException
+//	{
+//
+//		if (this.session == null)
+//		{
+//			throw new JMSException("MQClient has not been started.");
+//		}
+//
+//	}
+//
+//	public ObjectMessage createObjectMessage(java.io.Serializable object)
+//			throws JMSException
+//	{
+//
+//		this.initSession( transacted,acknowledgeMode);
+//		ObjectMessage msg = session.createObjectMessage(object);
+//		return msg;
+//
+//	}
+//
+//	public TextMessage createTextMessage() throws JMSException
+//	{
+//
+//		this.initSession( transacted,acknowledgeMode);
+//		TextMessage msg = session.createTextMessage();
+//		return msg;
+//
+//	}
+//
+//	public TextMessage createTextMessage(String msg) throws JMSException
+//	{
+//
+//		this.initSession( transacted,acknowledgeMode);
+//		TextMessage msg_ = session.createTextMessage(msg);
+//		return msg_;
+//
+//	}
+//
+//	public MapMessage createMapMessage() throws JMSException
+//	{
+//
+//		this.initSession( transacted,acknowledgeMode);
+//		MapMessage msg = session.createMapMessage();
+//
+//		return msg;
+//
+//	}
+//
+//	public StreamMessage createStreamMessage() throws JMSException
+//	{
+//
+//		this.initSession( transacted,acknowledgeMode);
+//		StreamMessage msg = session.createStreamMessage();
+//
+//		return msg;
+//
+//	}
 
 	// public Destination createDestination(String Destination) throws
 	// JMSException
@@ -205,7 +204,6 @@ public class RequestDispatcher extends ReceiveDispatcher
 	    if(step != null && step.isDebugEnabled())
     		step.debug("send message to " + destination_
     				+ " initSession( transacted,acknowledgeMode),message=" + message);
-		initSession( transacted,acknowledgeMode);
 		MessageProducer producer = null;
 		try
 		{
@@ -234,7 +232,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 			 if(step != null && step.isDebugEnabled())
 				 step.debug("send message to " + destination_
                    + " build destination.");
-			destination = this.connection.createDestination(session, destination_, destinationType);
+			destination = this.session.createDestination( destination_, destinationType);
 			if(step != null && step.isDebugEnabled())
 				step.debug("send message to " + destination_
                   + " build destination end");
@@ -292,7 +290,6 @@ public class RequestDispatcher extends ReceiveDispatcher
 		MessageProducer producer = null;
 		try
 		{
-			initSession( transacted,acknowledgeMode);
 			Destination destination = null;
 //			destinationType = JMSConnectionFactory.evaluateDestinationType(destination_, destinationType);
 	        
@@ -316,7 +313,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 //			}
 			LOG.debug("send message to " + destination_
                   + " build destination");
-			destination = connection.createDestination(session, destination_, destinationType);
+			destination = session.createDestination(destination_, destinationType);
 			LOG.debug("send message to " + destination_
 	                  + " build destination end.");
 			int deliveryMode = persistent ? DeliveryMode.PERSISTENT
@@ -363,64 +360,114 @@ public class RequestDispatcher extends ReceiveDispatcher
             boolean persistent, int priority, long timeToLive, String message,JMSProperties properties)
             throws JMSException
     {
-	    TextMessage message_ = this.createTextMessage(message);
+	    TextMessage message_ = session.createTextMessage(message);
 	    send( destinationType,  destination_,
 	             persistent,  priority,  timeToLive,  message_, properties);
            
     }
 
-	public void send(Message message, Logger logger,JMSProperties properties) throws JMSException
+//	public void send(Message message, Logger logger,JMSProperties properties) throws JMSException
+//	{
+//
+//		if (this.destinationType == MQUtil.TYPE_ROUTER)
+//			throw new JMSException("对不起,不能对路由节点发送消息.type="
+//					+ MQUtil.getTypeDesc(destinationType));
+//		// send(destinationType, this.persistent,4,0L,message, logger);
+//		send(destinationType, destination, persistent, message, logger, properties);
+//	}
+
+//	public void send(int destinationType, String destination_,
+//			boolean persistent, Message message, Logger logger, JMSProperties properties)
+//			throws JMSException
+//	{
+//
+//		send(destinationType, destination_, persistent, this.priovity,
+//				this.timetolive, message, logger, properties);
+//	}
+
+//	public void send(int destinationType, String destination_,
+//			boolean persistent, Message message,JMSProperties properties) throws JMSException
+//	{
+//
+//		send(destinationType, destination_, persistent, this.priovity,
+//				this.timetolive, message,properties);
+//	}
+//
+//	public void send(int destinationType, String destination_,
+//            boolean persistent, String message,JMSProperties properties) throws JMSException
+//    {
+//
+//        send(destinationType, destination_, persistent, this.priovity,
+//                this.timetolive, message, properties);
+//    }
+//
+//	public void send(Message message, JMSProperties properties) throws JMSException
+//	{
+//
+//		if (this.destinationType == MQUtil.TYPE_ROUTER)
+//			throw new JMSException("对不起,不能对路由节点发送消息.type="
+//					+ MQUtil.getTypeDesc(destinationType));
+//		send(destinationType, this.destination, persistent, message,properties);
+//	}
+//
+//	public void send(DefaultMessageAction defaultMessageAction ,String destination,int destinationType) throws JMSException
+//	{
+//
+////		initSession( transacted,acknowledgeMode);
+//		MessageProducer producer = null;
+//		try
+//		{
+//			Destination destination_ = session.createDestination(destination,destinationType);
+//
+////			if (this.destinationType == MQUtil.TYPE_QUEUE)
+////			{
+////				destination = session.createQueue(this.destination);
+////			}
+////			else
+////			{
+////				destination = session.createTopic(this.destination);
+////			}
+//			
+//			LOG.debug("send message to " + destination
+//	                  );
+////            destination = session.createDestination( destination_, destinationType);
+//
+//			producer = session.createProducer(destination_);
+//
+//
+//			defaultMessageAction.sendMessage(defaultMessageAction,producer);
+//		}
+//		catch (JMSException e)
+//		{
+//			throw e;
+//		}
+//		catch (Exception e)
+//		{
+//			throw new JMSException(e.getMessage());
+//		}
+//		finally
+//		{
+//			if (producer != null)
+//				try
+//				{
+//					producer.close();
+//				}
+//				catch (Exception e)
+//				{
+//
+//				}
+//
+//		}
+//
+//	}
+
+	public void send(String msg,String destination, int destinationType,boolean persistent,int priovity, long timetolive, JMSProperties properties) throws JMSException
 	{
 
-		if (this.destinationType == MQUtil.TYPE_ROUTER)
-			throw new JMSException("对不起,不能对路由节点发送消息.type="
-					+ MQUtil.getTypeDesc(destinationType));
-		// send(destinationType, this.persistent,4,0L,message, logger);
-		send(destinationType, destination, persistent, message, logger, properties);
-	}
-
-	public void send(int destinationType, String destination_,
-			boolean persistent, Message message, Logger logger, JMSProperties properties)
-			throws JMSException
-	{
-
-		send(destinationType, destination_, persistent, this.priovity,
-				this.timetolive, message, logger, properties);
-	}
-
-	public void send(int destinationType, String destination_,
-			boolean persistent, Message message,JMSProperties properties) throws JMSException
-	{
-
-		send(destinationType, destination_, persistent, this.priovity,
-				this.timetolive, message,properties);
-	}
-	
-	public void send(int destinationType, String destination_,
-            boolean persistent, String message,JMSProperties properties) throws JMSException
-    {
-
-        send(destinationType, destination_, persistent, this.priovity,
-                this.timetolive, message, properties);
-    }
-
-	public void send(Message message, JMSProperties properties) throws JMSException
-	{
-
-		if (this.destinationType == MQUtil.TYPE_ROUTER)
-			throw new JMSException("对不起,不能对路由节点发送消息.type="
-					+ MQUtil.getTypeDesc(destinationType));
-		send(destinationType, this.destination, persistent, message,properties);
-	}
-
-	public void send(SendCallback callback) throws JMSException
-	{
-
-		initSession( transacted,acknowledgeMode);
+//		initSession( transacted,acknowledgeMode);
 		MessageProducer producer = null;
 		try
 		{
-			Destination destination = null;
 
 //			if (this.destinationType == MQUtil.TYPE_QUEUE)
 //			{
@@ -430,75 +477,19 @@ public class RequestDispatcher extends ReceiveDispatcher
 //			{
 //				destination = session.createTopic(this.destination);
 //			}
-			
-			LOG.debug("send message to " + this.destination
-	                  + " build destination");
-            destination = connection.createDestination(session, this.destination, destinationType);
-            LOG.debug("send message to " + this.destination
-                      + " build destination end.");
 
-
-			producer = session.createProducer(destination);
-
-			DefaultMessageAction defaultMessageAction = new DefaultMessageAction(this.session,callback);
-			defaultMessageAction.sendMessage(defaultMessageAction,producer);
-		}
-		catch (JMSException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			throw new JMSException(e.getMessage());
-		}
-		finally
-		{
-			if (producer != null)
-				try
-				{
-					producer.close();
-				}
-				catch (Exception e)
-				{
-
-				}
-
-		}
-
-	}
-
-	public void send(String msg, JMSProperties properties) throws JMSException
-	{
-
-		initSession( transacted,acknowledgeMode);
-		MessageProducer producer = null;
-		try
-		{
-			Destination destination = null;
-
-//			if (this.destinationType == MQUtil.TYPE_QUEUE)
-//			{
-//				destination = session.createQueue(this.destination);
-//			}
-//			else
-//			{
-//				destination = session.createTopic(this.destination);
-//			}
-
-			LOG.debug("send message to " + this.destination
+			LOG.debug("send message to " + destination
 					+ " build destination");
-			destination = connection.createDestination(session, this.destination, destinationType);
-			LOG.debug("send message to " + this.destination
-					+ " build destination end.");
+			Destination destination_ = session.createDestination( destination, destinationType);
 
-			int deliveryMode = this.persistent ? DeliveryMode.PERSISTENT
+			int deliveryMode = persistent ? DeliveryMode.PERSISTENT
 					: DeliveryMode.NON_PERSISTENT;
-			producer = session.createProducer(destination);
-			Message message = createTextMessage(msg);
+			producer = session.createProducer(destination_);
+			Message message = session.createTextMessage(msg);
 			if(properties != null)
 				MQUtil.initMessage(message, properties);
 			producer
-					.send(message, deliveryMode, this.priovity, this.timetolive);
+					.send(message, deliveryMode, priovity, timetolive);
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Sent! to destination: " + destination + " message: "
@@ -534,7 +525,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 			throws JMSException
 	{
 
-		initSession( transacted,acknowledgeMode);
+//		initSession( transacted,acknowledgeMode);
 		MessageProducer producer = null;
 		try
 		{
@@ -550,7 +541,7 @@ public class RequestDispatcher extends ReceiveDispatcher
 			
 			LOG.debug("send message to " + destination_
                     + " build destination");
-          destination = connection.createDestination(session, destination_, destinationType);
+          destination = session.createDestination( destination_, destinationType);
           LOG.debug("send message to " + destination_
                     + " build destination end.");
 
@@ -590,13 +581,15 @@ public class RequestDispatcher extends ReceiveDispatcher
 		}
 	}
 
-	public void send(InputStream in, JMSProperties properties, Logger log)
+	public void send(InputStream in,int destinationType, String destination_, Message message,
+					 boolean persistent, int priority, long timeToLive,  JMSProperties properties, Logger log)
 			throws JMSException
 	{
 
-		BytesMessage msg = createBytesMessage();
+
 
 		byte[] send = null;
+		BytesMessage msg  = null;
 
 		/* 是否加密 */
 		if (properties.isEncrypt())
@@ -618,14 +611,15 @@ public class RequestDispatcher extends ReceiveDispatcher
 				EncryptDecryptAlgo ed = new EncryptDecryptAlgo();
 				send = ed.encrypt(send);
 			}
-			
+			msg = session.createBytesMessage(send);
 			if(properties != null)
 				MQUtil.initMessage(msg, properties);
-			msg.writeBytes(send);
+
 			send = null;
 		}
 		else
 		{
+			msg = session.createBytesMessage();
 			if(properties != null)
 				MQUtil.initMessage(msg, properties);
 			if (!MQUtil.readTxtFileByte(msg, in))
@@ -633,15 +627,11 @@ public class RequestDispatcher extends ReceiveDispatcher
 				;
 
 		}
-		send(msg,(JMSProperties)null);
+		send(  destinationType,   destination_,   msg,
+				  persistent,   priority,   timeToLive, (JMSProperties)null);
 	}
 
-	public void send(InputStream in, JMSProperties properties)
-			throws JMSException
-	{
 
-		send(in, properties, null);
-	}
 
 	
 

@@ -17,6 +17,7 @@
 package org.frameworkset.mq;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
 import java.util.ArrayList;
@@ -49,11 +50,11 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 
 	// protected String responseMessageSelector;
  
-
+	protected static Logger logger = LoggerFactory.getLogger(AbstractTemplate.class);
 	protected ConnectionFactory connectionFactory;
 
 	protected Connection connection;
-
+	protected Session session;
 	 
 
 	// protected RequestDispatcher responseDispatcher;
@@ -82,69 +83,86 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 		else
 			this.connectionFactory = new ConnectionFactoryWrapper(connectionFactory, null);
 
-		connection = this.connectionFactory.createConnection();	
-		connection.start();
+//		connection = this.connectionFactory.createConnection();	
+//		connection.start();
 	}
 
 	public void destroy() throws Exception {
 		this.stop();
 
 	}
+	protected void initSession(boolean transacted,int acknowledgeMode) throws JMSException {
+		if(connection == null){
+			connection = this.connectionFactory.createConnection();	
+			connection.start();
+		}
+		if(session == null)
+			session = connection.createSession(transacted, acknowledgeMode);
+	}
+	
+	protected void initSession(boolean transacted,int acknowledgeMode,String clientid) throws JMSException {
+		if(connection == null){
+			connection = this.connectionFactory.createConnection();	
+			connection.setClientID(clientid);
+			connection.start();
+		}
+		if(session == null)
+			session = connection.createSession(transacted, acknowledgeMode);
+	}
 	private boolean stoped;
 	public void stop() {
 		if(stoped)
 			return;
-		if (this.tempdispatcher.size() > 0) {
-			for (ReceiveDispatcher dispatcher : this.tempdispatcher) {
-				try {
-					dispatcher.stop();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
+		 for(ReceiveDispatcher receiveDispatcher:this.tempdispatcher){
+			 receiveDispatcher.stop();
+		 }
 		// if(this.responseDispatcher != null)
 		// {
 		// this.responseDispatcher.stop();
 		// }
-		if (this.connection != null)
+		 if(this.session != null){
+			 try {
+				this.session.close();
+			} catch (JMSException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 session = null;
+		 }
+		if (this.connection != null){
+			
 			try {
 				connection.stop();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		// try
-		// {
-		//
-		// connection.setClientID(null);
-		// }
-		// catch(Exception e)
-		// {
-		// e.printStackTrace();
-		// }
+			try {
 
-		try {
-
-			this.connection.close();
-		} catch (JMSException e) {
-			e.printStackTrace();
+				this.connection.close();
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}
 		}
+		
+
+		
 		stoped = true;
 	}
 
 	public javax.jms.Message receiveNoWait(String destination) throws javax.jms.JMSException {
 		ReceiveDispatcher dispatcher = null;
 		try {
-			dispatcher = new ReceiveDispatcher(this.connection, destination);
-			Message msg = dispatcher.receiveNoWait();
+			initSession(false,1);
+			MessageSession messageSession = new DefaultMessageAction(session);
+			dispatcher = new ReceiveDispatcher(messageSession);
+			Message msg = dispatcher.receiveNoWait(destination);
 			return msg;
 		} finally {
 			if (dispatcher != null) {
 				dispatcher.stop();
 			}
-			// dispatcher.stop();
+			 this.session = null;
 		}
 	}
 
@@ -156,14 +174,16 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 
 		ReceiveDispatcher dispatcher = null;
 		try {
-			dispatcher = new ReceiveDispatcher(this.connection, destination);
-			Message msg = dispatcher.receive();
+			initSession(false,1);
+			MessageSession messageSession = new DefaultMessageAction(session);
+			dispatcher = new ReceiveDispatcher(messageSession);
+			Message msg = dispatcher.receive(destination);
 			return msg;
 		} finally {
 			if (dispatcher != null) {
 				dispatcher.stop();
 			}
-			// dispatcher.stop();
+			 this.session = null;
 		}
 
 	}
@@ -171,29 +191,36 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 	public javax.jms.Message receive(String destination, long timeout) throws javax.jms.JMSException {
 		ReceiveDispatcher dispatcher = null;
 		try {
-			dispatcher = new ReceiveDispatcher(this.connection, destination);
-			Message msg = dispatcher.receive(timeout);
+			initSession(false,1);
+			MessageSession messageSession = new DefaultMessageAction(session);
+			dispatcher = new ReceiveDispatcher(messageSession);
+			Message msg = dispatcher.receive(destination,timeout);
 			return msg;
 		} finally {
 			if (dispatcher != null) {
 				dispatcher.stop();
 			}
+			 this.session = null;
 		}
+		
+		
 	}
 
-	 
-
+	  // Method descriptor #10 (Ljavax/jms/MessageListener;)V
+ 
 
 	public void setMessageListener(String destination, javax.jms.MessageListener listener)
 			throws javax.jms.JMSException {
 		ReceiveDispatcher dispatcher = null;
 		try {
-			dispatcher = new ReceiveDispatcher(this.connection, destination);
+			initSession(false,1);
+			MessageSession messageSession = new DefaultMessageAction(session);
+			dispatcher = new ReceiveDispatcher(messageSession);
 			if (listener instanceof JMSMessageListener) {
 				JMSMessageListener temp = (JMSMessageListener) listener;
 				temp.setReceivor(dispatcher);
 			}
-			dispatcher.setMessageListener(listener);
+			dispatcher.setMessageListener(destination,listener);
 
 			tempdispatcher.add(dispatcher);
 		} finally {
@@ -207,117 +234,95 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 		setMessageListener(destination, listener);
 
 	}
-
-	public boolean isClientAcknowledge(RequestDispatcher requestDispatcher) throws JMSException {
-
-		return requestDispatcher.isClientAcknowledge();
-	}
-
+ 
 	public void send(String destination, String message) throws JMSException {
 		send(destination, message, false);
 		// session.createProducer(arg0)
 	}
 
 	public void send(String destination, String message, boolean persistent) throws JMSException {
-		send(MQUtil.TYPE_QUEUE, destination, message, persistent);
+		send(MQUtil.TYPE_QUEUE, destination, message, persistent,null);
 
 		// session.createProducer(arg0)
 	}
 
 	public void send(int desttype, String destination, String message) throws JMSException {
-		send(desttype, destination, message, false);
+		send(desttype, destination, message, false,null);
 		// session.createProducer(arg0)
 	}
-
-	public void send(int desttype, String destination, String message, boolean persistent) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection, false, Session.AUTO_ACKNOWLEDGE, desttype, destination,
-					null, persistent);
-			dispatcher.send(message, (JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				dispatcher.stop();
-		}
+	
+	public void send(int desttype, String destination, String message,boolean persistent) throws JMSException {
+		send(desttype, destination, message, persistent,null);
 		// session.createProducer(arg0)
-	}
-
-	/**
-	 * 单/批处理发送消息api
-	 * @param destination
-	 * @param callback
-	 * @throws JMSException
-	 */
-	public void send(String destination,SendCallback callback) throws JMSException {
-		send(MQUtil.TYPE_QUEUE,   destination,  callback);
-	}
-	/**
-	 * 单/批处理发送消息api
-	 * @param desttype
-	 * @param destination
-	 * @param callback
-	 * @throws JMSException
-	 */
-	public void send(int desttype, String destination,SendCallback callback) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection, callback.autocommit(), callback.ackMode(), desttype, destination,
-					null, false);
-			dispatcher.send(callback);
-		} finally {
-			if(dispatcher != null)
-				dispatcher.stop();
-		}
-		// session.createProducer(arg0)
-	}
-
-	public void send(int desttype, String destination, String message, boolean persistent, JMSProperties properties)
-			throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection, false, Session.AUTO_ACKNOWLEDGE, desttype, destination,
-					null, persistent);
-			dispatcher.send(message, properties);
-		} finally {
-			if(dispatcher != null)
-				dispatcher.stop();
-		}
-		// session.createProducer(arg0)
-	}
-
-	// public void commitRequest() throws JMSException
-	// {
-	// if(this.requestDispatcher != null)
-	// this.requestDispatcher.commit();
-	// }
-
-	// public void commitReply() throws JMSException
-	// {
-	// if(this.responseDispatcher != null)
-	// this.responseDispatcher.commit();
-	// }
-
-	public void commit(RequestDispatcher requestDispatcher) throws JMSException {
-		if (requestDispatcher != null)
-			requestDispatcher.commit();
-	}
-	// public void rollbackRequest() throws JMSException
-	// {
-	// if(this.requestDispatcher != null)
-	// this.requestDispatcher.rollback();
-	// }
-	// public void rollbackReply() throws JMSException
-	// {
-	// if(this.responseDispatcher != null)
-	// this.responseDispatcher.rollback();
-	// }
-
-	public void rollback(RequestDispatcher requestDispatcher) throws JMSException {
-		if (requestDispatcher != null)
-			requestDispatcher.rollback();
 	}
 
 	
+
+	 
+
+	/**
+	 * 单/批处理发送消息api
+
+	 * @param callback
+	 * @throws JMSException
+	 */
+	public void send(SendCallback callback) throws JMSException {
+		DefaultMessageAction defaultMessageAction =  null;
+		try
+		{
+			initSession(!callback.autocommit(),callback.ackMode());
+			defaultMessageAction = new DefaultMessageAction(session,callback);
+			defaultMessageAction.sendMessage();
+			defaultMessageAction.commit();
+		}
+		catch(JMSException e)
+		{
+			if(defaultMessageAction != null){
+				defaultMessageAction.rollback();
+			}
+			throw e;
+		}
+		catch(Throwable e)
+		{
+			if(defaultMessageAction != null){
+				defaultMessageAction.rollback();
+			}
+			throw e;
+		}
+		finally
+		{
+//			this.session = null;
+			if(defaultMessageAction != null){
+				
+//				defaultMessageAction.close();
+				
+			}
+			
+		}
+	}
+	
+
+	
+	public void send(final int desttype, final String destination, final String message, final boolean persistent, final JMSProperties properties)
+			throws JMSException {
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination, desttype);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				TextMessage message_ = session.createTextMessage(message);
+				if(properties != null)
+					MQUtil.initMessage(message_, properties);
+				producer.send(message_, deliveryMode, -1, -1);
+				
+			}
+        });
+		// session.createProducer(arg0)
+	}
+
 
 	
 	
@@ -332,211 +337,153 @@ public abstract class AbstractTemplate implements org.frameworkset.spi.Disposabl
 	// this.responseDispatcher.send(msg,logger);
 	// }
 
-	public void send(int destinationType, String destination_, boolean persistent, int priority, long timeToLive,
-			Message message, Logger step) throws JMSException {
 
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, step,
-					(JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
 
+	public void send( final String destination_, final boolean persistent, final int priority, final long timeToLive,
+			final Message message) throws JMSException {
+		send(MQUtil.TYPE_QUEUE,    destination_,   persistent,  priority,   timeToLive,
+				 message,null);
+	}
+	public void send(final int destinationType, final String destination_,final  boolean persistent, final String message,
+			final JMSProperties properties) throws JMSException {
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination_
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination_, destinationType);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				TextMessage message_ = session.createTextMessage(message);
+				if(properties != null)
+					MQUtil.initMessage(message_, properties);
+				producer.send(message_, deliveryMode, -1, -1);
+				
+			}
+        });
+	}
+	public void send( final String destination_, final String message,final boolean persistent, final int priority, final long timeToLive) throws JMSException {
+
+		send( MQUtil.TYPE_QUEUE,  destination_,persistent,  message,
+				null);
+	}
+	public void send(final int destinationType, final String destination_, final boolean persistent,final  int priority, final long timeToLive,
+			final Message message) throws JMSException {
+
+		send(  destinationType,   destination_,  persistent,   priority,   timeToLive,
+				  message, null);
 	}
 
-	public void send(int destinationType, String destination_, boolean persistent, int priority, long timeToLive,
-			Message message, Logger step, JMSProperties properties) throws JMSException {
+	public void send(final int destinationType, final String destination_, final boolean persistent, final int priority, final long timeToLive,
+			final Message message, final JMSProperties properties) throws JMSException {
 
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, step, properties);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination_
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination_, destinationType);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				if(properties != null)
+					MQUtil.initMessage(message, properties);
+				producer.send(message, deliveryMode, priority, timeToLive);
+				
+			}
+        });
 	}
 
-	public void send( String destination_, boolean persistent, int priority, long timeToLive,
-			Message message) throws JMSException {
+	 
 
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(MQUtil.TYPE_QUEUE, destination_, persistent, priority, timeToLive, message,
-					(JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-	}
-	public void send( String destination_, String message,boolean persistent, int priority, long timeToLive) throws JMSException {
-
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(MQUtil.TYPE_QUEUE, destination_, persistent, priority, timeToLive, message,
-					(JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-	}
-	public void send(int destinationType, String destination_, boolean persistent, int priority, long timeToLive,
-			Message message) throws JMSException {
-
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message,
-					(JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-	}
-
-	public void send(int destinationType, String destination_, boolean persistent, int priority, long timeToLive,
-			Message message, JMSProperties properties) throws JMSException {
-
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, properties);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-	}
-
-	public void send(int destinationType, String destination_, boolean persistent, Message message, Logger logger)
+	
+	public void send(final int destinationType, final String destination_, final boolean persistent, final Message message)
 			throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, message, logger, (JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination_
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination_, destinationType);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				producer.send(message, deliveryMode, -1, -1);
+				
+			}
+        });
 	}
 
-	public void send(int destinationType, String destination_, boolean persistent, Message message, Logger logger,
-			JMSProperties properties) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, message, logger, properties);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
+	public void send(final int destinationType, final String destination_, final boolean persistent, final Message message,
+			final JMSProperties properties) throws JMSException {
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination_
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination_, destinationType);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				if(properties != null)
+					MQUtil.initMessage(message, properties);
+				producer.send(message, deliveryMode, -1, -1);
+				
+			}
+		});
+	}
+	 
+	public void send(final int destinationType, final String destination_,final boolean persistent, final String message) throws JMSException {
+		send(  destinationType, destination_,  persistent,   message,
+				null);
 	}
 
-	public void send(int destinationType, String destination_, boolean persistent, Message message)
-			throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, message, (JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
+	
+
+	public void send(final int destinationType, final String destination_,final  Message message, final boolean persistent,final  int priority,
+			final long timeToLive) throws JMSException {
+		send(destinationType,  destination_,  message,   persistent,   priority,
+				  timeToLive, null);
 	}
 
-	public void send(int destinationType, String destination_, boolean persistent, Message message,
-			JMSProperties properties) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, message, properties);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
+	public void send(final int destinationType, final String destination_, final Message message, final boolean persistent, final int priority,
+			final long timeToLive, final JMSProperties properties) throws JMSException {
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination_
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination_, destinationType);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				if(properties != null)
+					MQUtil.initMessage(message, properties);
+				producer.send(message, deliveryMode, priority, timeToLive);
+				
+			}
+        });
 	}
 
-	public void send(int destinationType, String destination_, boolean persistent, String message) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, message, (JMSProperties) null);
-		} finally {
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
+	public void send(final int destinationType, final String destination_, final String message, final boolean persistent, final int priority,
+			final long timeToLive) throws JMSException {
+		send(  destinationType,   destination_, message,   persistent, priority,
+				 timeToLive, null);
 	}
 
-	public void send(int destinationType, String destination_, boolean persistent, String message,
-			JMSProperties properties) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, message, properties);
-		} finally {
-//			dispatcher = null;
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-	}
-
-	public void send(int destinationType, String destination_, Message message, boolean persistent, int priority,
-			long timeToLive) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, message, persistent, priority, timeToLive,
-					(JMSProperties) null);
-		} finally {
-//			dispatcher = null;
-			if(dispatcher != null)
-				 dispatcher.stop();
-		}
-	}
-
-	public void send(int destinationType, String destination_, Message message, boolean persistent, int priority,
-			long timeToLive, JMSProperties properties) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, message, persistent, priority, timeToLive, properties);
-		} finally {
-//			dispatcher = null;
-			if(dispatcher != null)
-				dispatcher.stop();
-		}
-	}
-
-	public void send(int destinationType, String destination_, String message, boolean persistent, int priority,
-			long timeToLive) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message,
-					(JMSProperties) null);
-		} finally {
-			// dispatcher = null;
-			if(dispatcher != null)
-				dispatcher.stop();
-		}
-	}
-
-	public void send(int destinationType, String destination_, String message, boolean persistent, int priority,
-			long timeToLive, JMSProperties properties) throws JMSException {
-		RequestDispatcher dispatcher = null;
-		try {
-			dispatcher = new RequestDispatcher(this.connection);
-			dispatcher.send(destinationType, destination_, persistent, priority, timeToLive, message, properties);
-		} finally {
-			// dispatcher = null;
-			if(dispatcher != null)
-				dispatcher.stop();
-		}
+	public void send(final int destinationType, final String destination_,final  String message, final boolean persistent, final int priority,
+			final long timeToLive, final JMSProperties properties) throws JMSException {
+		send(new BaseSendCallback() {
+			@Override
+			public void sendMessage(MessageSession session) throws JMSException {
+		        System.out.println("send message to " + destination_
+		                    + " build destination end.");						
+				MessageProducer producer  = session.createProducer( destination_, destinationType);
+				int deliveryMode = persistent ? DeliveryMode.PERSISTENT
+						: DeliveryMode.NON_PERSISTENT;
+				TextMessage message_ = session.createTextMessage(message);
+				if(properties != null)
+					MQUtil.initMessage(message_, properties);
+				producer.send(message_, deliveryMode, priority, timeToLive);
+				
+			}
+        });
 	}
 
 	

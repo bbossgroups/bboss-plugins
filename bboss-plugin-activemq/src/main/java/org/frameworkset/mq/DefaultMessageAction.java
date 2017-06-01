@@ -1,7 +1,6 @@
 package org.frameworkset.mq;
 
 import javax.jms.JMSException;
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 /**
@@ -11,19 +10,20 @@ public class DefaultMessageAction extends MessageAction {
     public DefaultMessageAction(Session session, SendCallback callback) {
         super(session, callback);
     }
-
-    @Override
-    public void sendMessage(MessageSession session, MessageProducer producer) throws JMSException {
-        callback.sendMessage(session,producer);
+    
+    public DefaultMessageAction(Session session) {
+        super(session, null);
     }
 
     @Override
-    public boolean autocommit() {
-        return callback.autocommit();
+    public void sendMessage(MessageSession session) throws JMSException {
+        callback.sendMessage(session);
+    }
+    
+    
+    public void sendMessage() throws JMSException {
+        callback.sendMessage(this);
     }
 
-    @Override
-    public int ackMode() {
-        return callback.ackMode();
-    }
+   
 }

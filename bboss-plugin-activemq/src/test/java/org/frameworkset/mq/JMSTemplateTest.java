@@ -40,12 +40,15 @@ public class JMSTemplateTest
 		context =  DefaultApplicationContext.getApplicationContext("org/frameworkset/mq/manager-jmstemplate-test.xml");
 	}
 	 @Test
+	 /**
+	  * 不建议使用群发模式
+	  */
     public void test()
     {
         JMSTemplate template = context.getTBeanObject("test.jmstemplate",JMSTemplate.class);
         try
         {
-        	for(int i =0 ; i < 10; i ++)
+        	for(int i =0 ; i < 1000; i ++)
         		template.send("atest", "ahello "+ i);
             
         }
@@ -67,28 +70,25 @@ public class JMSTemplateTest
         JMSTemplate template = context.getTBeanObject("test.jmstemplate",JMSTemplate.class);
         try
         {
-            template.send("atest", new SendCallback() {
-                @Override
-                public void sendMessage(MessageSession session, MessageProducer producer) throws JMSException {
-                    for(int i =0 ; i < 10; i ++)
-                        producer.send(session.createTextMessage("ahello "+ i));
-                }
+            template.send(new BaseSendCallback() {
+				@Override
+				public void sendMessage(MessageSession session) throws JMSException {
+			       				
+					MessageProducer producer  = session.createProducer( "atest", MQUtil.TYPE_QUEUE);
+					for(int i =0 ; i < 1000; i ++){
+						String message = "ahello "+ i;
+						 producer.send(session.createTextMessage(message),0,-1,10000l);
+					}
+					 System.out.println("send message to " + "atest"
+			                    + " build destination end.");		
+					
+				}
 
-                @Override
-                public boolean autocommit() {
-                    return false;
-                }
-
-                @Override
-                /**
-                 *      * Session.AUTO_ACKNOWLEDGE
-                 *  int AUTO_ACKNOWLEDGE = 1;
-                 int CLIENT_ACKNOWLEDGE = 2;
-                 int DUPS_OK_ACKNOWLEDGE = 3;
-                 */
-                public int ackMode() {
-                    return Session.AUTO_ACKNOWLEDGE;
-                }
+				@Override
+				public boolean autocommit() {
+					// TODO Auto-generated method stub
+					return false;
+				}
             });
 
 
@@ -293,7 +293,8 @@ public class JMSTemplateTest
         JMSTemplate template = context.getTBeanObject("test.jmstemplate",JMSTemplate.class);
         try
         {
-            template.send("topic://getsubtest", "getsubtest");
+        	for(int i = 0; i <10000; i ++)
+        		template.send(MQUtil.TYPE_TOPIC,"getsubtest", "getsubtest_"+i,true,0,1000l);
             
         }
         catch (JMSException e)
@@ -307,6 +308,47 @@ public class JMSTemplateTest
         }
         
     }
+	 
+	 @Test
+	    public  void testTopicSendCallback()
+	    {
+	        JMSTemplate template = context.getTBeanObject("test.jmstemplate",JMSTemplate.class);
+	        try
+	        {
+	        	
+	        		template.send(new BaseSendCallback() {
+						
+						@Override
+						public void sendMessage(MessageSession session) throws JMSException {
+							MessageProducer producer  = session.createProducer( "getsubtest", MQUtil.TYPE_TOPIC);
+							for(int i =0 ; i < 10000; i ++){
+								String message = "ahello "+ i;
+								 producer.send(session.createTextMessage(message),0,-1,10000l);
+							}
+							 System.out.println("send message to " + "atest"
+					                    + " build destination end.");		
+							
+						}
+
+						@Override
+						public boolean autocommit() {
+							// TODO Auto-generated method stub
+							return false;
+						}
+					});
+	            
+	        }
+	        catch (JMSException e)
+	        {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+	        finally
+	        {
+	            template.stop();
+	        }
+	        
+	    }
 //	 @Test
 //    public  void testsubscriberSend()
 //    {
@@ -333,7 +375,7 @@ public class JMSTemplateTest
         JMSReceiveTemplate template = context.getTBeanObject("test.topic.receive.jmstemplate",JMSReceiveTemplate.class);
         try
         {
-            template.getTopicSubscriber("getsubtest", "subscribename").setMessageListener(new MessageListener() {
+            template.getTopicSubscriber("clientid1","getsubtest", "subscribename").setMessageListener(new MessageListener() {
 
                 public void onMessage(Message arg0)
                 {
@@ -355,17 +397,18 @@ public class JMSTemplateTest
         
         
     }
-	 @Test
-    public void testSubscriber()
+	
+    public void testSubscriber() throws Exception
     {
         JMSReceiveTemplate template = context.getTBeanObject("test.topic1.receive.jmstemplate",JMSReceiveTemplate.class);
         try
         {
-            template.subscribeTopic("subtest", "subscribename",new MessageListener() {
+            template.subscribeTopic("clientid","getsubtest", "duoduo",new MessageListener() {
 
                 public void onMessage(Message arg0)
                 {
                     System.out.println("topic msg comming:"+arg0);
+                    
                 }                
             });
             
@@ -374,6 +417,7 @@ public class JMSTemplateTest
         {
             
             template.stop();
+            throw e;
         }
         finally
         {
@@ -401,12 +445,13 @@ public class JMSTemplateTest
 	        }
 	    }
     
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
     	
         JMSTemplateTest JMSTemplateTest = new JMSTemplateTest();
         JMSTemplateTest.init();
-        JMSTemplateTest.test();
+        JMSTemplateTest.testSendCallback();
+        JMSTemplateTest.testTopicSendCallback();
 //        testPooledFactoryConnection();
 //        testPooledFactoryConnection();
         
@@ -419,7 +464,8 @@ public class JMSTemplateTest
 //        testAllparamsMessage();
 //        testReceiveMessage();
 ////        System.exit(0);
-        JMSTemplateTest.testMessageListener();
+//        JMSTemplateTest.testMessageListener();
+        JMSTemplateTest.testSubscriber();
 //        testTopicSend();
 //        testsubscriberSend();
 //        testSubscriber();

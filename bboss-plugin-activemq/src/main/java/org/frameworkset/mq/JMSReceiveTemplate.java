@@ -56,31 +56,33 @@ public class JMSReceiveTemplate extends AbstractTemplate
     
     
     
-    public TopicSubscriber getTopicSubscriber(String destination, String name) throws JMSException
+    public TopicSubscriber getTopicSubscriber(String clientid,String destination, String name) throws JMSException
     {
-        return getTopicSubscriberWithSelector(destination, name, null);
+        return getTopicSubscriberWithSelector(  clientid,destination, name, null);
     }
     
-    public void subscribeTopic(String destination, String name,MessageListener listener) throws JMSException
+    public void subscribeTopic(String clientid,String destination, String name,MessageListener listener) throws JMSException
     {
-        getTopicSubscriberWithSelector(destination, name, null).setMessageListener(listener);
+        getTopicSubscriberWithSelector(  clientid,destination, name, null).setMessageListener(listener);
     }
-    public void subscribeTopicWithSelector(String destination, String name,String selector,MessageListener listener) throws JMSException
+    public void subscribeTopicWithSelector(String clientid,String destination, String name,String selector,MessageListener listener) throws JMSException
     {
-        getTopicSubscriberWithSelector(destination, name, selector).setMessageListener(listener);
+        getTopicSubscriberWithSelector(  clientid,destination, name, selector).setMessageListener(listener);
     }
     
   
-    public TopicSubscriber getTopicSubscriber(Topic destination, String name) throws JMSException
+    public TopicSubscriber getTopicSubscriber(String clientid,Topic destination, String name) throws JMSException
     {
-        return getTopicSubscriber(destination, name, null);
+        return getTopicSubscriber(  clientid,destination, name, null);
     }
-    public TopicSubscriber getTopicSubscriber(Topic destination, String name, String selector) throws JMSException
+    public TopicSubscriber getTopicSubscriber(String clientid,Topic destination, String name, String selector) throws JMSException
     {
         ReceiveDispatcher dispatcher = null;
         try
         {
-            dispatcher = new ReceiveDispatcher(this.connection);
+        	initSession(false,1,clientid);
+			MessageSession messageSession = new DefaultMessageAction(session);
+            dispatcher = new ReceiveDispatcher(messageSession);
             TopicSubscriber sub = dispatcher.getTopicSubscriberWithSelector(destination, name, selector);
             this.tempdispatcher.add(dispatcher);
             return sub;
@@ -93,13 +95,16 @@ public class JMSReceiveTemplate extends AbstractTemplate
         }
 //        return this.requestDispatcher.getTopicSubscriber(destination, name, selector);
     }
-    public TopicSubscriber getTopicSubscriberWithSelector(String destination, String name, String selector)
+    public TopicSubscriber getTopicSubscriberWithSelector(String clientid,String destination, String name, String selector)
     throws JMSException
     {
         ReceiveDispatcher dispatcher = null;
         try
         {
-            dispatcher = new ReceiveDispatcher(this.connection);
+        	
+        	initSession(false,1,clientid);
+			MessageSession messageSession = new DefaultMessageAction(session);
+            dispatcher = new ReceiveDispatcher(messageSession);
             TopicSubscriber sub = dispatcher.getTopicSubscriberWithSelector(destination, name, selector);
             this.tempdispatcher.add(dispatcher);
             return sub;
@@ -121,10 +126,12 @@ public class JMSReceiveTemplate extends AbstractTemplate
 
     public void unsubscribe(String destination ,String unsubscribename) throws JMSException
     {
-    	RequestDispatcher requestDispatcher = null;
+    	ReceiveDispatcher requestDispatcher = null;
          try
          {
-        	 requestDispatcher = new RequestDispatcher(this.connection);
+        	 initSession(false,1);
+ 			 MessageSession messageSession = new DefaultMessageAction(session);
+        	 requestDispatcher = new ReceiveDispatcher(messageSession);
         	 requestDispatcher.unsubscribe(unsubscribename);
          }
         

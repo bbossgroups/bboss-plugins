@@ -1,9 +1,6 @@
 package org.frameworkset.mq;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.ObjectMessage;
-import javax.jms.TextMessage;
+import javax.jms.*;
 
 /**
  * Created by 1 on 2017/5/26.
@@ -25,4 +22,16 @@ public interface MessageSession {
     public TextMessage createTextMessage(String msg, JMSProperties properties) throws JMSException;
 
     public TextMessage createTextMessage(String msg) throws JMSException;
+    public javax.jms.Destination createDestination(String destination, int destinationType) throws JMSException;
+    public MessageConsumer createConsumer(Destination destination, String messageSelector, boolean noLocal) throws JMSException;
+    public TopicSubscriber createDurableSubscriber(Topic destination, String name, String selector, boolean noLocal) throws JMSException;
+    public Topic createTopic(String destination) throws JMSException;
+    public int getAcknowledgeMode()throws JMSException;
+    public void unsubscribe(String unsubscribename )throws JMSException;
+    public MessageProducer createProducer(Destination destination)throws JMSException;
+    
+    public MessageProducer createProducer(String destination, int destinationType)throws JMSException;
+    public BytesMessage createBytesMessage() throws JMSException;
+    
+   
 }
