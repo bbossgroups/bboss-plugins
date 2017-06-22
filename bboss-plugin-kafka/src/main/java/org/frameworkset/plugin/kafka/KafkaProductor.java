@@ -8,7 +8,7 @@ import java.util.Properties;
 
 
 public class KafkaProductor  {
-	private KafkaProducer<String, Object> producer = null;
+	private KafkaProducer<Object, Object> producer = null;
 //	private static final Logger logger = Logger.getLogger(KafkaProductor.class);
 	
 	private Properties productorPropes;
@@ -62,13 +62,18 @@ public class KafkaProductor  {
 //		// 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定
 //		props.put("bootstrap.servers", "hadoop85:9092,hadoop86:9092,hadoop88:9092");
 		if(sendDatatoKafka)		
-			producer = new KafkaProducer<String, Object>(productorPropes);
+			producer = new KafkaProducer<Object, Object>(productorPropes);
 	}
 	
 	public void send(String topic,Object msg){
 		if(sendDatatoKafka && producer != null){
-			producer.send(new ProducerRecord<String, Object>(topic, msg));
+			producer.send(new ProducerRecord<Object, Object>(topic, null,msg));
 		}		 
+	}
+	public void send(String topic,Object key,Object msg){
+		if(sendDatatoKafka && producer != null){
+			producer.send(new ProducerRecord<Object, Object>(topic,key, msg));
+		}
 	}
 
 	public Properties getProductorPropes() {

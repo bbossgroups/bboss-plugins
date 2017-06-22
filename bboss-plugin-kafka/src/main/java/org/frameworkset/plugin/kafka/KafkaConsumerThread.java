@@ -26,7 +26,7 @@ public class KafkaConsumerThread implements Runnable {
 	@Override
 	public void run() {
 		ConsumerIterator<byte[], byte[]> it = stream.iterator();		
-		logger.debug(Thread.currentThread().getName() + ": dddddddddddddddddddddddddd");
+		//logger.debug(Thread.currentThread().getName() + ": dddddddddddddddddddddddddd");
 		while (it.hasNext()) {
 			MessageAndMetadata<byte[], byte[]> mam = it.next();
 			try {
