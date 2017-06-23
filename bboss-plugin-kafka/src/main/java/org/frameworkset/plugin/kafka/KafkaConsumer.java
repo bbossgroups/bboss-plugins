@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class KafkaConsumer extends ApplicationObjectSupport implements Runnable {
-	private BaseApplicationContext applicationContext;
+//	private BaseApplicationContext applicationContext;
 	private ConsumerConfig consumerConfig;
 	private String topic;
 //	private String zookeeperConnect;
@@ -70,7 +70,7 @@ public class KafkaConsumer extends ApplicationObjectSupport implements Runnable 
 	    {
 	    	String[] infos = t.split(":");
 		    List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(infos[0]);
-		    System.out.println("-----------------------------------------:"+infos[0]+"-------------"+streams);
+//		    System.out.println("-----------------------------------------:"+infos[0]+"-------------"+streams);
 		    for (final KafkaStream<byte[], byte[]> stream : streams) {
 //				StoreService storeService = this.getApplicationContext().getTBeanObject("storeService",StoreService.class);
 //				if(this.storeService == null)
