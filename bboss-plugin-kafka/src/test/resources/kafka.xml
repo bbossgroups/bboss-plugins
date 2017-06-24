@@ -5,7 +5,7 @@
 			<property name="value.serializer" value="org.apache.kafka.common.serialization.StringSerializer">
 				<description> <![CDATA[ 指定序列化处理类，默认为kafka.serializer.DefaultEncoder,即byte[] ]]></description>
 			</property>
-			<property name="key.serializer" value="org.apache.kafka.common.serialization.StringSerializer">
+			<property name="key.serializer" value="org.apache.kafka.common.serialization.LongSerializer">
 				<description> <![CDATA[ 指定序列化处理类，默认为kafka.serializer.DefaultEncoder,即byte[] ]]></description>
 			</property>
 					

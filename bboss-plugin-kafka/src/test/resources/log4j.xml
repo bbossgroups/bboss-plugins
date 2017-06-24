@@ -8,7 +8,7 @@
         </layout>
     </appender>
 
-    <logger name="com.navercorp.pinpoint" additivity="false">
+    <logger name="org.frameworkset.plugin.kafka" additivity="false">
         <level value="DEBUG"/>
         <appender-ref ref="console"/>
     </logger>
