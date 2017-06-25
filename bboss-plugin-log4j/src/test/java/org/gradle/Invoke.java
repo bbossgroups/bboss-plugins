@@ -1,5 +1,6 @@
 package org.gradle;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,8 @@ public class Invoke {
 //	private static final Logger log_httpclientutils = LoggerFactory.getLogger(HttpClientUtils.class);
 
 //	
-    public static void main(String[] args) {
+	@Test
+    public  void log() {
     	long interval = 0;
     	while(true) {
 		//	System.out.println("aaa");
