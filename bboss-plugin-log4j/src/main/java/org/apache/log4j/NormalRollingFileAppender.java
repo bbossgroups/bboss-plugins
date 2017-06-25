@@ -277,6 +277,7 @@ public class NormalRollingFileAppender  extends FileAppender {
         }
         else
             logFileName = val;
+        logFileName = logFileName + ".";
         this.originFileName = val;
         if(!useDatePattern){//采用数字索引，计算当前的数字索引，默认索引为1
 
