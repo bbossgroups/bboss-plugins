@@ -16,11 +16,9 @@ public class Invoke {
     public  void log() {
     	long interval = 0;
     	while(true) {
-		//	System.out.println("aaa");
-		//	servicelog.info(servicelogstr);
-		//	weblog.info(weblogstr);
+		
 			log_invoke.info("日志信息");
-		//	log_httpclientutils.info("httpclientutils日志信息");
+		
 			if(interval > 0) {
 				try {
 					Thread.currentThread().sleep(interval);
@@ -31,5 +29,5 @@ public class Invoke {
 
 		}
     }	
-	}
+}
 
