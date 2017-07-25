@@ -12,3 +12,5 @@
 /.settings/
 /build.gradle.bak
 /settings.gradle.bak
+/.idea/
+/bboss-plugins.iml
