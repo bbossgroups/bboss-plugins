@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import bboss.org.artofsolving.jodconverter.process.ProcessManager;
 import bboss.org.artofsolving.jodconverter.process.ProcessQuery;
@@ -46,7 +47,7 @@ class OfficeProcess {
     private Process process;
     private long pid = PID_UNKNOWN;
 
-    private final Logger logger = Logger.getLogger(OfficeProcess.class);
+    private final Logger logger = LoggerFactory.getLogger(OfficeProcess.class);
 
     public OfficeProcess(File officeHome, UnoUrl unoUrl, String[] runAsArgs, File templateProfileDir, File workDir, ProcessManager processManager) {
         this.officeHome = officeHome;

@@ -23,12 +23,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.log4j.Logger;
-
-import bboss.org.artofsolving.jodconverter.util.PlatformUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.star.frame.XDesktop;
 import com.sun.star.lang.DisposedException;
+
+import bboss.org.artofsolving.jodconverter.util.PlatformUtils;
 
 public class ManagedOfficeProcess {
 
@@ -41,7 +42,7 @@ public class ManagedOfficeProcess {
 
     private ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("OfficeProcessThread"));
 
-    private final Logger logger = Logger.getLogger(ManagedOfficeProcess.class);
+    private final Logger logger = LoggerFactory.getLogger(ManagedOfficeProcess.class);
 
     public ManagedOfficeProcess(ManagedOfficeProcessSettings settings) throws OfficeException {
         this.settings = settings;

@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.DefaultApplicationContext;
 import org.frameworkset.spi.assemble.Pro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.dubbo.config.ServiceConfig;
 import com.alibaba.dubbo.rpc.service.GenericService;
@@ -20,7 +20,7 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 public class DubboHandlerContainer {
 	private DubboPluginConfig dubboPluginConfig;
 	private BaseApplicationContext context;
-	private static final Log log = LogFactory.getLog(DubboHandlerContainer.class);
+	private static final Logger log = LoggerFactory.getLogger(DubboHandlerContainer.class);
 	private Map<String,Pro> dubboServices = new HashMap<String,Pro>();
 	public DubboHandlerContainer(String serviceConfig) {
 		

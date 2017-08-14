@@ -36,12 +36,12 @@ dependencies {
                [group: 'hibernate', name: 'antlr', version: "2.7.5H3", transitive: false],
  
               [group: 'commons-collections', name: 'commons-collections', version: "3.2.1", transitive: false],
-             [group: 'org.slf4j', name: 'slf4j-api', version: "1.7.2", transitive: false],
-             [group: 'org.slf4j', name: 'slf4j-log4j12', version: "1.7.2", transitive: false],           
-              [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
+                  [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
               
+              [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25', transitive: false],
+           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25', transitive: false],
+          
               
-             [group: 'log4j', name: 'log4j', version: '1.2.16', transitive: false],
               [group: 'oro', name: 'oro', version: '2.0.8', transitive: false],
               [group: 'commons-lang', name: 'commons-lang', version: '2.6', transitive: false],
               [group: 'org.ow2.asm', name: 'asm', version: '5.0.3', transitive: false],

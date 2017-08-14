@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.bridge.XBridge;
@@ -66,7 +67,7 @@ class OfficeConnection implements OfficeContext {
         }
     };
 
-    private final static Logger logger = Logger.getLogger(OfficeConnection.class);
+    private final static Logger logger = LoggerFactory.getLogger(OfficeConnection.class);
 
     public OfficeConnection(UnoUrl unoUrl) {
         this.unoUrl = unoUrl;

@@ -1,16 +1,16 @@
 package org.frameworkset.spi.remote.dubbo;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.BeanInfoAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.dubbo.config.ReferenceConfig;
 
 public class DubboConsumerFactory extends BeanInfoAware {
 	private String reference;
 	private String version;
-	private static final Log log = LogFactory.getLog(DubboConsumerFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(DubboConsumerFactory.class);
 	public Object buildDubboConsumer(){
 		BaseApplicationContext context = super.beaninfo.getApplicationContext();
 		DubboPluginConfig pluginConfig = null;

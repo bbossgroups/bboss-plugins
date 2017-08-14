@@ -18,11 +18,12 @@ package com.frameworkset.common.poolman.hibernate;
 
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
 import org.frameworkset.spi.DisposableBean;
 import org.frameworkset.spi.InitializingBean;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -52,7 +53,7 @@ import org.hibernate.SessionFactory;
 public abstract class AbstractSessionFactoryBean implements InitializingBean,DisposableBean {
 
 	/** Logger available to subclasses */
-	protected final static Logger logger = Logger.getLogger(AbstractSessionFactoryBean.class);
+	protected final static Logger logger = LoggerFactory.getLogger(AbstractSessionFactoryBean.class);
 
 	private DataSource dataSource;
 

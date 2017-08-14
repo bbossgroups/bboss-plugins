@@ -23,7 +23,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import bboss.org.artofsolving.jodconverter.process.ProcessManager;
 
@@ -35,7 +36,7 @@ class ProcessPoolOfficeManager implements OfficeManager {
 
     private volatile boolean running = false;
 
-    private final static Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class);
+    private final static Logger logger = LoggerFactory.getLogger(ProcessPoolOfficeManager.class);
 
     public ProcessPoolOfficeManager(File officeHome, UnoUrl[] unoUrls, String[] runAsArgs, File templateProfileDir, File workDir,
             long retryTimeout, long taskQueueTimeout, long taskExecutionTimeout, int maxTasksPerProcess,

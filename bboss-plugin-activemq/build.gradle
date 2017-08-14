@@ -37,21 +37,17 @@ dependencies {
              [group: 'org.apache.commons', name: 'commons-pool2', version: "2.4.2", transitive: false],
           
             
-   			[group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true],
+   			
     
          
                 
                
     )
-    testCompile(
-   		//test
-         	 [group: 'org.slf4j', name: 'jcl-over-slf4j', version: "1.7.21", transitive: false],
-        
-        
-        [group: 'org.slf4j', name: 'slf4j-log4j12', version: "1.7.21", transitive: false],
-        
-        [group: 'log4j', name: 'log4j', version: "1.2.16", transitive: false],
-    )
+    compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )    
+    //{
+   	//	exclude group: 'log4j', module: 'log4j'
+    //}
+    
   
      
 }
