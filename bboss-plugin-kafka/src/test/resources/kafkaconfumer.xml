@@ -27,7 +27,9 @@
 		</propes>
 	</property>
 	<property name="kafkaconsumer"
-		class="org.frameworkset.plugin.kafka.KafkaConsumer" init-method="init"
+		class="org.frameworkset.plugin.kafka.KafkaBatchConsumer" init-method="init"
+		f:batchsize="-1"
+		f:checkinterval="10000"
 		f:productorPropes="attr:consumerPropes" f:topic="blackcat"
 		f:storeService="attr:storeService" f:partitions="4" />
 	<property name="storeService"

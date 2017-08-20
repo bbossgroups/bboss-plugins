@@ -7,6 +7,6 @@ public class TestKafka {
 	public void testSend(){
 		KafkaProductor productor = KafkaUtil.getKafkaProductor("kafkaproductor");
 		productor.send("blackcat",1l,"aaa");
-		productor.send("blackcat",1l,"bbb");
+		productor.send("blackcat",2l,"bbb");
 	}
 }

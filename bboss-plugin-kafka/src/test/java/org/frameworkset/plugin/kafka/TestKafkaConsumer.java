@@ -8,7 +8,7 @@ public class TestKafkaConsumer {
 
 	public static void main(String[] args) {
 		BaseApplicationContext context = DefaultApplicationContext.getApplicationContext("kafkaconfumer.xml");
-		KafkaConsumer consumer = context.getTBeanObject("kafkaconsumer", KafkaConsumer.class);
+		KafkaListener consumer = context.getTBeanObject("kafkaconsumer", KafkaListener.class);
 		Thread t = new Thread(consumer);
 		t.start();
 
