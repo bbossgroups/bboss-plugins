@@ -1,0 +1,1 @@
+# bboss elasticsearch插件

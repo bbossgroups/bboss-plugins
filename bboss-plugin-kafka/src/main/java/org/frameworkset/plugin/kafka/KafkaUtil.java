@@ -10,5 +10,12 @@ public class KafkaUtil {
 		return context.getTBeanObject(name, KafkaProductor.class);
 		
 	}
+	public static String getProperty(String name){
+		return context.getProperty(name);
+	}
+
+	public static String getProperty(String name,String defaultValue){
+		return context.getProperty(name,defaultValue);
+	}
 
 }
