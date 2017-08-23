@@ -31,11 +31,13 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	 */
 	private long checkinterval = 5000l;
 	private long lastSendTime = 0l;
+	private boolean lastReceive = false;
 	private ExecutorService executor = null;
  
 	private Thread batchCheckor;
-	public KafkaBatchConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,int batchsize ,long checkinterval,int worker) {
+	public KafkaBatchConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,int batchsize ,long checkinterval,String checkmode,int worker) {
 		super(stream,  storeService);
+		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
 		this.batchsize = batchsize;
 		if(checkinterval > 0l){
 			this.checkinterval = checkinterval; 
@@ -83,7 +85,10 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	
 	protected   void handleData(MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
 		try{
-			if(this.lastSendTime == 0l)
+			if(lastReceive){
+				lastSendTime = System.currentTimeMillis();
+			}
+			else if(this.lastSendTime == 0l )
 				lastSendTime = System.currentTimeMillis();
 			lock.lock();
 			messageQueue.add(mam);
@@ -113,7 +118,8 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 				if(touchSize || needSend){//第一次检查
 					data = new ArrayList<>(messageQueue);			
 					messageQueue.clear();
-					lastSendTime = System.currentTimeMillis();
+					if(!lastReceive)
+						lastSendTime = System.currentTimeMillis();
 				}
 			}
 			finally

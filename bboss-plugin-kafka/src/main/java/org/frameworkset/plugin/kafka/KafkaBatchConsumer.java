@@ -1,18 +1,6 @@
 package org.frameworkset.plugin.kafka;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.frameworkset.spi.BaseApplicationContext;
-import org.frameworkset.spi.support.ApplicationObjectSupport;
-
-import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
 
 public class KafkaBatchConsumer extends BaseKafkaConsumer {
  
@@ -26,6 +14,11 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	 */
 	private long checkinterval = 3000l;
 	private int worker = 10;
+	/**
+	 * lastreceive:最后一次接收的时间为基准
+	 * lastsend:最后一次发送的时间为基准
+	 */
+	private String checkmode = "lastsend";
  
 
 //	String topic,String zookeeperConnect, HDFSService logstashService
@@ -38,7 +31,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream) {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
-			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,worker);
+			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,checkmode,worker);
 		else
 			return new KafkaConsumerThread(stream,storeService);
 	}
