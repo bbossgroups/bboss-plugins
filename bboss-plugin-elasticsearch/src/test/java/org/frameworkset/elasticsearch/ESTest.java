@@ -48,5 +48,18 @@ public class ESTest {
 		System.out.println(response);
 		
 	}
+	@Test
+	public void querey() throws Exception
+	{
+		DefaultApplicationContext context = DefaultApplicationContext.getApplicationContext("conf/elasticsearch.xml");
+		ElasticSearch elasticSearchSink = context.getTBeanObject("elasticSearch", ElasticSearch.class);
+		ElasticSearch restelasticSearchSink = context.getTBeanObject("restelasticSearch", ElasticSearch.class);
+		
+		ClientUtil clientUtil = restelasticSearchSink.getClientUtil();
+		String entiry = "{\"query\" : {\"term\" : { \"rpc\" : \"content.page\" }}}";
+		String response = (String) clientUtil.executeRequest("trace-*/_search",entiry);
+		
+		System.out.println(response);
+	}
 
 }
