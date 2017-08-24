@@ -18,18 +18,11 @@
  */
 package org.frameworkset.elasticsearch.client;
 
-import static org.frameworkset.elasticsearch.ElasticSearchSinkConstants.DEFAULT_PORT;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Properties;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -44,7 +37,15 @@ import org.frameworkset.elasticsearch.event.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+import static org.frameworkset.elasticsearch.ElasticSearchSinkConstants.DEFAULT_PORT;
 
 //import org.elasticsearch.node.Node;
 //import org.elasticsearch.node.NodeBuilder;
@@ -58,6 +59,9 @@ public class ElasticSearchTransportClient implements ElasticSearchClient {
 	private ElasticSearchIndexRequestBuilderFactory indexRequestBuilderFactory;
 	private String elasticUser;
 	private String elasticPassword;
+
+
+
 	private Client client;
 
 	@VisibleForTesting
@@ -263,7 +267,7 @@ public class ElasticSearchTransportClient implements ElasticSearchClient {
  
 
  
-	public IndexRequestBuilder createIndexRequest(IndexNameBuilder indexNameBuilder, Event<Object> event,ElasticSearchEventSerializer elasticSearchEventSerializer) throws IOException {
+	public IndexRequestBuilder createIndexRequest(IndexNameBuilder indexNameBuilder, Event event,ElasticSearchEventSerializer elasticSearchEventSerializer) throws IOException {
 
 		IndexRequestBuilder indexRequestBuilder = null;
 		if (indexRequestBuilderFactory == null) {
@@ -288,6 +292,29 @@ public class ElasticSearchTransportClient implements ElasticSearchClient {
 		return indexRequestBuilder;
 
 	}
+	
+	
+	public UpdateRequestBuilder updateIndexRequest( Event event,ElasticSearchEventSerializer elasticSearchEventSerializer) throws IOException {
+
+		UpdateRequestBuilder indexRequestBuilder = null;
+		 
+			XContentBuilder bytesStream = null;
+			try {
+				bytesStream = elasticSearchEventSerializer == null ?serializer.getContentBuilder(event):elasticSearchEventSerializer.getContentBuilder(event);
+				indexRequestBuilder = client.prepareUpdate(event.getIndexPrefix(), event.getIndexType(),event.getId())
+						.setDoc(bytesStream);
+			} finally {
+				if (bytesStream != null) {
+					// bytesStream.cl
+				}
+			}
+
+		 
+
+		 
+		return indexRequestBuilder;
+
+	}
 
 
 
@@ -295,5 +322,13 @@ public class ElasticSearchTransportClient implements ElasticSearchClient {
 	public ClientUtil getClientUtil(IndexNameBuilder indexNameBuilder) {
 		// TODO Auto-generated method stub
 		return new TransportClientUtil(this,indexNameBuilder);
+	}
+	
+	public DeleteRequestBuilder deleteIndex(String indexName, String indexType, String id) throws Exception{
+		return client.prepareDelete(indexName, indexType, id);
+	}
+
+	public Client getClient() {
+		return client;
 	}
 }

@@ -29,7 +29,7 @@ public interface IndexNameBuilder  {
    *          Event which determines index name
    * @return index name of the form 'indexPrefix-indexDynamicName'
    */
-  public  String getIndexName(Event<Object> event);
+  public  String getIndexName(Event event);
   
   /**
    * Gets the prefix of index to use for an index request.
@@ -37,6 +37,6 @@ public interface IndexNameBuilder  {
    *          Event which determines index name
    * @return Index prefix name
    */
-  public     String getIndexPrefix(Event<Object> event);
+  public     String getIndexPrefix(Event event);
   public void configure(Properties elasticsearchPropes);
 }

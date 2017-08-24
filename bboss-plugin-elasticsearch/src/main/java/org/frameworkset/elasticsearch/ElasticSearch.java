@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.elasticsearch.client.Client;
 import org.frameworkset.elasticsearch.client.ClientUtil;
 import org.frameworkset.elasticsearch.client.ElasticSearchClient;
 import org.frameworkset.elasticsearch.client.ElasticSearchClientFactory;
@@ -147,15 +148,26 @@ public class ElasticSearch  {
     return indexNameBuilder;
   }
 
+  public ClientUtil getClientUtil(){
+    return client.getClientUtil(this.indexNameBuilder);
+  }
+  /**
+   * 获取es client对象
+   * @return
+   */
+  public Client getClient() {
+    return client.getClientUtil(indexNameBuilder).getClient();
+  }
+
    
-  public   void builkHandler(java.util.List<Event<Object>> datas,ElasticSearchEventSerializer elasticSearchEventSerializer) throws EventDeliveryException {
+  public   Object addIndexs(java.util.List<Event> datas,ElasticSearchEventSerializer elasticSearchEventSerializer) throws EventDeliveryException {
 	  logger.debug("processing...");
 	     ClientUtil clientUtil = client.getClientUtil(indexNameBuilder);
 	    try {
 	     
 	      int count;
 	      for (count = 0; count < datas.size(); ++count) {
-	        Event<Object> event = datas.get(count);
+	        Event event = datas.get(count);
 	       
 
 	        if (event == null) {
@@ -169,22 +181,120 @@ public class ElasticSearch  {
 	      }
 
 	      
-	      clientUtil.execute();
+	      return clientUtil.execute();
 	      
-	    } catch (Throwable ex) {
+	    } catch (EventDeliveryException ex) {
 	       
-	        logger.error(
-	            "Exception in rollback. Rollback might not have been successful.",
-	            ex);
+//	        logger.error(
+//	            "Exception in rollback. Rollback might not have been successful.",
+//	            ex);
+	        throw ex;
+	        
+	      }
+	    catch (Exception ex) {
+		       
+//	        logger.error(
+//	            "Exception in rollback. Rollback might not have been successful.",
+//	            ex);
+	        throw new EventDeliveryException(ex);
 	        
 	      }
   }
-  public  void builkHandler(java.util.List<Event<Object>> datas) throws EventDeliveryException {
-	  builkHandler(  datas,null); 
 
+  /**
+   *
+   * @param datas
+   * @throws EventDeliveryException
+   */
+  public  Object addIndexs(java.util.List<Event> datas) throws EventDeliveryException {
+    return addIndexs(  datas,null);
      
-     
-     
+  }
+  
+  public Object executeRequest(String path,String entity) throws Exception{
+	  ClientUtil clientUtil = client.getClientUtil(indexNameBuilder);
+	  
+	  return clientUtil.executeRequest(path, entity);
+  }
+  
+  public Object executeRequest(String path) throws Exception{
+	  ClientUtil clientUtil = client.getClientUtil(indexNameBuilder);
+	  
+	  return clientUtil.executeRequest(path, (String)null);
+  }
+
+  /**
+   * 更新索引
+   * @param datas
+   * @param elasticSearchEventSerializer
+   * @throws EventDeliveryException
+   */
+  public   Object updateIndexs(java.util.List<Event> datas,ElasticSearchEventSerializer elasticSearchEventSerializer) throws EventDeliveryException {
+    logger.debug("processing...");
+    ClientUtil clientUtil = client.getClientUtil(indexNameBuilder);
+    try {
+
+      int count;
+      for (count = 0; count < datas.size(); ++count) {
+        Event event = datas.get(count);
+
+
+        if (event == null) {
+          break;
+        }
+        if(event.getTTL() <= 0l)
+          event.setTTL(ttlMs);
+        String realIndexType = event.getIndexType() == null?BucketPath.escapeString(indexType, event.getHeaders()):event.getIndexType();
+        event.setIndexType(realIndexType);
+        clientUtil.updateIndexs(event, elasticSearchEventSerializer);
+      }
+
+
+      return clientUtil.execute();
+
+    } catch (EventDeliveryException ex) {
+	       
+//        logger.error(
+//            "Exception in rollback. Rollback might not have been successful.",
+//            ex);
+        throw ex;
+        
+      }
+    catch (Exception ex) {
+	       
+//        logger.error(
+//            "Exception in rollback. Rollback might not have been successful.",
+//            ex);
+        throw new EventDeliveryException(ex);
+        
+      }
+  }
+  public  Object updateIndexs(java.util.List<Event> datas) throws EventDeliveryException {
+    return updateIndexs(  datas,null);
+
+  }
+  
+  public Object deleteIndex(String indexName,String indexType,String... ids) throws EventDeliveryException{
+	  ClientUtil clientUtil = client.getClientUtil(indexNameBuilder);
+	    try {
+	     
+	      clientUtil.deleteIndex(indexName, indexType, ids);
+
+	      
+	      return clientUtil.execute();
+	      
+	    } catch (EventDeliveryException ex) {
+	       
+	       throw ex;
+	        
+	      }catch (Throwable ex) {
+		       
+//		        logger.error(
+//		            "Exception in rollback. Rollback might not have been successful.",
+//		            ex);
+	    	  throw new EventDeliveryException(ex);
+		        
+		      }
   }
 
   public void configure() {

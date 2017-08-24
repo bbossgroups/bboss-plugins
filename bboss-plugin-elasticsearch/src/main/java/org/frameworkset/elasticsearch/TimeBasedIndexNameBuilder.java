@@ -60,7 +60,7 @@ public class TimeBasedIndexNameBuilder implements
    * @return index name of the form 'indexPrefix-formattedTimestamp'
    */
   @Override
-  public  String getIndexName(Event<Object> event) {
+  public  String getIndexName(Event event) {
     TimestampedEvent timestampedEvent = new TimestampedEvent(event);
     long timestamp = timestampedEvent.getTimestamp();
     String realIndexPrefix = BucketPath.escapeString(event.getIndexPrefix() != null?event.getIndexPrefix():indexPrefix, event.getHeaders());
@@ -71,7 +71,7 @@ public class TimeBasedIndexNameBuilder implements
   }
   
   @Override
-  public String getIndexPrefix(Event<Object> event) {
+  public String getIndexPrefix(Event event) {
     return BucketPath.escapeString(event.getIndexPrefix() != null?event.getIndexPrefix():indexPrefix, event.getHeaders());
   }
 

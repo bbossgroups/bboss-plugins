@@ -44,19 +44,19 @@ public class ElasticSearchDynamicSerializer implements
   
 
   @Override
-  public  XContentBuilder getContentBuilder(Event<Object> event) throws IOException {
+  public  XContentBuilder getContentBuilder(Event event) throws IOException {
     XContentBuilder builder = jsonBuilder().startObject();
     appendBody(builder, event);
     appendHeaders(builder, event);
     return builder ;
   }
 
-  private   void appendBody(XContentBuilder builder, Event<Object> event)
+  private   void appendBody(XContentBuilder builder, Event event)
       throws IOException {
     ContentBuilderUtil.appendField(builder, "body", (byte[])event.getBody());
   }
 
-  private   void appendHeaders(XContentBuilder builder, Event<Object> event)
+  private   void appendHeaders(XContentBuilder builder, Event event)
       throws IOException {
     Map<String, String> headers = event.getHeaders();
     for (String key : headers.keySet()) {

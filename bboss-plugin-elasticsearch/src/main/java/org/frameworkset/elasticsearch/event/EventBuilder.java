@@ -32,12 +32,12 @@ public class EventBuilder  {
    * @return
    */
   public static Event withBody(Object body, Map<String, String> headers) {
-    Event event = new SimpleEvent();
+    Event event = new SimpleEvent(body);
 
-    if (body == null) {
-      body = null;
-    }
-    event.setBody(body);
+//    if (body == null) {
+//      body = null;
+//    }
+//    event.setBody(body);
 
     if (headers != null) {
       event.setHeaders(new HashMap<String, String>(headers));

@@ -74,7 +74,7 @@ public class ElasticSearchLogStashEventSerializer implements
     ElasticSearchEventSerializer {
 
   @Override
-  public  XContentBuilder getContentBuilder(Event<Object> event) throws IOException {
+  public  XContentBuilder getContentBuilder(Event event) throws IOException {
     XContentBuilder builder = jsonBuilder();
 
       builder.startObject();
@@ -87,14 +87,14 @@ public class ElasticSearchLogStashEventSerializer implements
 
   }
 
-  private   void appendBody(XContentBuilder builder, Event<Object> event)
+  private   void appendBody(XContentBuilder builder, Event event)
       throws IOException, UnsupportedEncodingException {
     byte[] body = (byte[]) event.getBody();
     ContentBuilderUtil.appendField(builder, "@message", body);
 
   }
 
-  private  void appendHeaders(XContentBuilder builder, Event<Object> event)
+  private  void appendHeaders(XContentBuilder builder, Event event)
       throws IOException {
 //    Map<String, String> headers = Maps.newHashMap(event.getHeaders());
 	  MapBuilder mapBuilder = MapBuilder.newMapBuilder();

@@ -106,7 +106,7 @@ public class  ElasticSearchRestClient implements ElasticSearchClient {
   public void close() {
   }
 
-  public  void createIndexRequest(StringBuilder bulkBuilder,IndexNameBuilder indexNameBuilder, Event<Object> event,ElasticSearchEventSerializer elasticSearchEventSerializer) throws IOException {
+  public  void createIndexRequest(StringBuilder bulkBuilder,IndexNameBuilder indexNameBuilder, Event event,ElasticSearchEventSerializer elasticSearchEventSerializer) throws IOException {
 
 	  BytesReference content = elasticSearchEventSerializer == null?serializer.getContentBuilder(event).bytes():
 		  elasticSearchEventSerializer.getContentBuilder(event).bytes()
@@ -116,7 +116,7 @@ public class  ElasticSearchRestClient implements ElasticSearchClient {
 	    indexParameters.put(ElasticSearchRestClient.INDEX_PARAM, indexNameBuilder.getIndexName(event));
 	    indexParameters.put(ElasticSearchRestClient.TYPE_PARAM, event.getIndexType());
 	    if (event.getTTL() > 0) {
-	      indexParameters.put(ElasticSearchRestClient.TTL_PARAM, Long.toString(event.getTTL()));
+	      indexParameters.put(ElasticSearchRestClient.TTL_PARAM, Long.toString(event.getTTL())+"ms");
 	    }
 	    parameters.put(ElasticSearchRestClient.INDEX_OPERATION_NAME, indexParameters);
 
@@ -141,7 +141,7 @@ public class  ElasticSearchRestClient implements ElasticSearchClient {
 //    }
 //  }
   
-  public void execute(String entity) throws Exception {
+  public String execute(String entity) throws Exception {
     int  triesCount = 0;
     String response = null;
     Exception e = null;
@@ -152,7 +152,9 @@ public class  ElasticSearchRestClient implements ElasticSearchClient {
       try{
     	  response = HttpRequestUtil.sendJsonBody(entity, url,this.headers);
     	  if (response != null) {
-	        logger.debug("Status message from elasticsearch: " + response);
+    		  
+	        logger.info("Status message from elasticsearch: " + response);
+	       
 	      }
     	  break;
       }
@@ -167,9 +169,13 @@ public class  ElasticSearchRestClient implements ElasticSearchClient {
     		  break;
     	  }
       } 
+     
       
      
     }
+    if(e != null)
+  	  throw e;
+    return response;
     
 
 //    if (statusCode != HttpStatus.SC_OK) {
@@ -184,5 +190,44 @@ public class  ElasticSearchRestClient implements ElasticSearchClient {
 public ClientUtil getClientUtil(IndexNameBuilder indexNameBuilder) {
 	// TODO Auto-generated method stub
 	return new RestClientUtil(this, indexNameBuilder);
+}
+public String executeRequest(String path, String entity) throws Exception {
+	 int  triesCount = 0;
+	    String response = null;
+	    Exception e = null;
+	    while (true) {
+	      
+	      String host = serversList.get();
+	      String url = new StringBuilder().append(host ).append( "/" ).append( path).toString();
+	      try{
+	    	  if(entity == null)
+	    		  response = HttpRequestUtil.httpPostforString(url, null,this.headers);
+	    	  else
+	    		  response = HttpRequestUtil.sendJsonBody(entity, url,this.headers);
+	    	  if (response != null) {
+	    		  
+		        logger.info("Status message from elasticsearch: " + response);
+		       
+		      }
+	    	  break;
+	      }
+	      catch(Exception ex){
+	    	  if(triesCount < serversList.size()){//失败尝试下一个地址
+	    		  triesCount++;
+	    		  continue;
+	    	  }
+	    	  else
+	    	  {
+	    		  e = ex;
+	    		  break;
+	    	  }
+	      } 
+	     
+	      
+	     
+	    }
+	    if(e != null)
+	  	  throw e;
+	    return response;
 }
 }

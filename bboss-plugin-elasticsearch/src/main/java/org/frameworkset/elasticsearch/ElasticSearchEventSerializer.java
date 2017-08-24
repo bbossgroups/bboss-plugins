@@ -43,6 +43,6 @@ public interface ElasticSearchEventSerializer {
    * @throws IOException
    *           If an error occurs during serialization
    */
-  abstract   XContentBuilder getContentBuilder(Event<Object> event) throws IOException;
+  abstract   XContentBuilder getContentBuilder(Event event) throws IOException;
   public void configure(Properties elasticsearchPropes);
 }

@@ -2,7 +2,7 @@ package org.frameworkset.elasticsearch.event;
 
 import java.util.Map;
 
-public interface Event<T> {
+public interface Event {
 
 	  /**
 	   * Returns a map of name-value pairs describing the data stored in the body.
@@ -18,13 +18,13 @@ public interface Event<T> {
 	  /**
 	   * Returns the raw byte array of the data contained in this event.
 	   */
-	  public T getBody();
+	  public Object getBody();
 
 	  /**
 	   * Sets the raw byte array of the data contained in this event.
 	   * @param body The data.
 	   */
-	  public void setBody(T body);
+	  public void setBody(Object body);
 	  
 	  public void setIndexType(String indexType);
 	  public String getIndexType();
@@ -32,5 +32,7 @@ public interface Event<T> {
 	  public long getTTL();
 	  public String getIndexPrefix();
 	  public void setIndexPrefix(String indexPrefix);
+	  public void setId(String id);
+	  public String getId();
 
 }

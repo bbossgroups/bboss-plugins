@@ -73,7 +73,7 @@ import com.frameworkset.util.SimpleStringUtil;
  */
 public class ElasticSearchJSONEventSerializer  implements
 ElasticSearchEventSerializer {
-  private   Map<String,Object> jsonConverter(Event<Object> event) throws IOException {
+  private   Map<String,Object> jsonConverter(Event event) throws IOException {
     Map<String,Object> builder = new HashMap<String,Object>();
     appendBody(builder, event);
     appendHeaders(builder, event);
@@ -82,7 +82,7 @@ ElasticSearchEventSerializer {
   }
 
   @Override
-  public   XContentBuilder getContentBuilder(Event<Object> event) throws IOException {
+  public   XContentBuilder getContentBuilder(Event event) throws IOException {
     XContentBuilder builder = jsonBuilder();
     Map<String, String> headers = event.getHeaders();
     
@@ -98,7 +98,7 @@ ElasticSearchEventSerializer {
 
   }
 
-  private   void appendBody(Map<String,Object> builder, Event<Object> event)
+  private   void appendBody(Map<String,Object> builder, Event event)
       throws IOException, UnsupportedEncodingException {
     String data = String.valueOf(event.getBody());
     if(data.startsWith("{") && data.endsWith("}")){
@@ -114,7 +114,7 @@ ElasticSearchEventSerializer {
 
   }
 
-  private   void appendHeaders(Map<String,Object> builder, Event<Object> event)
+  private   void appendHeaders(Map<String,Object> builder, Event event)
       throws IOException {
 //    Map<String, String> headers = Maps.newHashMap(event.getHeaders());
 	  MapBuilder mapBuilder = MapBuilder.newMapBuilder();

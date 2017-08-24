@@ -21,7 +21,7 @@ package org.frameworkset.elasticsearch;
 import java.util.Map;
 
 import org.frameworkset.elasticsearch.event.Event;
-import org.frameworkset.elasticsearch.event.ObjectEvent;
+import org.frameworkset.elasticsearch.event.SimpleEvent;
 import org.joda.time.DateTimeUtils;
 
 import com.frameworkset.util.SimpleStringUtil;
@@ -34,11 +34,11 @@ import com.frameworkset.util.SimpleStringUtil;
  * <li>The current time in millis, otherwise</li>
  * </ol>
  */
-final class TimestampedEvent extends ObjectEvent {
+final class TimestampedEvent extends SimpleEvent {
 
   private final long timestamp;
 
-  TimestampedEvent(Event<Object> base) {
+  TimestampedEvent(Event base) {
 	  super(base);
 //    setBody(base.getBody());
 	
