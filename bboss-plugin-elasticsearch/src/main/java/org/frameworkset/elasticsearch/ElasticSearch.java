@@ -341,7 +341,7 @@ public class ElasticSearch  {
     }
     
 
-    String serializerClazz = DEFAULT_SERIALIZER_CLASS;
+    String serializerClazz = null;//DEFAULT_SERIALIZER_CLASS;
     if (SimpleStringUtil.isNotEmpty(elasticsearchPropes.getProperty(SERIALIZER))) {
       serializerClazz = elasticsearchPropes.getProperty(SERIALIZER);
     }
@@ -349,22 +349,24 @@ public class ElasticSearch  {
    
 
     try {
-      @SuppressWarnings("unchecked")
-      Class<? extends ElasticSearchEventSerializer> clazz = (Class<? extends ElasticSearchEventSerializer>) Class
-          .forName(serializerClazz);
-      ElasticSearchEventSerializer serializer = clazz.newInstance();
 
-      if (serializer instanceof ElasticSearchIndexRequestBuilderFactory) {
-        indexRequestFactory
-            = (ElasticSearchIndexRequestBuilderFactory) serializer;
-        indexRequestFactory.configure(elasticsearchPropes);
-      } else if (serializer instanceof ElasticSearchEventSerializer) {
-        eventSerializer = (ElasticSearchEventSerializer) serializer;
-        eventSerializer.configure(elasticsearchPropes);
-      } else {
-        throw new IllegalArgumentException(serializerClazz
-            + " is not an ElasticSearchEventSerializer");
-      }
+      if(serializerClazz != null && !serializerClazz.equals("")) {
+		  Class<? extends ElasticSearchEventSerializer> clazz = (Class<? extends ElasticSearchEventSerializer>) Class
+				  .forName(serializerClazz);
+		  ElasticSearchEventSerializer serializer = clazz.newInstance();
+
+		  if (serializer instanceof ElasticSearchIndexRequestBuilderFactory) {
+			  indexRequestFactory
+					  = (ElasticSearchIndexRequestBuilderFactory) serializer;
+			  indexRequestFactory.configure(elasticsearchPropes);
+		  } else if (serializer instanceof ElasticSearchEventSerializer) {
+			  eventSerializer = (ElasticSearchEventSerializer) serializer;
+			  eventSerializer.configure(elasticsearchPropes);
+		  } else {
+			  throw new IllegalArgumentException(serializerClazz
+					  + " is not an ElasticSearchEventSerializer");
+		  }
+	  }
     } catch (Exception e) {
       logger.error("Could not instantiate event serializer.", e);
       Throwables.propagate(e);

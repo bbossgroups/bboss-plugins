@@ -107,8 +107,7 @@ public class ElasticSearchSinkConstants {
   public static final String DEFAULT_USER = "elastic";
   public static final String DEFAULT_PASSWORD = "changeme";
   public static final String TTL_REGEX = "^(\\d+)(\\D*)";
-  public static final String DEFAULT_SERIALIZER_CLASS = "org.apache.flume." +
-          "sink.elasticsearch.ElasticSearchLogStashEventSerializer";
+  public static final String DEFAULT_SERIALIZER_CLASS = "org.frameworkset.elasticsearch.ElasticSearchJSONEventSerializer" ;
   public static final String DEFAULT_INDEX_NAME_BUILDER_CLASS =
           "org.frameworkset.elasticsearch.TimeBasedIndexNameBuilder";
 }
