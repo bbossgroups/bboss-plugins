@@ -18,9 +18,9 @@
  */
 package org.frameworkset.elasticsearch.client;
 
-import java.util.Properties;
-
 import org.frameworkset.elasticsearch.IndexNameBuilder;
+
+import java.util.Properties;
 
 /**
  * Interface for an ElasticSearch client which is responsible for sending bulks
@@ -34,7 +34,7 @@ public interface ElasticSearchClient {
 	 */
 	void close();
 	ClientUtil getClientUtil(IndexNameBuilder indexNameBuilder);
-
+	public ClientUtil getConfigClientUtil(IndexNameBuilder indexNameBuilder,String configFile);
 //	BulkRequestBuilder prepareBulk();
 //
 //	IndexRequestBuilder createIndexRequest(IndexNameBuilder indexNameBuilder, Event event) throws IOException;

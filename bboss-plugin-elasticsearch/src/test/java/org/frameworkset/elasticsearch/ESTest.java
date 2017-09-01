@@ -13,9 +13,9 @@ public class ESTest {
 	public void test() throws Exception{
 		DefaultApplicationContext context = DefaultApplicationContext.getApplicationContext("conf/elasticsearch.xml");
 		ElasticSearch elasticSearchSink = context.getTBeanObject("elasticSearch", ElasticSearch.class);
-		ElasticSearch restelasticSearchSink = context.getTBeanObject("restelasticSearch", ElasticSearch.class);
+//		ElasticSearch restelasticSearchSink = context.getTBeanObject("restelasticSearch", ElasticSearch.class);
 		
-		ClientUtil clientUtil = restelasticSearchSink.getClientUtil();
+		ClientUtil clientUtil = elasticSearchSink.getRestClientUtil();
 		String entity = "{"+
     "\"aggs\": {"+
     "\"top_tags\": {"+
@@ -53,9 +53,9 @@ public class ESTest {
 	{
 		DefaultApplicationContext context = DefaultApplicationContext.getApplicationContext("conf/elasticsearch.xml");
 		ElasticSearch elasticSearchSink = context.getTBeanObject("elasticSearch", ElasticSearch.class);
-		ElasticSearch restelasticSearchSink = context.getTBeanObject("restelasticSearch", ElasticSearch.class);
+//		ElasticSearch restelasticSearchSink = context.getTBeanObject("restelasticSearch", ElasticSearch.class);
 		
-		ClientUtil clientUtil = restelasticSearchSink.getClientUtil();
+		ClientUtil clientUtil = elasticSearchSink.getRestClientUtil();
 		String entiry = "{\"query\" : {\"term\" : { \"rpc\" : \"content.page\" }}}";
 		String response = (String) clientUtil.executeRequest("trace-*/_search",entiry);
 		

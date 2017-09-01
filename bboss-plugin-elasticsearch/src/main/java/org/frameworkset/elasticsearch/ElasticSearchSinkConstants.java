@@ -28,8 +28,8 @@ public class ElasticSearchSinkConstants {
    *  127.0.0.1:92001,127.0.0.2:9300
    * </pre>
    */
-  public static final String HOSTNAMES = "elasticsearch.hostNames";
-
+  public static final String REST_HOSTNAMES = "elasticsearch.rest.hostNames";
+  public static final String TRANSPORT_HOSTNAMES = "elasticsearch.transport.hostNames";
   /**
    * The name to index the document to, defaults to 'flume'</p>
    * The current date in the format 'yyyy-MM-dd' will be appended to this name,

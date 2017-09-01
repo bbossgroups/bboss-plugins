@@ -18,45 +18,41 @@
  */
 package org.frameworkset.elasticsearch.client;
 
-import java.net.UnknownHostException;
-import java.util.Properties;
-
 import org.frameworkset.elasticsearch.ElasticSearchEventSerializer;
 import org.frameworkset.elasticsearch.ElasticSearchIndexRequestBuilderFactory;
+
+import java.net.UnknownHostException;
+import java.util.Properties;
 
 /**
  * Internal ElasticSearch client factory. Responsible for creating instance
  * of ElasticSearch clients.
  */
 public class ElasticSearchClientFactory {
-  public static final String TransportClient = "transport";
-  public static final String RestClient = "rest";
+	public static final String TransportClient = "transport";
+	public static final String RestClient = "rest";
 
-  /**
-   *
-   * @param clientType
-   *    String representation of client type
-   * @param hostNames
-   *    Array of strings that represents hostnames with ports (hostname:port)
-   * @param clusterName
-   *    Elasticsearch cluster name used only by Transport Client
-   * @param serializer
-   *    Serializer of flume events to elasticsearch documents
-   * @return
- * @throws UnknownHostException 
-   */
-  public ElasticSearchClient getClient(String clientType, String[] hostNames, String elasticUser, String elasticPassword,
-                                       String clusterName, ElasticSearchEventSerializer serializer,
-      ElasticSearchIndexRequestBuilderFactory indexBuilder,Properties extendElasticsearchPropes) throws NoSuchClientTypeException, UnknownHostException {
-    if (clientType.equalsIgnoreCase(TransportClient) && serializer != null) {
-      return new ElasticSearchTransportClient(hostNames,   elasticUser,   elasticPassword,  clusterName, serializer,extendElasticsearchPropes);
-    } else if (clientType.equalsIgnoreCase(TransportClient) && indexBuilder != null) { 
-      return new ElasticSearchTransportClient(hostNames,   elasticUser,   elasticPassword,  clusterName, indexBuilder,extendElasticsearchPropes);
-    } else if (clientType.equalsIgnoreCase(RestClient) && serializer != null) {
-      return new ElasticSearchRestClient(hostNames,   elasticUser,   elasticPassword,  serializer,extendElasticsearchPropes);
-    }
-    throw new NoSuchClientTypeException();
-  }
+	/**
+	 * @param clientType  String representation of client type
+	 * @param hostNames   Array of strings that represents hostnames with ports (hostname:port)
+	 * @param clusterName Elasticsearch cluster name used only by Transport Client
+	 * @param serializer  Serializer of flume events to elasticsearch documents
+	 * @return
+	 * @throws UnknownHostException
+	 */
+	public ElasticSearchClient getClient(String clientType, String[] hostNames, String elasticUser, String elasticPassword,
+										 String clusterName, ElasticSearchEventSerializer serializer,
+										 ElasticSearchIndexRequestBuilderFactory indexBuilder, Properties extendElasticsearchPropes) throws NoSuchClientTypeException, UnknownHostException {
+		if (clientType.equalsIgnoreCase(TransportClient)) {
+			if (indexBuilder != null)
+				return new ElasticSearchTransportClient(hostNames, elasticUser, elasticPassword, clusterName, indexBuilder, extendElasticsearchPropes);
+			else
+				return new ElasticSearchTransportClient(hostNames, elasticUser, elasticPassword, clusterName, serializer, extendElasticsearchPropes);
+		} else if (clientType.equalsIgnoreCase(RestClient)) {
+			return new ElasticSearchRestClient(hostNames, elasticUser, elasticPassword, serializer, extendElasticsearchPropes);
+		}
+		throw new NoSuchClientTypeException();
+	}
 
 //  /**
 //   * Used for tests only. Creates local elasticsearch instance client.

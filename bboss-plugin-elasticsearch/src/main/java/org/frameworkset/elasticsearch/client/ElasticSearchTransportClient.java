@@ -223,17 +223,24 @@ public class ElasticSearchTransportClient implements ElasticSearchClient {
 				builder.put(extendElasticsearchPropes);
 			}
 		}
-		
-		TransportClient transportClient = this.elasticUser != null && !this.elasticUser.equals("")
-				? new PreBuiltXPackTransportClient(settings) : new PreBuiltTransportClient(settings);
-		// TransportClient transportClient = new TransportClient(settings);
-		for (InetSocketTransportAddress host : serverAddresses) {
-			transportClient.addTransportAddress(host);
+		try{
+			TransportClient transportClient = this.elasticUser != null && !this.elasticUser.equals("")
+					? new PreBuiltXPackTransportClient(settings) : new PreBuiltTransportClient(settings);
+			// TransportClient transportClient = new TransportClient(settings);
+			for (InetSocketTransportAddress host : serverAddresses) {
+				transportClient.addTransportAddress(host);
+			}
+			if (client != null) {
+				client.close();
+			}
+			client = transportClient;
 		}
-		if (client != null) {
-			client.close();
+		catch(RuntimeException e){
+			e.printStackTrace();
 		}
-		client = transportClient;
+		catch(Throwable e){
+			e.printStackTrace();
+		}
 	}
 
 	// /*
@@ -323,7 +330,12 @@ public class ElasticSearchTransportClient implements ElasticSearchClient {
 		// TODO Auto-generated method stub
 		return new TransportClientUtil(this,indexNameBuilder);
 	}
-	
+
+	@Override
+	public ClientUtil getConfigClientUtil(IndexNameBuilder indexNameBuilder, String configFile) {
+		return null;
+	}
+
 	public DeleteRequestBuilder deleteIndex(String indexName, String indexType, String id) throws Exception{
 		return client.prepareDelete(indexName, indexType, id);
 	}
