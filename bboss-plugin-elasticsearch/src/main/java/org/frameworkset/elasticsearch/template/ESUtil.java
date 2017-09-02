@@ -292,7 +292,7 @@ public class ESUtil {
 				{
 					if(damon == null)
 					{
-						damon = new DaemonThread(refresh_interval,"SQL files Refresh Worker"); 
+						damon = new DaemonThread(refresh_interval,"ElasticSearch files Refresh Worker"); 
 						damon.start();
 						
 					}

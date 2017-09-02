@@ -341,11 +341,12 @@ public class ElasticSearch {
 		if (SimpleStringUtil.isNotEmpty(elasticsearchPropes.getProperty(BATCH_SIZE))) {
 			this.batchSize = Integer.parseInt(elasticsearchPropes.getProperty(BATCH_SIZE));
 		}
-
-		if (SimpleStringUtil.isNotEmpty(elasticsearchPropes.getProperty(TTL))) {
-			this.ttlMs = parseTTL(elasticsearchPropes.getProperty(TTL));
-			Preconditions.checkState(ttlMs > 0, TTL
-					+ " must be greater than 0 or not set.");
+		String ttl = elasticsearchPropes.getProperty(TTL);
+		if (SimpleStringUtil.isNotEmpty(ttl)) {
+			this.ttlMs = parseTTL(ttl);
+			logger.info("elasticsearch.TTL:"+ttlMs+",config value is:"+ttl);
+//			Preconditions.checkState(ttlMs > 0, TTL
+//					+ " must be greater than 0 or not set.");
 		}
 
 		if (SimpleStringUtil.isNotEmpty(elasticsearchPropes.getProperty(CLIENT_TYPE))) {
@@ -525,7 +526,7 @@ public class ElasticSearch {
 			}
 		}
 		logger.info("TTL not provided. Skipping the TTL config by returning 0.");
-		return 0;
+		return -1;
 	}
 
 
