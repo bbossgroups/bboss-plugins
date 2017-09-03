@@ -1,6 +1,5 @@
 package org.frameworkset.elasticsearch.client;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -11,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.elasticsearch.client.Client;
 import org.frameworkset.elasticsearch.ElasticSearchEventSerializer;
@@ -36,7 +32,6 @@ import com.frameworkset.common.poolman.NestedSQLException;
 import com.frameworkset.util.ColumnEditorInf;
 import com.frameworkset.util.ColumnToFieldEditor;
 import com.frameworkset.util.ColumnType;
-import com.frameworkset.util.SimpleStringUtil;
 
 import bboss.org.apache.velocity.VelocityContext;
 
@@ -372,16 +367,16 @@ public class ConfigRestClientUtil extends RestClientUtil {
 	}
 	@Override
 	public SearchResult search(String path, String templateName, Map params) throws ElasticSearchException {
-		return executeRequest(  path,   evalTemplate(templateName,params),new ElasticSearchResponseHandler());
+		return super.executeRequest(  path,   evalTemplate(templateName,params),new ElasticSearchResponseHandler());
 	}
 	@Override
 	public SearchResult search(String path, String templateName, Object params) throws ElasticSearchException {
-		return executeRequest(  path,   evalTemplate(templateName,params),new ElasticSearchResponseHandler());
+		return super.executeRequest(  path,   evalTemplate(templateName,params),new ElasticSearchResponseHandler());
 	}
 	@Override
 	public SearchResult search(String path, String templateName) throws ElasticSearchException {
 		 
-		return executeRequest(  path,   evalTemplate(templateName,null),new ElasticSearchResponseHandler());
+		return super.executeRequest(  path,   evalTemplate(templateName,null),new ElasticSearchResponseHandler());
 	} 
 	 
 	
