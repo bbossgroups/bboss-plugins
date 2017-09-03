@@ -216,7 +216,7 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		String response = null;
 		Exception e = null;
 		if(logger.isDebugEnabled()){
-			logger.debug("es action:{},request body:\n{}",path,entity);
+			logger.debug("Elastic search action:{},request body:\n{}",path,entity);
 		}
 		while (true) {
 
@@ -264,7 +264,7 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		String response = null;
 		Exception e = null;
 		if(logger.isDebugEnabled()){
-			logger.debug("es action:{},request body:\n{}",path,entity);
+			logger.debug("Elastic search action:{},request body:\n{}",path,entity);
 		}
 		while (true) {
 
@@ -298,12 +298,18 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 			throw new ElasticSearchException(e);
 		return response;
 	}
+	/**
+	 * 需要补充容错机制
+	 * @param path
+	 * @param entity
+	 * @param responseHandler
+	 * @return
+	 * @throws ElasticSearchException
+	 */
 	public <T> T executeRequest(String path, String entity,ResponseHandler<T> responseHandler) throws ElasticSearchException {
-		int triesCount = 0;
 		T response = null;
-		Exception e = null;
 		if(logger.isDebugEnabled()){
-			logger.debug("es action:{},request body:\n{}",path,entity);
+			logger.debug("Elastic search action:{},request body:\n{}",path,entity);
 		}
 		while (true) {
 
@@ -321,20 +327,19 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 				}
 				break;
 			} catch (Exception ex) {
-				if (triesCount < serversList.size()) {//失败尝试下一个地址
-					triesCount++;
-					continue;
-				} else {
-					e = ex;
-					break;
-				}
+				throw new ElasticSearchException(ex);
+//				if (triesCount < serversList.size()) {//失败尝试下一个地址
+//					triesCount++;
+//					continue;
+//				} else {
+//					e = ex;
+//					break;
+//				}
 			}
 
 
 
 		}
-		if (e != null)
-			throw new ElasticSearchException(e);
 		return response;
 	}
 	

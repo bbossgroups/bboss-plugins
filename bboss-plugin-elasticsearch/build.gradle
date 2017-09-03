@@ -52,7 +52,7 @@ dependencies {
     
    compile (
          [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: "${jacksonversion}",transitive: false],
-          
+          [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonversion}",transitive: false],
         [group: 'org.elasticsearch', name: 'elasticsearch', version: "${elasticsearch}", transitive: true],
         //[group: 'org.elasticsearch', name: 'transport', version: "${elasticsearch}", transitive: true],
         //[group: 'org.apache.httpcomponents', name: 'httpclient', version: "4.5.3", transitive: true],
