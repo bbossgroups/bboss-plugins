@@ -14,7 +14,7 @@ public class RestResponse  implements SearchResult,Serializable {
     private Shards shards;
     @JsonProperty("hits")
     private SearchHits searchHits;
-    private Map<String,Object> aggregations;
+    private Map<String,Map<String,Object>> aggregations;
 	public RestResponse() {
 		// TODO Auto-generated constructor stub
 	}
@@ -43,10 +43,10 @@ public class RestResponse  implements SearchResult,Serializable {
 	public void setTimedOut(boolean timedOut) {
 		this.timedOut = timedOut;
 	}
-	public Map<String, Object> getAggregations() {
+	public Map<String, Map<String,Object>> getAggregations() {
 		return aggregations;
 	}
-	public void setAggregations(Map<String, Object> aggregations) {
+	public void setAggregations(Map<String, Map<String,Object>> aggregations) {
 		this.aggregations = aggregations;
 	}
 	
