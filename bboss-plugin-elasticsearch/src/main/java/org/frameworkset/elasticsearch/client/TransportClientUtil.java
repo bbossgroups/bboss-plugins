@@ -200,5 +200,53 @@ public class TransportClientUtil  implements ClientUtil{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public String dropIndice(String index) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String updateIndiceMapping(String action, String indexMapping) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String createIndiceMapping(String indexName, String indexMapping) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String updateIndiceMapping(String action, String templateName, Object parameter)
+			throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String createIndiceMapping(String indexName, String templateName, Object parameter)
+			throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String updateIndiceMapping(String action, String templateName, Map parameter) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String createIndiceMapping(String indexName, String templateName, Map parameter)
+			throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	  * 获取索引定义
+	  * @param index
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String getIndice(String index)  throws ElasticSearchException {
+		return null;
+	 }
 
 }

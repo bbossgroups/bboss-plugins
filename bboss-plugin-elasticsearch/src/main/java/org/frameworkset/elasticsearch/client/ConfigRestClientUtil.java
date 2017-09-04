@@ -378,7 +378,106 @@ public class ConfigRestClientUtil extends RestClientUtil {
 		 
 		return super.executeRequest(  path,   evalTemplate(templateName,null),new ElasticSearchResponseHandler());
 	} 
-	 
 	
+	
+	/**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String templateName)  throws ElasticSearchException {
+		 return super.updateIndiceMapping(action,evalTemplate(templateName,null));
+	 }
+	 
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String templateName)  throws ElasticSearchException {
+		 return super.createIndiceMapping(indexName,evalTemplate(templateName,null));
+	 }
+	 
+	 
+	 /**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String templateName,Object parameter)  throws ElasticSearchException {
+		 return super.updateIndiceMapping(action,evalTemplate(templateName,parameter));
+	 }
+	 
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String templateName,Object parameter)  throws ElasticSearchException {
+		 return super.createIndiceMapping(indexName,evalTemplate(templateName,parameter));
+	 }
+	 
+	 /**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String templateName,Map parameter)  throws ElasticSearchException {
+		 return super.updateIndiceMapping(action,evalTemplate(templateName,parameter));
+	 }
+	 
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String templateName,Map parameter)  throws ElasticSearchException {
+		 return super.createIndiceMapping(indexName,evalTemplate(templateName,parameter));
+	 }
 
 }

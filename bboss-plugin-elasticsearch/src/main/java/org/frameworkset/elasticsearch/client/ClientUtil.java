@@ -77,5 +77,105 @@ public interface ClientUtil {
 	  */
 	 public SearchResult search(String path, String entity) throws ElasticSearchException ;
 	 
+	 /**
+	  * 获取索引定义
+	  * @param index
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String getIndice(String index)  throws ElasticSearchException ;
+	 /**
+	  * 删除索引定义
+	  * @param index
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String dropIndice(String index)  throws ElasticSearchException ;
+	 
+	 /**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String indexMapping)  throws ElasticSearchException ;
+	 
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String indexMapping)  throws ElasticSearchException ;
+	 
+	 
+	 /**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String templateName,Object parameter)  throws ElasticSearchException ;
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String templateName,Object parameter)  throws ElasticSearchException ;
+	 /**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String templateName,Map parameter)  throws ElasticSearchException ;
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String templateName,Map parameter)  throws ElasticSearchException ;
+	 
 	 
 }

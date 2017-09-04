@@ -123,5 +123,78 @@ public class RestClientUtil implements ClientUtil{
 		return executeRequest(  path,   entity,new ElasticSearchResponseHandler());
 	}
 	
+	 public String dropIndice(String index)  throws ElasticSearchException {
+		 return this.client.executeHttp(index+"?pretty",ClientUtil.HTTP_DELETE);
+		 
+	 }
+	 
+	 
+	 /**
+	  * 更新索引定义
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String updateIndiceMapping(String action,String indexMapping)  throws ElasticSearchException {
+		 return this.client.executeHttp(action,indexMapping,ClientUtil.HTTP_POST);
+	 }
+	 
+	 /**
+	  * 创建索引定义
+	  * curl -XPUT 'localhost:9200/test?pretty' -H 'Content-Type: application/json' -d'
+		{
+		    "settings" : {
+		        "number_of_shards" : 1
+		    },
+		    "mappings" : {
+		        "type1" : {
+		            "properties" : {
+		                "field1" : { "type" : "text" }
+		            }
+		        }
+		    }
+		}
+	  * @param indexMapping
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String createIndiceMapping(String indexName,String indexMapping)  throws ElasticSearchException {
+		 return this.client.executeHttp(indexName+"?pretty",indexMapping,ClientUtil.HTTP_POST);
+	 }
+	@Override
+	public String updateIndiceMapping(String action, String templateName, Object parameter)
+			throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String createIndiceMapping(String indexName, String templateName, Object parameter)
+			throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String updateIndiceMapping(String action, String templateName, Map parameter) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String createIndiceMapping(String indexName, String templateName, Map parameter)
+			throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	  * 获取索引定义
+	  * @param index
+	  * @return
+	  * @throws ElasticSearchException
+	  */
+	 public String getIndice(String index)  throws ElasticSearchException {
+		 String response = (String)client.executeHttp(index+"/_mapping?pretty",ClientUtil.HTTP_GET);
+		 return response;
+	 }
+	
  
 }
