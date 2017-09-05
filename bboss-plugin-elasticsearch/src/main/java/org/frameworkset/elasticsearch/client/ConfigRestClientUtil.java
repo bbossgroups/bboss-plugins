@@ -20,6 +20,7 @@ import org.frameworkset.elasticsearch.template.ESInfo;
 import org.frameworkset.elasticsearch.template.ESTemplate;
 import org.frameworkset.elasticsearch.template.ESUtil;
 import org.frameworkset.spi.assemble.Param;
+import org.frameworkset.spi.remote.http.MapResponseHandler;
 import org.frameworkset.util.ClassUtil;
 import org.frameworkset.util.ClassUtil.ClassInfo;
 import org.frameworkset.util.ClassUtil.PropertieDescription;
@@ -479,5 +480,25 @@ public class ConfigRestClientUtil extends RestClientUtil {
 	 public String createIndiceMapping(String indexName,String templateName,Map parameter)  throws ElasticSearchException {
 		 return super.createIndiceMapping(indexName,evalTemplate(templateName,parameter));
 	 }
+	 
+	 public Map<String,Object> searchMap(String path, String templateName,Map params) throws ElasticSearchException{
+		 return this.client.executeRequest(  path,   this.evalTemplate(templateName, params),new MapResponseHandler());
+	 }
+		
+	 
+		@SuppressWarnings("unchecked")
+		public Map<String,Object> searchMap(String path, String templateName,Object params) throws ElasticSearchException{
+			return this.client.executeRequest(  path,   this.evalTemplate(templateName, params),new MapResponseHandler());
+		}
+		/**
+		  * 
+		  * @param path
+		  * @param entity
+		  * @return
+		  */
+		 @SuppressWarnings("unchecked")
+		public Map<String,Object> searchMap(String path, String templateName) throws ElasticSearchException {
+			return super.executeRequest(  path,   this.evalTemplate(templateName, null),new MapResponseHandler());
+		 }
 
 }

@@ -248,5 +248,20 @@ public class TransportClientUtil  implements ClientUtil{
 	 public String getIndice(String index)  throws ElasticSearchException {
 		return null;
 	 }
+	@Override
+	public Map<String, Object> searchMap(String path, String templateName, Map params) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, Object> searchMap(String path, String templateName, Object params) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, Object> searchMap(String path, String entity) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

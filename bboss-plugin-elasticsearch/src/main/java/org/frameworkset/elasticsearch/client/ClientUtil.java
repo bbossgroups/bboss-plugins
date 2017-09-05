@@ -77,6 +77,20 @@ public interface ClientUtil {
 	  */
 	 public SearchResult search(String path, String entity) throws ElasticSearchException ;
 	 
+	 
+	 public Map<String,Object> searchMap(String path, String templateName,Map params) throws ElasticSearchException;
+		
+	 
+	public Map<String,Object> searchMap(String path, String templateName,Object params) throws ElasticSearchException;
+	/**
+	  * 
+	  * @param path
+	  * @param entity
+	  * @return
+	  */
+	 public Map<String,Object> searchMap(String path, String entity) throws ElasticSearchException ;
+	 
+	 
 	 /**
 	  * 获取索引定义
 	  * @param index

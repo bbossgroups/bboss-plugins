@@ -8,6 +8,7 @@ import org.frameworkset.elasticsearch.ElasticSearchEventSerializer;
 import org.frameworkset.elasticsearch.ElasticSearchException;
 import org.frameworkset.elasticsearch.IndexNameBuilder;
 import org.frameworkset.elasticsearch.event.Event;
+import org.frameworkset.spi.remote.http.MapResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,6 +123,26 @@ public class RestClientUtil implements ClientUtil{
 		 
 		return executeRequest(  path,   entity,new ElasticSearchResponseHandler());
 	}
+	
+	
+	 public Map<String,Object>  searchMap(String path, String templateName,Map params) throws ElasticSearchException{
+		 return null;
+	 }
+		
+	 
+		public Map<String,Object> searchMap(String path, String templateName,Object params) throws ElasticSearchException{
+			return null;
+		}
+		/**
+		  * 
+		  * @param path
+		  * @param entity
+		  * @return
+		  */
+		 @SuppressWarnings("unchecked")
+		public Map<String,Object> searchMap(String path, String entity) throws ElasticSearchException {
+			 return executeRequest(  path,   entity,new MapResponseHandler());
+		 }
 	
 	 public String dropIndice(String index)  throws ElasticSearchException {
 		 return this.client.executeHttp(index+"?pretty",ClientUtil.HTTP_DELETE);
