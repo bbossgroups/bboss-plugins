@@ -1,6 +1,7 @@
 package org.frameworkset.elasticsearch.client;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
@@ -260,6 +261,11 @@ public class TransportClientUtil  implements ClientUtil{
 	}
 	@Override
 	public Map<String, Object> searchMap(String path, String entity) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<ESIndice> getIndexes() throws ElasticSearchException {
 		// TODO Auto-generated method stub
 		return null;
 	}

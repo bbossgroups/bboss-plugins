@@ -1,5 +1,6 @@
 package org.frameworkset.elasticsearch.client;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
@@ -191,5 +192,6 @@ public interface ClientUtil {
 	  */
 	 public String createIndiceMapping(String indexName,String templateName,Map parameter)  throws ElasticSearchException ;
 	 
+	 public List<ESIndice> getIndexes() throws ElasticSearchException;
 	 
 }

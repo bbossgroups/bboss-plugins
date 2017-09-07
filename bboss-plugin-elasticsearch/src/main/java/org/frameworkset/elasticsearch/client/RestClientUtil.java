@@ -1,5 +1,13 @@
 package org.frameworkset.elasticsearch.client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
@@ -11,6 +19,8 @@ import org.frameworkset.elasticsearch.event.Event;
 import org.frameworkset.spi.remote.http.MapResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.frameworkset.util.SimpleStringUtil;
 
 public class RestClientUtil implements ClientUtil{
 	private static Logger logger = LoggerFactory.getLogger(RestClientUtil.class);
@@ -216,6 +226,155 @@ public class RestClientUtil implements ClientUtil{
 		 String response = (String)client.executeHttp(index+"/_mapping?pretty",ClientUtil.HTTP_GET);
 		 return response;
 	 }
-	
+	 public List<ESIndice> getIndexes() throws ElasticSearchException{
+		 String data = this.client.executeHttp("_cat/indices?v",HTTP_GET);
+         logger.debug(data);
+
+         if(SimpleStringUtil.isNotEmpty(data)){
+			try {
+				List<ESIndice> indices = extractIndice(data);
+				 return indices;
+			} catch (IOException e) {
+				throw new ElasticSearchException(e);
+			}
+        	
+         }
+         return null;
+	 }
+	 
+	 public List<ESIndice> extractIndice(String data) throws IOException {
+	        Reader reader = null;
+	        BufferedReader br = null;
+	        try{
+	        	reader = new StringReader(data);
+	            br = new BufferedReader(reader);
+		        List<ESIndice> indices = new ArrayList<ESIndice>();
+		        int i = 0;
+		        SimpleDateFormat format = new SimpleDateFormat(client.getDateFormat());
+		        while(true){
+		            String line = br.readLine();
+		            if(line == null)
+		                break;
+		            if(i == 0){
+		                i ++;
+		                continue;
+		            }
+		            
+		            ESIndice esIndice = buildESIndice(  line,  format);
+		            //如果索引已经过时，则清除过时索引数据
+//		            if(esIndice.getGenDate() != null && esIndice.getGenDate().before(deadLine)){
+		                indices.add(esIndice);
+//		            }
+		
+		        }
+		        return indices;
+	        }
+	        finally
+	        {
+	        	 if(reader != null)
+					try {
+						reader.close();
+					} catch (IOException e) {
+						 
+					}
+	        	 if(br != null)
+	        		 try {
+	 					br.close();
+	 				} catch (IOException e) {
+	 					 
+	 				}
+	        }
+
+
+	    }
+	    
+	    private ESIndice buildESIndice(String line,SimpleDateFormat format)
+	    {
+	    	StringBuilder token = new StringBuilder();
+	        ESIndice esIndice = new ESIndice();
+
+	        int k = 0;
+	        for(int j = 0; j < line.length(); j ++){
+	            char c = line.charAt(j);
+	            if(c != ' '){
+	                token.append(c);
+	            }
+	            else {
+	                if(token.length() == 0)
+	                    continue;
+	                switch (k ){
+	                    case 0:
+	                        esIndice.setHealth(token.toString());
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 1:
+	                        esIndice.setStatus(token.toString());
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 2:
+	                        esIndice.setIndex(token.toString());
+	                        putGendate(  esIndice,  format);
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 3:
+	                        esIndice.setUuid(token.toString());
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 4:
+	                        esIndice.setPri(Integer.parseInt(token.toString()));
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 5:
+	                        esIndice.setRep(Integer.parseInt(token.toString()));
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 6:
+	                        esIndice.setDocsCcount(Long.parseLong(token.toString()));
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 7:
+	                        esIndice.setDocsDeleted(Long.parseLong(token.toString()));
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 8:
+	                        esIndice.setStoreSize(token.toString());
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    case 9:
+	                        esIndice.setPriStoreSize(token.toString());
+	                        token.setLength(0);
+	                        k ++;
+	                        break;
+	                    default:
+	                        break;
+
+	                }
+	            }
+	        }
+	        esIndice.setPriStoreSize(token.toString());
+	        return esIndice;
+	    }
+	    private void putGendate(ESIndice esIndice,SimpleDateFormat format){
+	    	int dsplit = esIndice.getIndex().lastIndexOf('-');
+
+	        try {
+	        	if(dsplit > 0){
+		            String date = esIndice.getIndex().substring(dsplit+1);
+		            esIndice.setGenDate((Date)format.parseObject(date));
+	        	}
+
+	        } catch (Exception e) {
+
+	        }
+	    }
  
 }

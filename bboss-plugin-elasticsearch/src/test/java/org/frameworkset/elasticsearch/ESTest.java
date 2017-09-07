@@ -4,18 +4,27 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.frameworkset.elasticsearch.client.ClientUtil;
-import org.frameworkset.json.JacksonObjectMapper;
 import org.frameworkset.spi.DefaultApplicationContext;
 import org.frameworkset.spi.remote.http.MapResponseHandler;
 import org.frameworkset.spi.remote.http.StringResponseHandler;
+import org.frameworkset.util.FastDateFormat;
 import org.junit.Test;
 
 public class ESTest {
 
 	public ESTest() {
 		// TODO Auto-generated constructor stub
+	}
+	@Test
+	public void testFastDateFormat() throws ParseException{
+		String data = "2005-01-10 12:00:00";
+		String format = "yyyy-MM-dd HH:mm:ss";
+		FastDateFormat df = FastDateFormat.getInstance(format,TimeZone.getTimeZone("Asia/Shanghai"));
+		Object ojb = df.parseObject(data);
+		System.out.println();
 	}
 	@Test
 	public void test() throws Exception{

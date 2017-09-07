@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
@@ -33,11 +34,14 @@ import org.elasticsearch.common.bytes.BytesReference;
 import org.frameworkset.elasticsearch.ElasticSearchEventSerializer;
 import org.frameworkset.elasticsearch.ElasticSearchException;
 import org.frameworkset.elasticsearch.IndexNameBuilder;
+import org.frameworkset.elasticsearch.TimeBasedIndexNameBuilder;
 import org.frameworkset.elasticsearch.event.Event;
 import org.frameworkset.spi.remote.http.HttpRequestUtil;
+import org.frameworkset.util.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.frameworkset.util.SimpleStringUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
 
@@ -61,7 +65,13 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 	private String elasticPassword;
 	private HttpClient httpClient;
 	private Map<String, String> headers = new HashMap<>();
+ 
+    private FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy.MM.dd",
+      TimeZone.getTimeZone("Etc/UTC"));
+    
+    private String dateFormat = "yyyy.MM.dd";
 
+    private TimeZone timeZone = TimeZone.getTimeZone("Etc/UTC");
 	public ElasticSearchRestClient(String[] hostNames, String elasticUser, String elasticPassword,
 								   ElasticSearchEventSerializer serializer, Properties extendElasticsearchPropes) {
 		this.extendElasticsearchPropes = extendElasticsearchPropes;
@@ -102,6 +112,20 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 
 	@Override
 	public void configure(Properties elasticsearchPropes) {
+		String dateFormatString = elasticsearchPropes.getProperty(TimeBasedIndexNameBuilder.DATE_FORMAT);
+
+	    String timeZoneString = elasticsearchPropes.getProperty(TimeBasedIndexNameBuilder.TIME_ZONE);
+		//  logger.info(">>>>>>>>>>>>>>>>>>dateFormatString:"+dateFormatString+",timeZoneString:"+timeZoneString);
+	    if (SimpleStringUtil.isEmpty(dateFormatString)) {
+	      dateFormatString = TimeBasedIndexNameBuilder.DEFAULT_DATE_FORMAT;
+	    }
+	    if (SimpleStringUtil.isEmpty(timeZoneString)) {
+	      timeZoneString = TimeBasedIndexNameBuilder.DEFAULT_TIME_ZONE;
+	    }
+	    this.dateFormat = dateFormatString;
+	    this.timeZone = TimeZone.getTimeZone(timeZoneString);
+	    fastDateFormat = FastDateFormat.getInstance(dateFormatString,
+	        TimeZone.getTimeZone(timeZoneString));
 	}
 
 	@Override
@@ -341,6 +365,27 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 
 		}
 		return response;
+	}
+
+	public FastDateFormat getFastDateFormat() {
+		return fastDateFormat;
+	}
+	 
+
+	public String getDateFormat() {
+		return dateFormat;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
+
+	public void setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
 	}
 	
 }
