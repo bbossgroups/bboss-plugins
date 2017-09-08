@@ -8,6 +8,9 @@ public class RootCause {
 	@JsonProperty("index_uuid")
 	private String indexUuid;//": "Yh1s0aoDTdqa3ojpbYq2BQ",
 	private String index;//": "trace-2017.08.31"
+	
+	private int line;
+	private int col;
 	public RootCause() {
 		// TODO Auto-generated constructor stub
 	}
@@ -34,6 +37,18 @@ public class RootCause {
 	}
 	public void setIndex(String index) {
 		this.index = index;
+	}
+	public int getLine() {
+		return line;
+	}
+	public void setLine(int line) {
+		this.line = line;
+	}
+	public int getCol() {
+		return col;
+	}
+	public void setCol(int col) {
+		this.col = col;
 	}
 
 }

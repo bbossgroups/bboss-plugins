@@ -254,7 +254,7 @@ public class ConfigRestClientUtil extends RestClientUtil {
 		
 		ESInfo esInfo = esUtil.getESInfo(templateName);
 		if(esInfo == null)
-			return templateName;
+			throw new ElasticSearchException("ElasticSearch Template ["+templateName+"]@"+this.esUtil.getRealTemplateFile()+" 未定义.");
 		if(params == null || params.size() == 0)
 			return esInfo.getTemplate();
 		String template  = null;
@@ -289,7 +289,7 @@ public class ConfigRestClientUtil extends RestClientUtil {
 		
 		ESInfo esInfo = esUtil.getESInfo(templateName);
 		if(esInfo == null)
-			return templateName;
+			throw new ElasticSearchException("ElasticSearch Template ["+templateName+"]@"+this.esUtil.getRealTemplateFile()+" 未定义.");
 		if(params == null )
 			return esInfo.getTemplate();
 		String template  = null;

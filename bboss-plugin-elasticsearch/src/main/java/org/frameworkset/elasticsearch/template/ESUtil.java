@@ -61,7 +61,8 @@ public class ESUtil {
 	protected Map<String,ESInfo> esInfos;
 	protected Map<String,ESRef> esrefs;
 	protected boolean hasrefs;
-	
+	protected String templateFile;
+	protected String realTemplateFile;
 	public static class ESRef
 	{
 		public ESRef(String esname, String templatefile, String name) {
@@ -303,7 +304,9 @@ public class ESUtil {
 		
 	}
 	private ESUtil(String templatefile) {
+		this.templateFile = templatefile;
 		this.templatecontext = new ESSOAFileApplicationContext(templatefile);		
+		this.realTemplateFile = this.templatecontext.getConfigfile();
 		this.trimValues();
 		
 		 checkESUtil(templatefile,this);
@@ -559,6 +562,10 @@ public class ESUtil {
 	public boolean fromConfig() {
 		
 		return this.templatecontext != null;
+	}
+
+	public String getRealTemplateFile() {
+		return realTemplateFile;
 	}
 
 }

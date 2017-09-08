@@ -65,6 +65,7 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 	private String elasticPassword;
 	private HttpClient httpClient;
 	private Map<String, String> headers = new HashMap<>();
+	private boolean showTemplate = false;
  
     private FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy.MM.dd",
       TimeZone.getTimeZone("Etc/UTC"));
@@ -115,6 +116,11 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		String dateFormatString = elasticsearchPropes.getProperty(TimeBasedIndexNameBuilder.DATE_FORMAT);
 
 	    String timeZoneString = elasticsearchPropes.getProperty(TimeBasedIndexNameBuilder.TIME_ZONE);
+	    
+	    String showTemplate_ = elasticsearchPropes.getProperty("elasticsearch.showTemplate");
+	    if(showTemplate_ != null && showTemplate_.equals("true")){
+	    	this.showTemplate = true;
+	    }
 		//  logger.info(">>>>>>>>>>>>>>>>>>dateFormatString:"+dateFormatString+",timeZoneString:"+timeZoneString);
 	    if (SimpleStringUtil.isEmpty(dateFormatString)) {
 	      dateFormatString = TimeBasedIndexNameBuilder.DEFAULT_DATE_FORMAT;
@@ -332,8 +338,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 	 */
 	public <T> T executeRequest(String path, String entity,ResponseHandler<T> responseHandler) throws ElasticSearchException {
 		T response = null;
-		if(logger.isDebugEnabled()){
-			logger.debug("Elastic search action:{},request body:\n{}",path,entity);
+		if(this.showTemplate && logger.isInfoEnabled()){
+			logger.info("Elastic search action:{},request body:\n{}",path,entity);
 		}
 		while (true) {
 
@@ -344,11 +350,11 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 					response = HttpRequestUtil.httpPostforString(url, null, this.headers,  responseHandler);
 				else
 					response = HttpRequestUtil.sendJsonBody(entity, url, this.headers, responseHandler);
-				if (response != null) {
-
-					logger.info("Status message from elasticsearch: " + response);
-
-				}
+//				if (response != null) {
+//
+//					logger.info("Status message from elasticsearch: " + response);
+//
+//				}
 				break;
 			} catch (Exception ex) {
 				throw new ElasticSearchException(ex);
@@ -386,6 +392,14 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 
 	public void setTimeZone(TimeZone timeZone) {
 		this.timeZone = timeZone;
+	}
+
+	public boolean isShowTemplate() {
+		return showTemplate;
+	}
+
+	public void setShowTemplate(boolean showTemplate) {
+		this.showTemplate = showTemplate;
 	}
 	
 }

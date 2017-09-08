@@ -11,6 +11,8 @@ public class ErrorInfo {
 	private String reason;//: "all shards failed",
 	private String phase;//": "query",
 	private boolean  grouped;//": true,
+	private int line;
+	private int col;
 	@JsonProperty("failed_shards")
     private List<FailedShard> failedShards;
 	public ErrorInfo() {
@@ -51,6 +53,18 @@ public class ErrorInfo {
 	}
 	public void setFailedShards(List<FailedShard> failedShards) {
 		this.failedShards = failedShards;
+	}
+	public int getLine() {
+		return line;
+	}
+	public void setLine(int line) {
+		this.line = line;
+	}
+	public int getCol() {
+		return col;
+	}
+	public void setCol(int col) {
+		this.col = col;
 	}
 
 }

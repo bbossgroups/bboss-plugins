@@ -45,7 +45,9 @@
 				<description> <![CDATA[ ms(毫秒) s(秒) m(分钟) h(小时) d(天) w(星期)]]></description>
 			</property>
 
-
+			<property name="elasticsearch.showTemplate" value="${elasticsearch.showTemplate:false}">
+				<description> <![CDATA[ ms(毫秒) s(秒) m(分钟) h(小时) d(天) w(星期)]]></description>
+			</property>
 			<property name="elasticsearch.serialize" value="${elasticsearch.serialize:}">
 				<description> <![CDATA[ elasticsearch.serializer=org.frameworkset.elasticsearch.ElasticSearchJSONEventSerializer]]></description>
 			</property>
