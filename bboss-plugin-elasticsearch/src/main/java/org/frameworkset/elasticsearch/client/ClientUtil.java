@@ -193,5 +193,8 @@ public interface ClientUtil {
 	 public String createIndiceMapping(String indexName,String templateName,Map parameter)  throws ElasticSearchException ;
 	 
 	 public List<ESIndice> getIndexes() throws ElasticSearchException;
+	 public String refreshIndexInterval(String indexName,int interval) throws ElasticSearchException;
+	 public String refreshIndexInterval(String indexName,String indexType,int interval) throws ElasticSearchException;
+	 
 	 
 }

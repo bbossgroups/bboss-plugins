@@ -185,12 +185,15 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 			String host = serversList.get();
 			String url = host + "/" + BULK_ENDPOINT;
 			try {
-				response = HttpRequestUtil.sendJsonBody(entity, url, this.headers);
-				if (response != null) {
-
-					logger.info("Status message from elasticsearch: " + response);
-
+				if(this.showTemplate && logger.isInfoEnabled()){
+					logger.info(entity);
 				}
+				response = HttpRequestUtil.sendJsonBody(entity, url, this.headers);
+//				if (response != null) {
+//
+//					logger.info("Status message from elasticsearch: " + response);
+//
+//				}
 				break;
 			} catch (Exception ex) {
 				if (triesCount < serversList.size()) {//失败尝试下一个地址
@@ -245,8 +248,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		int triesCount = 0;
 		String response = null;
 		Exception e = null;
-		if(logger.isDebugEnabled()){
-			logger.debug("Elastic search action:{},request body:\n{}",path,entity);
+		if(this.showTemplate && logger.isInfoEnabled()){
+			logger.info("Elastic search action:{},request body:\n{}",path,entity);
 		}
 		while (true) {
 
@@ -256,20 +259,29 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 				if (entity == null){
 					if(action == null)				
 						response = HttpRequestUtil.httpPostforString(url, null, this.headers);
-					else if(action == ClientUtil.HTTP_POST || action == ClientUtil.HTTP_PUT)				
+					else if(action == ClientUtil.HTTP_POST )				
 						response = HttpRequestUtil.httpPostforString(url, null, this.headers);
+					else if( action == ClientUtil.HTTP_PUT)				
+						response = HttpRequestUtil.httpPutforString(url, null, this.headers);
 					else if(action == ClientUtil.HTTP_GET)				
 						response = HttpRequestUtil.httpGetforString(url, this.headers);
 					else if(action == ClientUtil.HTTP_DELETE)				
 						response = HttpRequestUtil.httpDelete(url, null, this.headers);
 				}
 				else
-					response = HttpRequestUtil.sendJsonBody(entity, url, this.headers);
-				if (response != null) {
-
-					logger.info("Status message from elasticsearch: " + response);
-
+				{
+					 if(action == ClientUtil.HTTP_POST )	
+						 response = HttpRequestUtil.sendJsonBody(entity, url, this.headers);
+					 else if( action == ClientUtil.HTTP_PUT)	
+					 {
+						 response = HttpRequestUtil.putJson(entity, url, this.headers);
+					 }
 				}
+//				if (response != null) {
+//
+//					logger.info("Status message from elasticsearch: " + response);
+//
+//				}
 				break;
 			} catch (Exception ex) {
 				if (triesCount < serversList.size()) {//失败尝试下一个地址
@@ -293,8 +305,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		int triesCount = 0;
 		String response = null;
 		Exception e = null;
-		if(logger.isDebugEnabled()){
-			logger.debug("Elastic search action:{},request body:\n{}",path,entity);
+		if(this.showTemplate && logger.isInfoEnabled()){
+			logger.info("Elastic search action:{},request body:\n{}",path,entity);
 		}
 		while (true) {
 
@@ -305,11 +317,11 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 					response = HttpRequestUtil.httpPostforString(url, null, this.headers);
 				else
 					response = HttpRequestUtil.sendJsonBody(entity, url, this.headers);
-				if (response != null) {
-
-					logger.info("Status message from elasticsearch: " + response);
-
-				}
+//				if (response != null) {
+//					if(logger.isDebugEnabled())
+//						logger.debug("Status message from elasticsearch: {}", response);
+//
+//				}
 				break;
 			} catch (Exception ex) {
 				if (triesCount < serversList.size()) {//失败尝试下一个地址

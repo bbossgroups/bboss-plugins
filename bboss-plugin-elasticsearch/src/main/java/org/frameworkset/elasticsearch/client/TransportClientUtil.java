@@ -269,5 +269,11 @@ public class TransportClientUtil  implements ClientUtil{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	public String refreshIndexInterval(String indexName,String indexType,int interval) throws ElasticSearchException{
+//    	return this.client.executeHttp("/_all/_settings?preserve_existing=true", "{\"index.refresh_interval\" : \""+interval+"\"}", HTTP_PUT);
+		return null;
+    }
+	public String refreshIndexInterval(String indexName,int interval) throws ElasticSearchException{
+		return null;
+	}
 }

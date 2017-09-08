@@ -376,5 +376,12 @@ public class RestClientUtil implements ClientUtil{
 
 	        }
 	    }
+	    public String refreshIndexInterval(String indexName,int interval) throws ElasticSearchException{
+	    	return this.client.executeHttp(new StringBuilder().append(indexName).append("/_settings").toString(), new StringBuilder().append("{  \"index\" : {  \"refresh_interval\" : \"").append(interval).append("s\"   } }").toString(), HTTP_PUT);
+	    }
+	    public String refreshIndexInterval(String indexName,String indexType,int interval) throws ElasticSearchException{
+	    	return this.client.executeHttp(new StringBuilder().append(indexName).append("/").append(indexType).append("/_settings").toString(), new StringBuilder().append("{  \"index\" : {  \"refresh_interval\" : \"").append(interval).append("s\"    } }").toString(), HTTP_PUT);
+	    }
+		 
  
 }
