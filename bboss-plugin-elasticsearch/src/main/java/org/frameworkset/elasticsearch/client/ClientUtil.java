@@ -195,6 +195,9 @@ public interface ClientUtil {
 	 public List<ESIndice> getIndexes() throws ElasticSearchException;
 	 public String refreshIndexInterval(String indexName,int interval) throws ElasticSearchException;
 	 public String refreshIndexInterval(String indexName,String indexType,int interval) throws ElasticSearchException;
+	  public String refreshIndexInterval(int interval,boolean preserveExisting) throws ElasticSearchException;
+	    
+	    public String refreshIndexInterval(int interval) throws ElasticSearchException;
 	 
 	 
 }

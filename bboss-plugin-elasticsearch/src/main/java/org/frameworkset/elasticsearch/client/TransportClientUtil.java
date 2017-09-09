@@ -276,4 +276,14 @@ public class TransportClientUtil  implements ClientUtil{
 	public String refreshIndexInterval(String indexName,int interval) throws ElasticSearchException{
 		return null;
 	}
+	@Override
+	public String refreshIndexInterval(int interval, boolean preserveExisting) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String refreshIndexInterval(int interval) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
