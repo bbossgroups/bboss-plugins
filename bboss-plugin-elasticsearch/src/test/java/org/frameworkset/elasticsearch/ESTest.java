@@ -86,7 +86,7 @@ public class ESTest {
 		traceExtraCriteria.setApplication("testweb1");
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		traceExtraCriteria.setStartTime(dateFormat.parse("2017-09-02 00:00:00").getTime());
-		traceExtraCriteria.setEndTime(dateFormat.parse("2017-09-03 00:00:00").getTime());
+		traceExtraCriteria.setEndTime(dateFormat.parse("2017-09-10 00:00:00").getTime());
 		 String data = clientUtil.executeRequest("trace-*/_search","queryPeriodsTopN",traceExtraCriteria,new StringResponseHandler());
 	        System.out.println("------------------------------");
 	        System.out.println(data);
