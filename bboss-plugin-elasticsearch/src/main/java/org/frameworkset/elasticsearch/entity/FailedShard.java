@@ -1,6 +1,8 @@
-package org.frameworkset.elasticsearch.client;
+package org.frameworkset.elasticsearch.entity;
 
-public class FailedShard {
+import java.io.Serializable;
+
+public class FailedShard  implements Serializable {
 	private int shard;//": 0,
     private String index;//": "trace-2017.08.31",
     private String node;//": "ecJr-Zj3SQqJAIRyhYkdHQ",

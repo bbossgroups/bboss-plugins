@@ -1,10 +1,11 @@
-package org.frameworkset.elasticsearch.client;
-
-import java.util.List;
+package org.frameworkset.elasticsearch.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SearchHits {
+import java.io.Serializable;
+import java.util.List;
+
+public class SearchHits  implements Serializable {
 	private long total;
 	@JsonProperty("max_score")
 	private Long maxScore;

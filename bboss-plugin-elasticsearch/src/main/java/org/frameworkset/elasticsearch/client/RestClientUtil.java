@@ -1,26 +1,24 @@
 package org.frameworkset.elasticsearch.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.frameworkset.util.SimpleStringUtil;
 import org.apache.http.client.ResponseHandler;
 import org.elasticsearch.client.Client;
 import org.frameworkset.elasticsearch.ElasticSearchEventSerializer;
 import org.frameworkset.elasticsearch.ElasticSearchException;
 import org.frameworkset.elasticsearch.IndexNameBuilder;
+import org.frameworkset.elasticsearch.entity.*;
 import org.frameworkset.elasticsearch.event.Event;
+import org.frameworkset.elasticsearch.serial.ESTypeReferences;
 import org.frameworkset.spi.remote.http.MapResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.frameworkset.util.SimpleStringUtil;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class RestClientUtil implements ClientUtil{
 	private static Logger logger = LoggerFactory.getLogger(RestClientUtil.class);
@@ -90,6 +88,9 @@ public class RestClientUtil implements ClientUtil{
 	}
 	
 	
+	 
+	
+	
 	@Override
 	public String executeHttp(String path, String action) throws ElasticSearchException {
 		// TODO Auto-generated method stub
@@ -130,8 +131,321 @@ public class RestClientUtil implements ClientUtil{
 	}
 	@Override
 	public SearchResult search(String path, String entity) throws ElasticSearchException {
-		 
-		return executeRequest(  path,   entity,new ElasticSearchResponseHandler());
+		return this.client.executeRequest(path,entity,   new ElasticSearchResponseHandler(  ));
+	}
+
+	@Override
+	public SearchResult search(String path, String templateName, Map params,Class<?> type) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public SearchResult search(String path, String templateName, Object params,Class<?> type) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public SearchResult search(String path, String entity,Class<?> type) throws ElasticSearchException {
+		return this.client.executeRequest(path,entity,   new ElasticSearchResponseHandler( type));
+	}
+
+	protected <T> ESDatas<T> buildESDatas(SearchResult result,Class<T> type){
+		if(result instanceof ErrorResponse){
+			throw new ElasticSearchException(SimpleStringUtil.object2json(result));
+		}
+		ESDatas<T> datas = new ESDatas<T>();
+		RestResponse restResponse = (RestResponse)result;
+		datas.setTotalSize(restResponse.getSearchHits().getTotal());
+		List<SearchHit> searchHits = restResponse.getSearchHits().getHits();
+		List<T> hits = new ArrayList<T>(searchHits.size());
+		for(SearchHit hit:searchHits){
+			hits.add((T)hit.getSource());
+		}
+		datas.setDatas(hits);
+		return datas;
+	}
+	public <T> ESDatas<T> searchList(String path, String templateName, Map params, Class<T> type) throws ElasticSearchException {
+	 	return null;
+	}
+	public <T> ESDatas<T> searchList(String path, String templateName, Object params,Class<T> type) throws ElasticSearchException {
+	 	return null;
+	}
+	public <T> ESDatas<T> searchList(String path, String entity, Class<T> type) throws ElasticSearchException{
+		SearchResult result = this.client.executeRequest(path,entity,   new ElasticSearchResponseHandler( type));
+		return buildESDatas(result,type);
+	}
+
+	public <T> T searchObject(String path, String templateName, Map params, Class<T> type) throws ElasticSearchException {
+	 	return null;
+	}
+
+	public <T> T searchObject(String path, String templateName, Object params,Class<T> type) throws ElasticSearchException {
+	 	return null;
+	}
+	protected <T> T buildObject(SearchResult result, Class<T> type){
+		if(result instanceof ErrorResponse){
+			throw new ElasticSearchException(SimpleStringUtil.object2json(result));
+		}
+		RestResponse restResponse = (RestResponse)result;
+		List<SearchHit> searchHits = restResponse.getSearchHits().getHits();
+		if(searchHits != null && searchHits.size() > 0)
+			return (T)searchHits.get(0).getSource();
+		return null;
+
+	}
+	public <T> T searchObject(String path, String entity, Class<T> type) throws ElasticSearchException{
+		SearchResult result = this.client.executeRequest(path,entity,   new ElasticSearchResponseHandler( type));
+		return buildObject(result, type);
+	}
+	private Long longValue(Object num,Long defaultValue){
+		if(num == null)
+			return defaultValue;
+		if(num instanceof Long)
+		{
+			return ((Long)num);
+		}else if(num instanceof Double)
+		{
+			return ((Double)num).longValue();
+		}else if(num instanceof Integer){
+			return ((Integer)num).longValue();
+		}
+		else if(num instanceof Float)
+		{
+			return ((Float)num).longValue();
+		}
+		else  if(num instanceof Short)
+		{
+			return ((Short)num).longValue();
+		}
+		else
+		{
+			return Long.parseLong(num.toString());
+		}
+	}
+
+	private Float floatValue(Object num,Float defaultValue){
+		if(num == null)
+			return defaultValue;
+		if(num instanceof Float)
+		{
+			return (Float)num;
+		}else if(num instanceof Double)
+		{
+			return ((Double)num).floatValue();
+		}else if(num instanceof Integer){
+			return ((Integer)num).floatValue();
+		}
+		else  if(num instanceof Long)
+		{
+			return ((Long)num).floatValue();
+		}
+		else  if(num instanceof Short)
+		{
+			return ((Short)num).floatValue();
+		}
+		else
+		{
+
+			return Float.parseFloat(num.toString());
+		}
+	}
+
+	private Double doubleValue(Object num,Double defaultValue){
+		if(num == null)
+			return defaultValue;
+		if(num instanceof Double)
+		{
+			return (Double)num;
+		}else if(num instanceof Float)
+		{
+			return ((Float)num).doubleValue();
+		}else if(num instanceof Integer){
+			return ((Integer)num).doubleValue();
+		}
+		else  if(num instanceof Long)
+		{
+			return ((Long)num).doubleValue();
+		}
+		else  if(num instanceof Short)
+		{
+			return ((Short)num).doubleValue();
+		}
+		else
+		{
+
+			return Double.parseDouble(num.toString());
+		}
+	}
+	private void buildLongAggHit(LongAggHit longRangeHit,Map<String,Object> bucket,String stats){
+		longRangeHit.setKey((String)bucket.get("key"));
+		longRangeHit.setDocCount(longValue(bucket.get("doc_count"),0l));
+		Map<String,Object> stats_ = (Map<String,Object>)bucket.get(stats);
+		longRangeHit.setMax(longValue(stats_.get("max"),0l));
+		longRangeHit.setMin(longValue(stats_.get("min"),0l));
+		longRangeHit.setAvg(floatValue(stats_.get("avg"),0f));
+		longRangeHit.setSum(longValue(stats_.get("sum"),0l));
+	}
+	private void buildFloatAggHit(FloatAggHit floatRangeHit,Map<String,Object> bucket,String stats){
+		floatRangeHit.setKey((String)bucket.get("key"));
+		floatRangeHit.setDocCount(longValue(bucket.get("doc_count"),0l));
+		Map<String,Object> stats_ = (Map<String,Object>)bucket.get(stats);
+		floatRangeHit.setMax(floatValue(stats_.get("max"),0f));
+		floatRangeHit.setMin(floatValue(stats_.get("min"),0f));
+		floatRangeHit.setAvg(floatValue(stats_.get("avg"),0f));
+		floatRangeHit.setSum(floatValue(stats_.get("sum"),0f));
+	}
+
+	private void buildDoubleAggHit(DoubleAggHit doubleAggHit,Map<String,Object> bucket,String stats){
+		doubleAggHit.setKey((String)bucket.get("key"));
+		doubleAggHit.setDocCount(longValue(bucket.get("doc_count"),0l));
+		Map<String,Object> stats_ = (Map<String,Object>)bucket.get(stats);
+		doubleAggHit.setMax(doubleValue(stats_.get("max"),0d));
+		doubleAggHit.setMin(doubleValue(stats_.get("min"),0d));
+		doubleAggHit.setAvg(doubleValue(stats_.get("avg"),0d));
+		doubleAggHit.setSum(doubleValue(stats_.get("sum"),0d));
+	}
+
+	private void buildLongAggRangeHit(LongAggRangeHit longRangeHit,Map<String,Object> bucket,String stats,String key){
+		longRangeHit.setKey(key);
+		longRangeHit.setFrom(longValue(bucket.get("from"),null));
+		longRangeHit.setTo(longValue(bucket.get("to"),null));
+		longRangeHit.setDocCount(longValue(bucket.get("doc_count"),0l));
+		Map<String,Object> stats_ = (Map<String,Object>)bucket.get(stats);
+		longRangeHit.setMax(longValue(stats_.get("max"),0l));
+		longRangeHit.setMin(longValue(stats_.get("min"),0l));
+		longRangeHit.setAvg(floatValue(stats_.get("avg"),0f));
+		longRangeHit.setSum(longValue(stats_.get("sum"),0l));
+	}
+	private void buildFloatAggRangeHit(FloatAggRangeHit floatRangeHit,Map<String,Object> bucket,String stats,String key){
+		floatRangeHit.setKey(key);
+		floatRangeHit.setFrom(floatValue(bucket.get("from"),null));
+		floatRangeHit.setTo(floatValue(bucket.get("to"),null));
+		floatRangeHit.setDocCount(longValue(bucket.get("doc_count"),0l));
+		Map<String,Object> stats_ = (Map<String,Object>)bucket.get(stats);
+		floatRangeHit.setMax(floatValue(stats_.get("max"),0f));
+		floatRangeHit.setMin(floatValue(stats_.get("min"),0f));
+		floatRangeHit.setAvg(floatValue(stats_.get("avg"),0f));
+		floatRangeHit.setSum(floatValue(stats_.get("sum"),0f));
+	}
+	private void buildDoubleAggRangeHit(DoubleAggRangeHit doubleRangeHit,Map<String,Object> bucket,String stats,String key){
+		doubleRangeHit.setKey(key);
+		doubleRangeHit.setFrom(doubleValue(bucket.get("from"),null));
+		doubleRangeHit.setTo(doubleValue(bucket.get("to"),null));
+		doubleRangeHit.setDocCount(longValue(bucket.get("doc_count"),0l));
+		Map<String,Object> stats_ = (Map<String,Object>)bucket.get(stats);
+		doubleRangeHit.setMax(doubleValue(stats_.get("max"),0d));
+		doubleRangeHit.setMin(doubleValue(stats_.get("min"),0d));
+		doubleRangeHit.setAvg(doubleValue(stats_.get("avg"),0d));
+		doubleRangeHit.setSum(doubleValue(stats_.get("sum"),0d));
+	}
+
+	protected  <T extends AggHit> ESAggDatas<T> buildESAggDatas(SearchResult result,Class<T> type,String aggs,String stats){
+		if(result instanceof ErrorResponse){
+			throw new ElasticSearchException(SimpleStringUtil.object2json(result));
+		}
+		else
+		{
+			RestResponse searchResult =(RestResponse)result;
+			Map<String,Map<String,Object>> aggregations = searchResult.getAggregations();
+			if(aggregations != null){
+				Map<String,Object> traces = aggregations.get(aggs);
+				Object _buckets = traces.get("buckets");
+				ESAggDatas<T> ret = new ESAggDatas<T>();
+				ret.setTotalSize(searchResult.getSearchHits().getTotal());
+
+				if(_buckets instanceof List) {
+					List<Map<String, Object>> buckets = (List<Map<String, Object>>) _buckets;
+					List<T> datas = new ArrayList<>(buckets.size());
+					ret.setAggDatas(datas);
+					for (Map<String, Object> bucket : buckets) {
+						try {
+							T obj = type.newInstance();
+							if(obj instanceof LongAggRangeHit){
+								buildLongAggRangeHit((LongAggRangeHit) obj, bucket,  stats,null);
+							}else if(obj instanceof FloatAggRangeHit){
+								buildFloatAggRangeHit((FloatAggRangeHit) obj, bucket,  stats,null);
+							}else if(obj instanceof DoubleAggRangeHit){
+								buildDoubleAggRangeHit((DoubleAggRangeHit) obj, bucket,  stats,null);
+							} else if (obj instanceof LongAggHit) {
+								buildLongAggHit((LongAggHit) obj, bucket,  stats);
+							} else if(obj instanceof FloatAggHit){
+								buildFloatAggHit((FloatAggHit) obj, bucket,  stats);
+							}else if(obj instanceof DoubleAggHit){
+								buildDoubleAggHit((DoubleAggHit) obj, bucket,  stats);
+							}
+
+							datas.add(obj);
+						} catch (InstantiationException e) {
+							throw new ElasticSearchException(e);
+						} catch (IllegalAccessException e) {
+							throw new ElasticSearchException(e);
+						}
+					}
+
+
+				}
+				else
+				{
+					Map<String,Map<String, Object>> buckets = (Map<String,Map<String, Object>>) _buckets;
+					List<T> datas = new ArrayList<>(buckets.size());
+					ret.setAggDatas(datas);
+					Iterator<Map.Entry<String, Map<String, Object>>> iterable = buckets.entrySet().iterator();
+					while(iterable.hasNext()){
+						Map.Entry<String, Map<String, Object>> entry = iterable.next();
+						String key = entry.getKey();
+						try {
+							T obj = type.newInstance();
+							if (obj instanceof LongAggRangeHit) {
+								buildLongAggRangeHit((LongAggRangeHit) obj, entry.getValue(),  stats,key);
+							} else if (obj instanceof DoubleAggRangeHit)
+							{
+								buildDoubleAggRangeHit((DoubleAggRangeHit) obj, entry.getValue(),  stats,key);
+							}else if (obj instanceof FloatAggRangeHit)
+							{
+								buildFloatAggRangeHit((FloatAggRangeHit) obj, entry.getValue(),  stats,key);
+							}
+							datas.add(obj);
+						}catch (InstantiationException e) {
+							throw new ElasticSearchException(e);
+						} catch (IllegalAccessException e) {
+							throw new ElasticSearchException(e);
+						}
+					}
+				}
+				return ret;
+			}
+
+		}
+		return null;
+	}
+	public <T extends AggHit> ESAggDatas<T> searchAgg(String path,String entity,Map params,Class<T> type,String aggs,String stats) throws ElasticSearchException{
+
+		return null;
+	}
+
+	public <T extends AggHit> ESAggDatas<T> searchAgg(String path,String entity,Object params,Class<T> type,String aggs,String stats) throws ElasticSearchException{
+		return null;
+	}
+
+	public <T extends AggHit> ESAggDatas<T> searchAgg(String path,String entity,Class<T> type,String aggs,String stats) throws ElasticSearchException{
+		SearchResult result = this.client.executeRequest(path,entity,   new ElasticSearchResponseHandler( ));
+		return buildESAggDatas(result,type,aggs,stats);
+	}
+
+
+	@Override
+	public SearchResult search(String path, String templateName, Map params,ESTypeReferences type) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public SearchResult search(String path, String templateName, Object params, ESTypeReferences type) throws ElasticSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public SearchResult search(String path, String entity,ESTypeReferences type) throws ElasticSearchException {
+		return this.client.executeRequest(path,entity,   new ElasticSearchResponseHandler( type));
 	}
 	
 	
@@ -151,7 +465,8 @@ public class RestClientUtil implements ClientUtil{
 		  */
 		 @SuppressWarnings("unchecked")
 		public Map<String,Object> searchMap(String path, String entity) throws ElasticSearchException {
-			 return executeRequest(  path,   entity,new MapResponseHandler());
+			 // TODO Auto-generated method stub
+			 return this.client.executeRequest(path,entity,  new MapResponseHandler());
 		 }
 	
 	 public String dropIndice(String index)  throws ElasticSearchException {
@@ -288,7 +603,7 @@ public class RestClientUtil implements ClientUtil{
 
 	    }
 	    
-	    private ESIndice buildESIndice(String line,SimpleDateFormat format)
+	    private ESIndice buildESIndice(String line, SimpleDateFormat format)
 	    {
 	    	StringBuilder token = new StringBuilder();
 	        ESIndice esIndice = new ESIndice();

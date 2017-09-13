@@ -1,6 +1,8 @@
-package org.frameworkset.elasticsearch.client;
+package org.frameworkset.elasticsearch.entity;
 
-public class Shards {
+import java.io.Serializable;
+
+public class Shards  implements Serializable {
 	private long total;
 	private long successful;
 	private long failed;

@@ -1,9 +1,9 @@
-package org.frameworkset.elasticsearch.client;
+package org.frameworkset.elasticsearch.entity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RestResponse  implements SearchResult,Serializable {
 	

@@ -1,10 +1,12 @@
-package org.frameworkset.elasticsearch.client;
-
-import java.util.Map;
+package org.frameworkset.elasticsearch.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.frameworkset.elasticsearch.serial.ESHitDeserializer;
 
-public class SearchHit {
+import java.io.Serializable;
+
+public class SearchHit  implements Serializable {
 	@JsonProperty("_index")
 	private String index;//"_index": "trace-2017.09.01",
 	@JsonProperty("_type")
@@ -14,7 +16,8 @@ public class SearchHit {
 	@JsonProperty("_score")
 	private int  score;
 	@JsonProperty("_source")
-	private Map<String,Object> source;
+	
+	private Object source;
 	private long[] sort;
 	public SearchHit() {
 		// TODO Auto-generated constructor stub
@@ -43,10 +46,12 @@ public class SearchHit {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	public Map<String, Object> getSource() {
+
+	public Object getSource() {
 		return source;
 	}
-	public void setSource(Map<String, Object> source) {
+	@JsonDeserialize(using = ESHitDeserializer.class)
+	public void setSource(Object source) {
 		this.source = source;
 	}
 	public long[] getSort() {

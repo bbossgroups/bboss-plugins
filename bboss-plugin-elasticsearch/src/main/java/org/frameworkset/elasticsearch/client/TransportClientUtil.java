@@ -1,9 +1,5 @@
 package org.frameworkset.elasticsearch.client;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.http.client.ResponseHandler;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -14,7 +10,13 @@ import org.frameworkset.elasticsearch.ElasticSearchEventSerializer;
 import org.frameworkset.elasticsearch.ElasticSearchException;
 import org.frameworkset.elasticsearch.EventDeliveryException;
 import org.frameworkset.elasticsearch.IndexNameBuilder;
+import org.frameworkset.elasticsearch.entity.*;
 import org.frameworkset.elasticsearch.event.Event;
+import org.frameworkset.elasticsearch.serial.ESTypeReferences;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class TransportClientUtil  implements ClientUtil{
 	private ElasticSearchTransportClient client;
@@ -284,6 +286,81 @@ public class TransportClientUtil  implements ClientUtil{
 	@Override
 	public String refreshIndexInterval(int interval) throws ElasticSearchException {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SearchResult search(String path, String templateName, Map params, Class<?> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public SearchResult search(String path, String templateName, Object params, Class<?> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public SearchResult search(String path, String entity, Class<?> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public SearchResult search(String path, String templateName, Map params, ESTypeReferences type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public SearchResult search(String path, String templateName, Object params, ESTypeReferences type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public SearchResult search(String path, String entity, ESTypeReferences type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T> ESDatas<T> searchList(String path, String templateName, Map params, Class<T> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T> ESDatas<T> searchList(String path, String templateName, Object params, Class<T> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T> ESDatas<T> searchList(String path, String entity, Class<T> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T> T searchObject(String path, String templateName, Map params, Class<T> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T> T searchObject(String path, String templateName, Object params, Class<T> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T> T searchObject(String path, String entity, Class<T> type) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T extends AggHit> ESAggDatas<T> searchAgg(String path, String entity, Map params, Class<T> type, String aggs, String stats) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T extends AggHit> ESAggDatas<T> searchAgg(String path, String entity, Object params, Class<T> type, String aggs, String stats) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public <T extends AggHit> ESAggDatas<T> searchAgg(String path, String entity, Class<T> type, String aggs, String stats) throws ElasticSearchException {
 		return null;
 	}
 }
