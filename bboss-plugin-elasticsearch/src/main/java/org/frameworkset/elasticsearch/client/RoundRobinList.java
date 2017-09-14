@@ -2,6 +2,8 @@ package org.frameworkset.elasticsearch.client;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /*
  * Copyright 2014 Apache Software Foundation.
@@ -19,26 +21,68 @@ import java.util.Iterator;
  * limitations under the License.
  */
 
-public class RoundRobinList<T> {
+public class RoundRobinList<T extends ESAddress> {
 
-  private Iterator<T> iterator;
-  private final Collection<T> elements;
+	private final Collection<T> elements;
 
-  public RoundRobinList(Collection<T> elements) {
-    this.elements = elements;
-    iterator = this.elements.iterator();
-  }
+	private Iterator<T> iterator;
 
-  public synchronized T get() {
-    if (iterator.hasNext()) {
-      return iterator.next();
-    } else {
-      iterator = elements.iterator();
-      return iterator.next();
-    }
-  }
+	public RoundRobinList(Collection<T> elements) {
+		this.elements = elements;
+		iterator = this.elements.iterator();
+	}
 
-  public int size() {
-    return elements.size();
-  }
+//	public synchronized T get() {
+//		T address = null;
+//		while (iterator.hasNext()) {
+//			address = iterator.next();
+//			if (address.ok())
+//				break;
+//		}
+//		if (address != null) {
+//			return address;
+//
+//		}
+//		else {
+//			iterator = elements.iterator();
+//			while (iterator.hasNext()) {
+//				address = iterator.next();
+//				if (address.ok())
+//					break;
+//			}
+//			return address;
+//		}
+//
+//	}
+	private Lock lock = new ReentrantLock();
+	public T get(){
+		try {
+			lock.lock();
+			T address = null;
+			while (iterator.hasNext()) {
+				address = iterator.next();
+				if (address.ok())
+					break;
+			}
+			if (address != null) {
+				return address;
+
+			} else {
+				iterator = elements.iterator();
+				while (iterator.hasNext()) {
+					address = iterator.next();
+					if (address.ok())
+						break;
+				}
+				return address;
+			}
+		}
+		finally {
+			lock.unlock();
+		}
+	}
+
+	public int size() {
+		return elements.size();
+	}
 }

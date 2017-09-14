@@ -18,14 +18,9 @@
  */
 package org.frameworkset.elasticsearch.client;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
-
+import com.frameworkset.util.SimpleStringUtil;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -41,9 +36,9 @@ import org.frameworkset.util.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.frameworkset.util.SimpleStringUtil;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.Gson;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Rest ElasticSearch client which is responsible for sending bulks of events to
@@ -59,7 +54,7 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 	public static final String BULK_ENDPOINT = "_bulk";
 	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchRestClient.class);
 	private final ElasticSearchEventSerializer serializer;
-	private final RoundRobinList<String> serversList;
+	private final RoundRobinList<ESAddress> serversList;
 	private Properties extendElasticsearchPropes;
 	private String elasticUser;
 	private String elasticPassword;
@@ -82,8 +77,11 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 			}
 		}
 		this.serializer = serializer;
-
-		serversList = new RoundRobinList<String>(Arrays.asList(hostNames));
+		List<ESAddress> addressList = new ArrayList<ESAddress>();
+		for(String host:hostNames){
+			addressList.add(new ESAddress(host));
+		}
+		serversList = new RoundRobinList<ESAddress>(addressList);
 		httpClient = new DefaultHttpClient();
 		this.elasticUser = elasticUser;
 		this.elasticPassword = elasticPassword;
@@ -182,8 +180,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		Exception e = null;
 		while (true) {
 
-			String host = serversList.get();
-			String url = host + "/" + BULK_ENDPOINT;
+			ESAddress host = serversList.get();
+			String url = host.getAddress() + "/" + BULK_ENDPOINT;
 			try {
 				if(this.showTemplate && logger.isInfoEnabled()){
 					logger.info(entity);
@@ -253,8 +251,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		}
 		while (true) {
 
-			String host = serversList.get();
-			String url = new StringBuilder().append(host).append("/").append(path).toString();
+			ESAddress host = serversList.get();
+			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
 			try {
 				if (entity == null){
 					if(action == null)				
@@ -310,8 +308,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		}
 		while (true) {
 
-			String host = serversList.get();
-			String url = new StringBuilder().append(host).append("/").append(path).toString();
+			ESAddress host = serversList.get();
+			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
 			try {
 				if (entity == null)
 					response = HttpRequestUtil.httpPostforString(url, null, this.headers);
@@ -355,8 +353,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		}
 		while (true) {
 
-			String host = serversList.get();
-			String url = new StringBuilder().append(host).append("/").append(path).toString();
+			ESAddress host = serversList.get();
+			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
 			try {
 				if (entity == null)
 					response = HttpRequestUtil.httpPostforString(url, null, this.headers,  responseHandler);
