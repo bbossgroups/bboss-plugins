@@ -94,7 +94,7 @@ http.defaultMaxPerRoute = 200
 bboss es开发套件采用类似于mybatis的方式操作elasticsearch
 
 ## ormapping操作示例
-加载query dsl文件
+加载query dsl文件,并执行查询操作
 
 ```
 import org.frameworkset.elasticsearch.ElasticSearchHelper;
