@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.frameworkset.elasticsearch.serial.ESHitDeserializer;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public class SearchHit  implements Serializable {
 	@JsonProperty("_index")
@@ -18,6 +20,7 @@ public class SearchHit  implements Serializable {
 	@JsonProperty("_source")
 	
 	private Object source;
+	private Map<String,List<Object>> fields;
 	private long[] sort;
 	public SearchHit() {
 		// TODO Auto-generated constructor stub
@@ -61,4 +64,11 @@ public class SearchHit  implements Serializable {
 		this.sort = sort;
 	}
 
+	public Map<String, List<Object>> getFields() {
+		return fields;
+	}
+
+	public void setFields(Map<String, List<Object>> fields) {
+		this.fields = fields;
+	}
 }

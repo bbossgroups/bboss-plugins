@@ -261,5 +261,10 @@ public interface ClientUtil {
 	public <T extends AggHit> ESAggDatas<T> searchAgg(String path, String entity, Object params, Class<T> type, String aggs, String stats) throws ElasticSearchException;
 
 	public <T extends AggHit> ESAggDatas<T> searchAgg(String path, String entity, Class<T> type, String aggs, String stats) throws ElasticSearchException;
+	public String createTempate(String template,String entity)  throws ElasticSearchException;
+
+	public String createTempate(String template, String templateName,Object params) throws ElasticSearchException ;
+
+	public String createTempate(String template, String templateName,Map params) throws ElasticSearchException ;
 
 }

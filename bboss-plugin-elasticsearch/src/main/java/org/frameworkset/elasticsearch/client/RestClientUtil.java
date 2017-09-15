@@ -432,6 +432,21 @@ public class RestClientUtil implements ClientUtil{
 		return buildESAggDatas(result,type,aggs,stats);
 	}
 
+	@Override
+	public String createTempate(String template, String entity) throws ElasticSearchException {
+		return this.client.executeHttp("_template/"+template,entity,ClientUtil.HTTP_PUT);
+	}
+
+	@Override
+	public String createTempate(String template, String templateName,Object params) throws ElasticSearchException {
+		return null;
+	}
+
+	@Override
+	public String createTempate(String template, String templateName,Map params) throws ElasticSearchException {
+		return null;
+	}
+
 
 	@Override
 	public SearchResult search(String path, String templateName, Map params,ESTypeReferences type) throws ElasticSearchException {

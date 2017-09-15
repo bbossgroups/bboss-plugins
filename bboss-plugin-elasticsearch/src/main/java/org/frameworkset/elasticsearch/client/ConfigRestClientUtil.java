@@ -551,4 +551,19 @@ public class ConfigRestClientUtil extends RestClientUtil {
 		return buildESAggDatas(result, type, aggs, stats);
 	}
 
+	@Override
+	public String createTempate(String template, String templateName) throws ElasticSearchException {
+		return this.client.executeHttp("_template/"+template,this.evalTemplate(templateName,(Object)null),ClientUtil.HTTP_PUT);
+	}
+
+	@Override
+	public String createTempate(String template, String templateName,Object params) throws ElasticSearchException {
+		return this.client.executeHttp("_template/"+template,this.evalTemplate(templateName,(Object)params),ClientUtil.HTTP_PUT);
+	}
+
+	@Override
+	public String createTempate(String template, String templateName,Map params) throws ElasticSearchException {
+		return this.client.executeHttp("_template/"+template,this.evalTemplate(templateName,(Object)params),ClientUtil.HTTP_PUT);
+	}
+
 }

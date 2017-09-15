@@ -5,8 +5,8 @@
 			f:retryTime = "1"
 			f:maxLineLength = "-1"
 			f:maxHeaderCount = "200"
-			f:maxTotal = "1000" 
-			f:defaultMaxPerRoute = "10"
+			f:maxTotal = "800"
+			f:defaultMaxPerRoute = "200"
 		class="org.frameworkset.spi.remote.http.ClientConfiguration">		      
 	</property>
 	
