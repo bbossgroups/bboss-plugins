@@ -30,8 +30,7 @@ http.defaultMaxPerRoute = 200
 
 ## 配置es查询dsl
 在resources下创建配置文件estrace/ESTracesqlMapper.xml，内容如下：
-
-``
+```
 <properties>
    <property name="queryServiceByCondition">
         <![CDATA[
@@ -91,14 +90,13 @@ http.defaultMaxPerRoute = 200
     </property>
 
 </properties>
-``
+```
 bboss es开发套件采用类似于mybatis的方式操作elasticsearch
 
 ## ormapping操作示例
 加载query dsl文件
 
-``
-
+```
 import org.frameworkset.elasticsearch.ElasticSearchHelper;
 import org.frameworkset.elasticsearch.client.ClientUtil;
 //加载配置文件，创建es客户端工具包
@@ -134,5 +132,5 @@ ESDatas<Traces> data //ESDatas为查询结果集对象，封装了返回的当�
 								traceExtraCriteria,//查询条件封装对象
 								Traces.class);//指定返回的po对象类型，po对象中的属性与indices表中的文档filed名称保持一致
 
-``
+```
 
