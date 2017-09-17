@@ -28,12 +28,12 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	}
 	 
 	@Override
-	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream) {
+	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream,String topic) {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
-			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,checkmode,worker);
+			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,checkmode,worker,  topic);
 		else
-			return new KafkaConsumerThread(stream,storeService);
+			return new KafkaConsumerThread(stream,storeService,  topic);
 	}
 
 

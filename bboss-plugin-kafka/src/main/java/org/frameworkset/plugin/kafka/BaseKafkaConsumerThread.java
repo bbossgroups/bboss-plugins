@@ -1,27 +1,25 @@
 package org.frameworkset.plugin.kafka;
 
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BaseKafkaConsumerThread implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(BaseKafkaConsumerThread.class);
 	protected KafkaStream<byte[], byte[]> stream;
 	 
 	protected StoreService storeService;
+	protected String name;
 //	
 //	private HDFSService logstashService;
 //	protected ConsumerConnector consumer;
-	public BaseKafkaConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService) {
+	public BaseKafkaConsumerThread(String name,KafkaStream<byte[], byte[]> stream,StoreService storeService) {
 		this.stream = stream;
 		this.storeService = storeService;
+		this.name = name;
 		
 	}
 
@@ -52,4 +50,12 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 		}
 	}
 	protected abstract void handleData(MessageAndMetadata<byte[], byte[]> mam)  throws Exception;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

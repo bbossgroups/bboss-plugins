@@ -211,6 +211,14 @@ public class ElasticSearch {
 			throw new EventDeliveryException(ex);
 
 		}
+		catch (Throwable ex) {
+
+//	        logger.error(
+//	            "Exception in rollback. Rollback might not have been successful.",
+//	            ex);
+			throw new EventDeliveryException(ex);
+
+		}
 	}
 
 	/**

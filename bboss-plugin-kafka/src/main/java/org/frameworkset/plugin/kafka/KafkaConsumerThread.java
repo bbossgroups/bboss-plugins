@@ -12,8 +12,8 @@ public class KafkaConsumerThread extends BaseKafkaConsumerThread{
 	 
 //	
 //	private HDFSService logstashService;
-	public KafkaConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService) {
-		super(stream,  storeService);		
+	public KafkaConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,String topic) {
+		super("KafkaConsumerThread-"+topic,stream,  storeService);
 	}
 
 	 

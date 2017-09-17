@@ -234,6 +234,13 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 	public String executeHttp(String path,String action) throws ElasticSearchException{
 		return executeHttp(path, null,  action) ;
 	}
+
+	private String getPath(String host,String path){
+		String url = path.equals("") || path.startsWith("/")?
+				new StringBuilder().append(host).append(path).toString()
+				:new StringBuilder().append(host).append("/").append(path).toString();
+		return url;
+	}
 	/**
 	 * 
 	 * @param path
@@ -252,7 +259,10 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		while (true) {
 
 			ESAddress host = serversList.get();
-			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
+			String url = getPath(host.getAddress(),path);
+//			path.equals("") || path.startsWith("/")?
+//					new StringBuilder().append(host.getAddress()).append(path).toString()
+//					:new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
 			try {
 				if (entity == null){
 					if(action == null)				
@@ -309,7 +319,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		while (true) {
 
 			ESAddress host = serversList.get();
-			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
+			String url =  getPath(host.getAddress(),path);
+//					new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
 			try {
 				if (entity == null)
 					response = HttpRequestUtil.httpPostforString(url, null, this.headers);
@@ -354,7 +365,8 @@ public class ElasticSearchRestClient implements ElasticSearchClient {
 		while (true) {
 
 			ESAddress host = serversList.get();
-			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
+//			String url = new StringBuilder().append(host.getAddress()).append("/").append(path).toString();
+			String url =  getPath(host.getAddress(),path);
 			try {
 				if (entity == null)
 					response = HttpRequestUtil.httpPostforString(url, null, this.headers,  responseHandler);

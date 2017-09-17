@@ -99,7 +99,7 @@ public class RestClientUtil implements ClientUtil{
 	@Override
 	public String executeHttp(String path, String entity,String action) throws ElasticSearchException {
 		// TODO Auto-generated method stub
-		return this.client.executeHttp(path,entity);
+		return this.client.executeHttp(path,entity,action);
 	}
 	
 	public String getIndexMapping(String index) throws ElasticSearchException{

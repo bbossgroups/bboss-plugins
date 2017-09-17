@@ -29,9 +29,10 @@ public class KafkaConsumer  extends BaseKafkaConsumer {
 	}
 	 
 	@Override
-	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream) {
+	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream,String topic) {
 		// TODO Auto-generated method stub
-		return new KafkaConsumerThread(stream,storeService);
+
+		return new KafkaConsumerThread(stream,storeService,topic);
 	}
 
 

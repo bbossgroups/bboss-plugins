@@ -1,18 +1,18 @@
 package org.frameworkset.plugin.kafka;
 
+import kafka.consumer.ConsumerConfig;
+import kafka.consumer.KafkaStream;
+import kafka.javaapi.consumer.ConsumerConnector;
+import org.frameworkset.spi.BaseApplicationContext;
+import org.frameworkset.spi.support.ApplicationObjectSupport;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.frameworkset.spi.BaseApplicationContext;
-import org.frameworkset.spi.support.ApplicationObjectSupport;
-
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
+import java.util.concurrent.ThreadFactory;
 
 public abstract class BaseKafkaConsumer extends ApplicationObjectSupport implements KafkaListener {
 //	private BaseApplicationContext applicationContext;
@@ -66,18 +66,26 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	    }
 		final ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
 	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-	    final ExecutorService executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10);
+	    final ExecutorService executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
+
+			@Override
+			public Thread newThread(Runnable r) {
+
+				return new Thread(r,r.toString());
+			}
+		});
 
 		for(String t:topics)
 	    {
 	    	String[] infos = t.split(":");
 		    List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(infos[0]);
 //		    System.out.println("-----------------------------------------:"+infos[0]+"-------------"+streams);
+			int i = 0;
 		    for (final KafkaStream<byte[], byte[]> stream : streams) {
 //				StoreService storeService = this.getApplicationContext().getTBeanObject("storeService",StoreService.class);
 //				if(this.storeService == null)
 //					this.storeService = storeService;
-		        executor.submit(buildRunnable(stream));
+		        executor.submit(buildRunnable(stream,infos[0]+"-"+i));
 		    }
 	    }
 	    BaseApplicationContext.addShutdownHook(new Runnable() {
@@ -91,6 +99,6 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 
 	}
 	
-	protected abstract Runnable buildRunnable(KafkaStream<byte[], byte[]> stream );
+	protected abstract Runnable buildRunnable(KafkaStream<byte[], byte[]> stream ,String topic);
 
 }
