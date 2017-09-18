@@ -97,10 +97,12 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	protected   void handleData(MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
 		try{
 			lastReceiveTime = System.currentTimeMillis();
-			logger.debug("Thread["+this.getName() +"] handleData messageQueue size:"+messageQueue.size());
+
 			lock.lock();
 
 			messageQueue.add(mam);
+			if(logger.isDebugEnabled())
+				logger.debug("Thread["+this.getName() +"] handleData messageQueue size:"+messageQueue.size());
 			if(touchBatchsize()){
 				handleDatas();
 			}
