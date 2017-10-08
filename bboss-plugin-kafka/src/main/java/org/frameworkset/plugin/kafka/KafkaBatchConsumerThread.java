@@ -29,13 +29,13 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	private long checkinterval = 5000l;
 	private long lastSendedTime = 0l;
 	private long lastReceiveTime = 0l;
-	private boolean lastReceive = false;
+//	private boolean lastReceive = false;
 	private ThreadPoolExecutor executor = null;
 
 	private Thread batchCheckor;
-	public KafkaBatchConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,int batchsize ,long checkinterval,String checkmode,int worker,String topic) {
+	public KafkaBatchConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,int batchsize ,long checkinterval,int worker,String topic) {
 		super("KafkaBatchConsumerThread-"+topic,stream,  storeService);
-		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
+//		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
 		this.batchsize = batchsize;
 		if(checkinterval > 0l){
 			this.checkinterval = checkinterval;
