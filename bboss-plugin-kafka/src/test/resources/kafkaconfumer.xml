@@ -34,7 +34,6 @@
 		class="org.frameworkset.plugin.kafka.KafkaBatchConsumer" init-method="init"
 		f:batchsize="-1"
 		f:checkinterval="10000"
-		f:checkmode="lastsend"
 		f:productorPropes="attr:consumerPropes" f:topic="blackcat"
 		f:storeService="attr:storeService" f:partitions="4" />
 	<property name="storeService"

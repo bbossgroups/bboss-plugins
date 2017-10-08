@@ -18,7 +18,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	 * lastreceive:最后一次接收的时间为基准
 	 * lastsend:最后一次发送的时间为基准
 	 */
-	private String checkmode = "lastsend";
+//	private String checkmode = "lastsend";
  
 
 //	String topic,String zookeeperConnect, HDFSService logstashService
@@ -31,7 +31,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream,String topic) {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
-			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,checkmode,worker,  topic);
+			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,worker,  topic);
 		else
 			return new KafkaConsumerThread(stream,storeService,  topic);
 	}
