@@ -1,11 +1,12 @@
 package com.frameworkset.common.poolman.hibernate;
+
+import com.frameworkset.orm.transaction.TransactionManager;
+import org.frameworkset.soa.PluginFactory;
 import org.frameworkset.spi.DefaultApplicationContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.MySQLDialect;
 import org.junit.Test;
-
-import com.frameworkset.orm.transaction.TransactionManager;
 
 public class TestPlugin {
 	@Test
@@ -41,6 +42,26 @@ public class TestPlugin {
 		finally
 		{
 			tm.release();
+		}
+	}
+
+	@Test
+	public void testSerialFactory(){
+		PluginFactory hibernatePluginFactory = new org.frameworkset.hibernate.serial.HibernatePluginFactory();
+		System.out.println(hibernatePluginFactory.getPlugins());
+		String[] plugins = hibernatePluginFactory.getPlugins();
+		for(String p:plugins){
+			try {
+				Class cls  = Class.forName(p);
+				System.out.println(cls.newInstance());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
