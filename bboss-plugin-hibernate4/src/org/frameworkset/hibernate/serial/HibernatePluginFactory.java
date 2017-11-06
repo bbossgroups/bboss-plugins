@@ -9,13 +9,7 @@ public class HibernatePluginFactory implements PluginFactory{
 			"org.frameworkset.hibernate.serial.PersistentMap",
 			"org.frameworkset.hibernate.serial.PersistentSet",
 			"org.frameworkset.hibernate.serial.PersistentSortedMap",
-			"org.frameworkset.hibernate.serial.PersistentSortedSet",
-			"org.frameworkset.hibernate.serial.v4.PersistentBagSerial",
-			"org.frameworkset.hibernate.serial.v4.PersistentList",
-			"org.frameworkset.hibernate.serial.v4.PersistentMap",
-			"org.frameworkset.hibernate.serial.v4.PersistentSet",
-			"org.frameworkset.hibernate.serial.v4.PersistentSortedMap",
-			"org.frameworkset.hibernate.serial.v4.PersistentSortedSet"
+			"org.frameworkset.hibernate.serial.PersistentSortedSet"
 	};
 	@Override
 	public String[] getPlugins() {
