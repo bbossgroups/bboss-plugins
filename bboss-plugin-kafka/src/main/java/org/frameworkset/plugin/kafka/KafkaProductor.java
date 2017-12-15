@@ -2,18 +2,28 @@ package org.frameworkset.plugin.kafka;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-//import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 
 public class KafkaProductor  {
 	private KafkaProducer<Object, Object> producer = null;
-//	private static final Logger logger = Logger.getLogger(KafkaProductor.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(KafkaProductor.class);
+	private final AtomicInteger rejectedExecutionCount = new AtomicInteger(0);
 	private Properties productorPropes;
 	private boolean sendDatatoKafka = false;
- 
+
+	/**
+	 * 异步方式发送消息
+	 */
+	private boolean sendAsyn = true;
+
 	public KafkaProductor() {
 		 
 //		Properties props = new Properties();
@@ -63,16 +73,76 @@ public class KafkaProductor  {
 //		props.put("bootstrap.servers", "hadoop85:9092,hadoop86:9092,hadoop88:9092");
 		if(sendDatatoKafka)		
 			producer = new KafkaProducer<Object, Object>(productorPropes);
+
+
 	}
-	
-	public void send(String topic,Object msg){
-		if(sendDatatoKafka && producer != null){
-			producer.send(new ProducerRecord<Object, Object>(topic, null,msg));
-		}		 
+
+	private ExecutorService worker;
+	private void initExecutorService(){
+		if(worker == null){
+			synchronized (this) {
+				if(worker == null)
+					worker = KafkaUtil.getExecutorService();
+			}
+		}
 	}
-	public void send(String topic,Object key,Object msg){
+
+
+	public void send(final String topic, final Object msg){
+		send(  topic,    msg,this.sendAsyn);
+	}
+	public void send(final String topic,final Object key,final Object msg){
+		send(  topic,  key,  msg,this.sendAsyn);
+	}
+
+	public void send(final String topic, final Object msg,boolean sendAsyn){
 		if(sendDatatoKafka && producer != null){
-			producer.send(new ProducerRecord<Object, Object>(topic,key, msg));
+			if(!sendAsyn) {
+				producer.send(new ProducerRecord<Object, Object>(topic, null,msg));
+			}
+			else
+			{
+				try{
+					initExecutorService();
+					this.worker.execute(new Runnable() {
+						@Override
+						public void run() {
+							producer.send(new ProducerRecord<Object, Object>(topic, null,msg));
+						}
+					});
+				} catch (RejectedExecutionException ree) {
+					handleRejectedExecutionException(ree);
+				}
+			}
+		}
+	}
+
+	private void handleRejectedExecutionException(RejectedExecutionException ree) {
+		final int error = rejectedExecutionCount.incrementAndGet();
+		final int mod = 100;
+		if ((error % mod) == 0) {
+			this.logger.warn("RejectedExecutionCount={}", error);
+		}
+	}
+	public void send(final String topic,final Object key,final Object msg,boolean sendAsyn){
+		if(sendDatatoKafka && producer != null){
+			if(!sendAsyn) {
+				producer.send(new ProducerRecord<Object, Object>(topic, key, msg));
+			}
+			else
+			{
+				try{
+					initExecutorService();
+					this.worker.execute(new Runnable() {
+						@Override
+						public void run() {
+							producer.send(new ProducerRecord<Object, Object>(topic, key, msg));
+						}
+					});
+				} catch (RejectedExecutionException ree) {
+					handleRejectedExecutionException(ree);
+				}
+			}
 		}
 	}
 

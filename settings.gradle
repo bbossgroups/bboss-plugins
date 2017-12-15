@@ -1,4 +1,5 @@
 include 'bboss-plugin-hibernate'
+include 'bboss-plugin-hibernate4'
 include 'bboss-jodconverter-core'
 include 'bboss-plugin-wordpdf'
 include 'bboss-plugin-wordpdf-web'
