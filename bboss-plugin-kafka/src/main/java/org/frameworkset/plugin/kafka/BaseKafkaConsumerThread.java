@@ -13,6 +13,7 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 	 
 	protected StoreService storeService;
 	protected String name;
+	protected  boolean shutdown ;
 //	
 //	private HDFSService logstashService;
 //	protected ConsumerConnector consumer;
@@ -22,12 +23,20 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 		this.name = name;
 		
 	}
+	public void shutdown(){
+		if(shutdown)
+			return;
+		this.shutdown = true;
+		Thread.currentThread().interrupt();
+	}
 
 	@Override
 	public void run() {
 		ConsumerIterator<byte[], byte[]> it = stream.iterator();		
 		//logger.debug(Thread.currentThread().getName() + ": dddddddddddddddddddddddddd");
 		while (it.hasNext()) {
+			if(shutdown)
+				break;
 			MessageAndMetadata<byte[], byte[]> mam = it.next();
 			try {
 				if(storeService != null){
@@ -39,12 +48,23 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 							+ "offset[" + mam.offset() + "], " + new String(mam.message(),"UTF-8"));
 				}
 				
-			} catch (Exception e) {
+			}
+			catch (InterruptedException e){
+				logger.error("中断异常：",e);
+				this.shutdown();
+				break;
+			}
+			catch (ShutdownException e){
+				logger.error("中断异常：",e);
+				this.shutdown();
+				break;
+			}
+			catch (Exception e) {
 				logger.error("系统异常：",e);
 			}
 			catch (Throwable e) {
 				logger.error("系统异常：",e);
-				break;
+
 			}
 
 		}
