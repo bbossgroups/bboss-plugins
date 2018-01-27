@@ -32,7 +32,11 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	private long lastSendedTime = 0l;
 	private long lastReceiveTime = 0l;
 	private int workQueue = 100;
-	private boolean asyn = false;
+	/**
+	 * 并行消费处理消息
+	 */
+	private boolean parallel = false;
+	private boolean discardRejectMessage ;
 	private BlockingQueue<List<MessageAndMetadata<byte[], byte[]>>> queue;
 //	private boolean lastReceive = false;
 	private ThreadPoolExecutor executor = null;
@@ -42,9 +46,10 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 	public KafkaBatchConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,
 									int batchsize ,long checkinterval,int workerQueue,
-									int worker,String topic,boolean asyn ) {
+									int worker,String topic,boolean parallel ,boolean discardRejectMessage) {
 		super("KafkaBatchConsumerThread-"+topic,stream,  storeService);
-		this.asyn = asyn;
+		this.discardRejectMessage = discardRejectMessage;
+		this.parallel = parallel;
 //		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
 		this.batchsize = batchsize;
 		if(checkinterval > 0l){
@@ -59,15 +64,19 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 		batchCheckor.start();
 		this.workQueue = workerQueue;
-		queue = new java.util.concurrent.LinkedBlockingQueue(workQueue);
-		handleWork = new HandleWork();
-		handleWork.start();
-		if(this.asyn) {
+
+		if(this.parallel) {
 			int poolsize = worker > 0 ? worker : 10;
 			executor = new ThreadPoolExecutor(poolsize, poolsize,
 					0L, TimeUnit.MILLISECONDS,
-					new LinkedBlockingQueue<Runnable>(10), Executors.defaultThreadFactory());//Executors.newFixedThreadPool(worker > 0?worker:10);
+					new LinkedBlockingQueue<Runnable>(workQueue), Executors.defaultThreadFactory());//Executors.newFixedThreadPool(worker > 0?worker:10);
 
+		}
+		else
+		{
+			queue = new java.util.concurrent.LinkedBlockingQueue(workQueue);
+			handleWork = new HandleWork();
+			handleWork.start();
 		}
 		BaseApplicationContext.addShutdownHook(new Runnable() {
 			@Override
@@ -79,7 +88,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 			StringBuilder builder = new StringBuilder();
 			builder.append("KafkaBatchConsumerThread:batchsize=").append(batchsize).append(",checkinterval=").append(checkinterval)
 					.append("ms,workqueue=").append(workQueue > 0?workQueue:100)
-			        .append("asyn=").append(this.asyn).append(",worker=").append(worker);
+			        .append("parallel=").append(this.parallel).append(",worker=").append(worker);
 			logger.debug(builder.toString());
 		}
 
@@ -174,30 +183,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 						break;
 					final List<MessageAndMetadata<byte[], byte[]>> data = queue.poll(2, TimeUnit.SECONDS);
 					if(data != null && data.size() > 0) {
-						if(asyn) {
-							long intervale = 500l;
-							do {
-								try {
-									executor.execute(new Runnable() {
-										@Override
-										public void run() {
-											_storeData(data);
-										}
-									});
-									break;
-								} catch (RejectedExecutionException e) {
-									handleRejectedExecutionException(e);
-
-									Thread.sleep(intervale);//睡眠500毫秒，继续提交作业
-									if(intervale < 10000l){//每次重试，递增等待时间，最大等待时间10秒
-										intervale = intervale + 100l;
-									}
-								}
-							}while(true);
-						}
-						else{
-							_storeData(data);
-						}
+						_storeData(data);
 
 					}
 				} catch (InterruptedException e) {
@@ -241,17 +227,56 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		return touchSize;
 	}
 
+	private void executor(final List<MessageAndMetadata<byte[], byte[]>> data){
+		long interval = 500l;
+		do {
+			try {
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						_storeData(data);
+					}
+				});
+				break;
+			} catch (RejectedExecutionException e) {
+				handleRejectedExecutionException(e);
+				if(!discardRejectMessage) {
+					try {
+						Thread.sleep(interval);//睡眠500毫秒，继续提交作业
+					} catch (InterruptedException e1) {
+						break;
+					}
+					if (interval < 10000l) {//每次重试，递增等待时间，最大等待时间10秒
+						interval = interval + 100l;
+					}
+				}
+				else{
+					break;
+				}
+
+			}
+		}while(true);
+	}
 	private void handleDatas()   {
 
 		boolean needSend = idleToLimit() ;
 		boolean touchSize = messageQueue.size() >= this.batchsize;
 		if(touchSize || needSend){//第一次检查
-			List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
-			messageQueue.clear();
-			try {
-				this.queue.put(data);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+
+			if(parallel) {
+
+				List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
+				messageQueue.clear();
+				executor(data);
+			}
+			else {
+				try {
+					List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
+					messageQueue.clear();
+					this.queue.put(data);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 
