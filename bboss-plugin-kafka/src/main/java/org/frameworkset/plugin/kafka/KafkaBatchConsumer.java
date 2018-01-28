@@ -14,6 +14,12 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	 */
 	private long checkinterval = 3000l;
 	private int worker = 10;
+	private int workQueue = 100;
+	/**
+	 * 并行消费处理消息
+	 */
+	private boolean parallel = false;
+	private boolean discardRejectMessage = false ;
 	/**
 	 * lastreceive:最后一次接收的时间为基准
 	 * lastsend:最后一次发送的时间为基准
@@ -31,7 +37,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream,String topic) {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
-			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,worker,  topic);
+			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,workQueue,worker,  topic,parallel,discardRejectMessage);
 		else
 			return new KafkaConsumerThread(stream,storeService,  topic);
 	}

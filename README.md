@@ -1,6 +1,6 @@
 # bboss 插件工程
  
-bboss-plugins project.包含word转pdf、pdf转swf项目，持久层hibernate插件
+bboss-plugins project.包含kafka、log4j、spring、dubbo、activemq、word转pdf、pdf转swf项目，持久层hibernate/hibernate4插件
 
 # bboss hibernate插件工程
 

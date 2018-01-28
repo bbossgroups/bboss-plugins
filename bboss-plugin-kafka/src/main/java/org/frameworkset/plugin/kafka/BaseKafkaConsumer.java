@@ -23,6 +23,16 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	
 
 	protected int partitions = 4;
+	protected ExecutorService executor;
+	protected ConsumerConnector consumer;
+	public void shutdown(){
+		if(executor != null)
+			executor.shutdown();
+		if(consumer != null)
+			consumer.shutdown();
+		if(storeService != null)
+			storeService.closeService();
+	}
 
 //	String topic,String zookeeperConnect, HDFSService logstashService
 	
@@ -64,9 +74,9 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	    	String[] infos = t.split(":");
 	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
 	    }
-		final ConsumerConnector consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
+		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
 	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-	    final ExecutorService executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
+	    executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
 
 			@Override
 			public Thread newThread(Runnable r) {
@@ -91,9 +101,7 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	    BaseApplicationContext.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
-				executor.shutdown();
-				consumer.shutdown();
-				storeService.closeService();
+				shutdown();
 			}
 		});
 
