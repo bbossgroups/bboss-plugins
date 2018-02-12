@@ -63,21 +63,18 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 //		batchCheckor.setDaemon(true);
 
 		batchCheckor.start();
-		this.workQueue = workerQueue;
+//		this.workQueue = workerQueue;
+//		queue = new java.util.concurrent.LinkedBlockingQueue(workQueue);
+//		handleWork = new HandleWork();
+//		handleWork.start();
+//		if(this.parallel) {
+//			int poolsize = worker > 0 ? worker : 10;
+//			executor = new ThreadPoolExecutor(poolsize, poolsize,
+//					0L, TimeUnit.MILLISECONDS,
+//					new LinkedBlockingQueue<Runnable>(workQueue), Executors.defaultThreadFactory());//Executors.newFixedThreadPool(worker > 0?worker:10);
+//
+//		}
 
-		if(this.parallel) {
-			int poolsize = worker > 0 ? worker : 10;
-			executor = new ThreadPoolExecutor(poolsize, poolsize,
-					0L, TimeUnit.MILLISECONDS,
-					new LinkedBlockingQueue<Runnable>(workQueue), Executors.defaultThreadFactory());//Executors.newFixedThreadPool(worker > 0?worker:10);
-
-		}
-		else
-		{
-			queue = new java.util.concurrent.LinkedBlockingQueue(workQueue);
-			handleWork = new HandleWork();
-			handleWork.start();
-		}
 		BaseApplicationContext.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
@@ -181,9 +178,15 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 				try {
 					if(shutdown)
 						break;
-					final List<MessageAndMetadata<byte[], byte[]>> data = queue.poll(2, TimeUnit.SECONDS);
+					final List<MessageAndMetadata<byte[], byte[]>> data = queue.poll(10, TimeUnit.SECONDS);
 					if(data != null && data.size() > 0) {
-						_storeData(data);
+						if(parallel) {
+
+							executor(data);
+						}
+						else {
+							_storeData(data);
+						}
 
 					}
 				} catch (InterruptedException e) {
@@ -262,25 +265,24 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		boolean needSend = idleToLimit() ;
 		boolean touchSize = messageQueue.size() >= this.batchsize;
 		if(touchSize || needSend){//第一次检查
+			List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
+			messageQueue.clear();
+			_storeData(data);
 
-			if(parallel) {
-
-				List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
-				messageQueue.clear();
-				executor(data);
-			}
-			else {
-				try {
-					List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
-					messageQueue.clear();
-					this.queue.put(data);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-
-
+//			if(parallel) {
+//				List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
+//				messageQueue.clear();
+//				executor(data);
+//			}
+//			else {
+//				try {
+//					List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
+//					messageQueue.clear();
+//					this.queue.put(data);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	}
 }
