@@ -26,20 +26,20 @@ sourceSets {
 
 dependencies {
     compile (
-        [group: 'org.apache.kafka', name: 'kafka_2.11', version: "0.10.0.1", transitive: true],
+        [group: 'org.apache.kafka', name: 'kafka_2.12', version: "${kafka}", transitive: true],
     ){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-    compile ([group: 'org.apache.kafka', name: 'kafka-tools', version: "0.10.0.1", transitive: true],){
+    compile ([group: 'org.apache.kafka', name: 'kafka-tools', version: "${kafka}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-    compile ([group: 'org.apache.kafka', name: 'kafka-clients', version: "0.10.0.1", transitive: true],){
+    compile ([group: 'org.apache.kafka', name: 'kafka-clients', version: "${kafka}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-    compile ([group: 'org.apache.kafka', name: 'kafka-streams', version: "0.10.0.1", transitive: true],){
+    compile ([group: 'org.apache.kafka', name: 'kafka-streams', version: "${kafka}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
     }
     
