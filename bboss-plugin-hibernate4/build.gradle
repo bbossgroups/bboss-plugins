@@ -26,7 +26,7 @@ dependencies {
              
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: false],
-              [group: 'com.bbossgroups', name: 'bboss-persistent', version: "${PROJ_BBOSS_VERSION}", transitive: false],
+              [group: 'com.bbossgroups', name: 'bboss-persistent', version: "${PROJ_BBOSS_VERSION}", transitive: true],
                 [group: 'com.bbossgroups', name: 'bboss-velocity', version: "${PROJ_BBOSS_VERSION}", transitive: false],
              [group: 'dom4j', name: 'dom4j', version: "1.6.1", transitive: false],
             //[group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: "1.0.1.Final", transitive: false],

@@ -14,13 +14,19 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 	protected StoreService storeService;
 	protected String name;
 	protected  boolean shutdown ;
-//	
+	protected BaseKafkaConsumer consumer;
+	protected  String topic;
+//	String topic,
 //	private HDFSService logstashService;
 //	protected ConsumerConnector consumer;
-	public BaseKafkaConsumerThread(String name,KafkaStream<byte[], byte[]> stream,StoreService storeService) {
+	public BaseKafkaConsumerThread(BaseKafkaConsumer consumer,String topic,String name,KafkaStream<byte[], byte[]> stream,StoreService storeService) {
 		this.stream = stream;
 		this.storeService = storeService;
 		this.name = name;
+		this.consumer = consumer;
+		this.name = name;
+		this.topic = topic;
+
 		
 	}
 	public void shutdown(){
@@ -32,22 +38,29 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 
 	@Override
 	public void run() {
-		ConsumerIterator<byte[], byte[]> it = stream.iterator();		
+		ConsumerIterator<byte[], byte[]> it = stream.iterator();
+
 		//logger.debug(Thread.currentThread().getName() + ": dddddddddddddddddddddddddd");
+
 		while (it.hasNext()) {
 			if(shutdown)
 				break;
 			MessageAndMetadata<byte[], byte[]> mam = it.next();
 			try {
 				if(storeService != null){
-					handleData( mam) ;
+					handleData( consumer,mam) ;
 				}
 				else
 				{
 					logger.debug(Thread.currentThread().getName() + ": partition[" + mam.partition() + "]," 
 							+ "offset[" + mam.offset() + "], " + new String(mam.message(),"UTF-8"));
 				}
-				
+//				Map<TopicAndPartition, OffsetAndMetadata> var1 = new HashMap<TopicAndPartition, OffsetAndMetadata>();
+//				TopicAndPartition topicAndPartition = new TopicAndPartition(this.topic,mam.partition());
+//				OffsetAndMetadata offsetAndMetadata = new OffsetAndMetadata(0l);
+//				var1.put(topicAndPartition,null);
+//				this.consumer.commitOffset();
+
 			}
 			catch (InterruptedException e){
 				logger.error("中断异常：",e);
@@ -69,7 +82,7 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 
 		}
 	}
-	protected abstract void handleData(MessageAndMetadata<byte[], byte[]> mam)  throws Exception;
+	protected abstract void handleData(BaseKafkaConsumer consumer,MessageAndMetadata<byte[], byte[]> mam)  throws Exception;
 
 	public String getName() {
 		return name;
