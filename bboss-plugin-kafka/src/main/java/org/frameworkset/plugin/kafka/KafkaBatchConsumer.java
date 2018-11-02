@@ -1,6 +1,7 @@
 package org.frameworkset.plugin.kafka;
 
 import kafka.consumer.KafkaStream;
+import kafka.javaapi.consumer.ConsumerConnector;
 
 public class KafkaBatchConsumer extends BaseKafkaConsumer {
  
@@ -34,12 +35,12 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	}
 	 
 	@Override
-	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream,String topic) {
+	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream, String topic) {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
-			return new KafkaBatchConsumerThread(stream,storeService,this.batchsize,this.checkinterval,workQueue,worker,  topic,parallel,discardRejectMessage);
+			return new KafkaBatchConsumerThread(this,stream,storeService,this.batchsize,this.checkinterval,workQueue,worker,  topic,parallel,discardRejectMessage);
 		else
-			return new KafkaConsumerThread(stream,storeService,  topic);
+			return new KafkaConsumerThread(this,stream,storeService,  topic);
 	}
 
 

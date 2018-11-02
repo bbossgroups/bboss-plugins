@@ -17,7 +17,7 @@ dependencies {
             [group: 'com.bbossgroups.plugins', name: 'bboss-jodconverter-core', version: "${PROJ_VERSION}", transitive: true],
              [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: false],
-              [group: 'com.bbossgroups', name: 'bboss-persistent', version: "${PROJ_BBOSS_VERSION}", transitive: false],
+              [group: 'com.bbossgroups', name: 'bboss-persistent', version: "${PROJ_BBOSS_VERSION}", transitive: true],
                 [group: 'com.bbossgroups', name: 'bboss-taglib', version: "${PROJ_BBOSS_VERSION}", transitive: false],
              [group: 'com.bbossgroups', name: 'bboss-mvc', version: "${PROJ_BBOSS_VERSION}", transitive: false],
              [group: 'jstl', name: 'jstl', version: '1.2', transitive: false],

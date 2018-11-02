@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -43,13 +46,16 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 	private BatchCheckor batchCheckor;
 	private HandleWork handleWork;
+	private String topic;
 
-	public KafkaBatchConsumerThread(KafkaStream<byte[], byte[]> stream,StoreService storeService,
-									int batchsize ,long checkinterval,int workerQueue,
-									int worker,String topic,boolean parallel ,boolean discardRejectMessage) {
-		super("KafkaBatchConsumerThread-"+topic,stream,  storeService);
+
+	public KafkaBatchConsumerThread(BaseKafkaConsumer consumer,KafkaStream<byte[], byte[]> stream, StoreService storeService,
+									int batchsize , long checkinterval, int workerQueue,
+									int worker, String topic, boolean parallel , boolean discardRejectMessage) {
+		super(consumer,  "KafkaBatchConsumerThread-"+topic,topic,stream,  storeService);
 		this.discardRejectMessage = discardRejectMessage;
 		this.parallel = parallel;
+		this.topic = topic;
 //		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
 		this.batchsize = batchsize;
 		if(checkinterval > 0l){
@@ -103,6 +109,15 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		}
 		super.shutdown();
 	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
 	class BatchCheckor extends Thread{
 		private boolean shutdown;
 		public void shutdown(){
@@ -205,7 +220,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		return (step > this.checkinterval) && (messageQueue.size() > 0) ;
 	}
 
-	protected void handleData(MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
+	protected void handleData(BaseKafkaConsumer consumer,MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
 		try{
 			lastReceiveTime = System.currentTimeMillis();
 			lock.lock();

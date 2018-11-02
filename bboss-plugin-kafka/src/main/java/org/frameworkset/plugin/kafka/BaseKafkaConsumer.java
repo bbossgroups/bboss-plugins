@@ -20,11 +20,17 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	protected String topic;
 //	private String zookeeperConnect;
 	protected Properties productorPropes;
+	private boolean autoCommit;
 	
 
 	protected int partitions = 4;
 	protected ExecutorService executor;
-	protected ConsumerConnector consumer;
+
+	public ConsumerConnector getConsumer() {
+		return consumer;
+	}
+
+	private ConsumerConnector consumer;
 	public void shutdown(){
 		if(executor != null)
 			executor.shutdown();
@@ -48,7 +54,7 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 //        props.put("group.id","logstash");  
 //        props.put("zookeeper.session.timeout.ms", "1000");
 //        props.put("zookeeper.sync.time.ms", "200");
-//        props.put("auto.commit.enable", true);
+//        props.put("auto.commit.enable", true);enable.auto.commit
 //        
 //        props.put("auto.commit.interval.ms", "1000"); 
 //        props.put("auto.offset.reset", "smallest");
@@ -59,13 +65,23 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
        
 	}
 	public void init(){
+		String _autoCommit = this.productorPropes.getProperty("enable.auto.commit","true");
+		if(_autoCommit.equals("true")){
+			this.autoCommit = true;
+		}
+		else{
+			this.autoCommit = false;
+		}
 		 consumerConfig = new ConsumerConfig(productorPropes);
 	}
 	protected StoreService storeService = null;
 
+	public Properties getProductorPropes(){
+		return this.productorPropes;
+	}
 	@Override
 	public void run() {
-		
+
 	    Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 	    String[] topics = topic.split("\\,");
 	    int a_numThreads = partitions;
@@ -108,5 +124,20 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	}
 	
 	protected abstract Runnable buildRunnable(KafkaStream<byte[], byte[]> stream ,String topic);
+
+	public boolean isAutoCommit() {
+		return autoCommit;
+	}
+
+	public void setAutoCommit(boolean autoCommit) {
+		this.autoCommit = autoCommit;
+	}
+
+	/**
+	 *
+	 */
+	public void commitOffset(){
+		this.consumer.commitOffsets();
+	}
 
 }
