@@ -12,8 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -42,10 +40,10 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	private boolean discardRejectMessage ;
 	private BlockingQueue<List<MessageAndMetadata<byte[], byte[]>>> queue;
 //	private boolean lastReceive = false;
-	private ThreadPoolExecutor executor = null;
+//	private ThreadPoolExecutor executor = null;
 
 	private BatchCheckor batchCheckor;
-	private HandleWork handleWork;
+//	private HandleWork handleWork;
 	private String topic;
 
 
@@ -101,12 +99,12 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	public void shutdown(){
 		if(batchCheckor != null)
 			batchCheckor.shutdown();
-		if(executor != null){
-			executor.shutdown();
-		}
-		if(handleWork != null){
-			handleWork.shutdown();
-		}
+//		if(executor != null){
+//			executor.shutdown();
+//		}
+//		if(handleWork != null){
+//			handleWork.shutdown();
+//		}
 		super.shutdown();
 	}
 
@@ -179,6 +177,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		}
 	}
 	private final AtomicInteger rejectedExecutionCount = new AtomicInteger(0);
+	/**
 	class HandleWork extends Thread{
 		private boolean shutdown;
 		public void shutdown(){
@@ -214,7 +213,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		}
 	}
 
-
+*/
 	private boolean idleToLimit(){
 		long step = (System.currentTimeMillis() - lastReceiveTime) ;
 		return (step > this.checkinterval) && (messageQueue.size() > 0) ;
@@ -244,7 +243,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		boolean touchSize = (messageQueue.size() >= this.batchsize);
 		return touchSize;
 	}
-
+/**
 	private void executor(final List<MessageAndMetadata<byte[], byte[]>> data){
 		long interval = 500l;
 		do {
@@ -274,7 +273,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 			}
 		}while(true);
-	}
+	}*/
 	private void handleDatas()   {
 
 		boolean needSend = idleToLimit() ;

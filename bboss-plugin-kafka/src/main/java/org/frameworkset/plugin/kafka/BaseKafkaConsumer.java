@@ -1,6 +1,9 @@
 package org.frameworkset.plugin.kafka;
 
+import kafka.common.OffsetAndMetadata;
+import kafka.common.TopicAndPartition;
 import kafka.consumer.ConsumerConfig;
+
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import org.frameworkset.spi.BaseApplicationContext;
@@ -138,6 +141,20 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	 */
 	public void commitOffset(){
 		this.consumer.commitOffsets();
+	}
+
+	public void commitOffsets(boolean retryOnFailure){
+		this.consumer.commitOffsets(retryOnFailure);
+	}
+
+	/**
+	 *  Commit offsets using the provided offsets map
+	 *
+	 *  @param offsetsToCommit a map containing the offset to commit for each partition.
+	 *  @param retryOnFailure enable retries on the offset commit if it fails.
+	 */
+	public void commitOffsets(Map<TopicAndPartition, OffsetAndMetadata> offsetsToCommit, boolean retryOnFailure){
+		this.consumer.commitOffsets(offsetsToCommit,retryOnFailure);
 	}
 
 }
