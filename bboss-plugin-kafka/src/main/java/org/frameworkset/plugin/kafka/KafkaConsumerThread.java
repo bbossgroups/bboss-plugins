@@ -1,8 +1,7 @@
 package org.frameworkset.plugin.kafka;
 
 
-import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,12 +10,12 @@ public class KafkaConsumerThread extends BaseKafkaConsumerThread{
 	 
 //	
 //	private HDFSService logstashService;
-	public KafkaConsumerThread(BaseKafkaConsumer consumer,KafkaStream<byte[], byte[]> stream, StoreService storeService, String topic) {
-		super(consumer,"KafkaConsumerThread-"+topic,topic,stream,  storeService);
+	public KafkaConsumerThread(BaseKafkaConsumer consumer,String[] topic, StoreService storeService,long timeOut) {
+		super(consumer,topic,"KafkaConsumerThread-"+topic[0],  timeOut,storeService);
 	}
 
 	 
-	protected   void handleData(BaseKafkaConsumer consumer,MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
-		storeService.store(mam);
+	protected   void handleData(BaseKafkaConsumer consumer, ConsumerRecord<Object, Object> record)  throws Exception{
+		storeService.store(record);
 	}
 }

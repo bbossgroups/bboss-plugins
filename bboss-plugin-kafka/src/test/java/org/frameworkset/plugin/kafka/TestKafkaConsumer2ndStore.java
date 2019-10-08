@@ -15,9 +15,7 @@ package org.frameworkset.plugin.kafka;
  * limitations under the License.
  */
 
-import kafka.message.MessageAndMetadata;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.List;
 
@@ -30,27 +28,24 @@ import java.util.List;
  * @version 1.0
  */
 public class TestKafkaConsumer2ndStore extends KafkaConsumer2ndStore{
-	StringDeserializer sd = new StringDeserializer();
-	LongDeserializer ld = new LongDeserializer();
 	@Override
-	public void store(List<MessageAndMetadata<byte[], byte[]>> messages) throws Exception {
-		for(MessageAndMetadata<byte[], byte[]> message:messages){
-			String data = sd.deserialize(null,message.message());
-			long key = ld.deserialize(null, message.key());
-			System.out.println("key="+key+",data="+data);
+	public void store(List<ConsumerRecord<Object,Object>> messages) throws Exception {
+		for(ConsumerRecord<Object,Object> message:messages){
+			Object data = message.value();
+			Object key =  message.key();
+			System.out.println("key="+key+",data="+data+",topic="+message.topic()+",partition="+message.partition()+",offset="+message.offset());
 		}
 	}
 
 	@Override
-	public void store(MessageAndMetadata<byte[], byte[]> message) throws Exception {
-		String data = sd.deserialize(null,message.message());
-		long key = ld.deserialize(null, message.key());
-		System.out.println("key="+key+",data="+data);
+	public void closeService() {
+
 	}
 
 	@Override
-	public void closeService() {
-		sd.close();
-		ld.close();
+	public void store(ConsumerRecord<Object,Object> message) throws Exception {
+		Object data = message.value();
+		Object key =  message.key();
+		System.out.println("key="+key+",data="+data+",topic="+message.topic()+",partition="+message.partition()+",offset="+message.offset());
 	}
 }

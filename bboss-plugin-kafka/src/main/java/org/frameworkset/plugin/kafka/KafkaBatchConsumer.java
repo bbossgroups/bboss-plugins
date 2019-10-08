@@ -1,7 +1,5 @@
 package org.frameworkset.plugin.kafka;
 
-import kafka.consumer.KafkaStream;
-
 public class KafkaBatchConsumer extends BaseKafkaConsumer {
  
 	/**
@@ -13,6 +11,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	 * 则强制进行处理并清空
 	 */
 	protected long checkinterval = 3000l;
+
 	protected int worker = 10;
 	protected int workQueue = 100;
 	/**
@@ -34,13 +33,13 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	}
 	 
 	@Override
-	protected Runnable buildRunnable(KafkaStream<byte[], byte[]> stream, String topic) {
+	protected Runnable buildRunnable( String[] topic) {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
-			return new KafkaBatchConsumerThread(this,stream,storeService,this.batchsize,
-					this.checkinterval,workQueue,worker,  topic,parallel,discardRejectMessage);
+			return new KafkaBatchConsumerThread(this,topic,storeService,this.batchsize,
+					this.checkinterval,pollTimeOut,workQueue,worker,  parallel,discardRejectMessage);
 		else
-			return new KafkaConsumerThread(this,stream,storeService,  topic);
+			return new KafkaConsumerThread(this,topic,storeService,  pollTimeOut);
 	}
 
 

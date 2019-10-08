@@ -29,18 +29,22 @@ dependencies {
         [group: 'org.apache.kafka', name: 'kafka_2.12', version: "${kafka}", transitive: true],
     ){
    		exclude group: 'log4j', module: 'log4j'
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     
     compile ([group: 'org.apache.kafka', name: 'kafka-tools', version: "${kafka}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     
     compile ([group: 'org.apache.kafka', name: 'kafka-clients', version: "${kafka}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     
     compile ([group: 'org.apache.kafka', name: 'kafka-streams', version: "${kafka}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     
    compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )    

@@ -2,6 +2,8 @@ package org.frameworkset.plugin.kafka;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.frameworkset.spi.BaseApplicationContext;
+import org.frameworkset.spi.support.ApplicationObjectSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,17 +14,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 
-public class KafkaProductor  {
+public class KafkaProductor extends ApplicationObjectSupport {
 	private KafkaProducer<Object, Object> producer = null;
 	private static final Logger logger = LoggerFactory.getLogger(KafkaProductor.class);
 	private final AtomicInteger rejectedExecutionCount = new AtomicInteger(0);
 	private Properties productorPropes;
 	private boolean sendDatatoKafka = false;
-
 	/**
 	 * 异步方式发送消息
 	 */
-	private boolean sendAsyn = true;
+	private boolean sendAsyn = false;
 
 	public KafkaProductor() {
 		 
@@ -71,21 +72,14 @@ public class KafkaProductor  {
 //
 //		// 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定
 //		props.put("bootstrap.servers", "hadoop85:9092,hadoop86:9092,hadoop88:9092");
-		if(sendDatatoKafka)		
+		if(sendDatatoKafka)
 			producer = new KafkaProducer<Object, Object>(productorPropes);
 
 
 	}
 
 	private ExecutorService worker;
-	private void initExecutorService(){
-		if(worker == null){
-			synchronized (this) {
-				if(worker == null)
-					worker = KafkaUtil.getExecutorService();
-			}
-		}
-	}
+
 
 
 	public void send(final String topic, final Object msg){
@@ -94,7 +88,28 @@ public class KafkaProductor  {
 	public void send(final String topic,final Object key,final Object msg){
 		send(  topic,  key,  msg,this.sendAsyn);
 	}
-
+	private final static int workerThreadSize = 100;
+	private final static int workerThreadQueueSize = 1024;
+	private  ExecutorService initExecutorService(){
+		if(worker != null){
+			return worker;
+		}
+		synchronized (this) {
+			if(worker == null) {
+				int workerThreadSize = super.getApplicationContext().getIntProperty("workerThreadSize",KafkaProductor.workerThreadSize);
+				int workerThreadQueueSize = super.getApplicationContext().getIntProperty("workerThreadQueueSize",KafkaProductor.workerThreadQueueSize);;
+				final ExecutorService worker_ = ExecutorFactory.newFixedThreadPool(workerThreadSize, workerThreadQueueSize, "Producer-Worker", true);
+				BaseApplicationContext.addShutdownHook(new Runnable() {
+					@Override
+					public void run() {
+						worker_.shutdown();
+					}
+				});
+				worker = worker_;
+			}
+		}
+		return worker;
+	}
 	public void send(final String topic, final Object msg,boolean sendAsyn){
 		if(sendDatatoKafka && producer != null){
 			if(!sendAsyn) {

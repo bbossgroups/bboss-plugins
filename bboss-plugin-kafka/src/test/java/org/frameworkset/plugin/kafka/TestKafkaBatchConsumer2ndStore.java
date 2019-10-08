@@ -15,9 +15,7 @@ package org.frameworkset.plugin.kafka;
  * limitations under the License.
  */
 
-import kafka.message.MessageAndMetadata;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.List;
 
@@ -30,34 +28,24 @@ import java.util.List;
  * @version 1.0
  */
 public class TestKafkaBatchConsumer2ndStore extends KafkaBatchConsumer2ndStore{
-	StringDeserializer sd = new StringDeserializer();
-	LongDeserializer ld = new LongDeserializer();
 	@Override
-	public void store(List<MessageAndMetadata<byte[], byte[]>> messages) throws Exception {
-		for(MessageAndMetadata<byte[], byte[]> message:messages){
-			String data = sd.deserialize(null,message.message());
-			long key = ld.deserialize(null, message.key());
-			System.out.println("key="+key+",data="+data
-					+",message.partition()="+message.partition()
-					+ ",topic:"+message.topic()+",offset:"+message.offset());
-
+	public void store(List<ConsumerRecord<Object,Object>> messages) throws Exception {
+		for(ConsumerRecord<Object,Object> message:messages){
+			Object data = message.value();
+			Object key =  message.key();
+			System.out.println("key="+key+",data="+data+",topic="+message.topic()+",partition="+message.partition()+",offset="+message.offset());
 		}
-		if(!this.isAutoCommit())
-			this.commitOffset();
-	}
-
-	@Override
-	public void store(MessageAndMetadata<byte[], byte[]> message) throws Exception {
-		String data = sd.deserialize(null,message.message());
-		long key = ld.deserialize(null, message.key());
-		System.out.println("key="+key+",data="+data);
-		if(!this.isAutoCommit())//如果是手动提交，则需要显示提交消费的commiter
-			this.commitOffset();
 	}
 
 	@Override
 	public void closeService() {
-		sd.close();
-		ld.close();
+
+	}
+
+	@Override
+	public void store(ConsumerRecord<Object,Object> message) throws Exception {
+		Object data = message.value();
+		Object key =  message.key();
+		System.out.println("key="+key+",data="+data+",topic="+message.topic()+",partition="+message.partition()+",offset="+message.offset());
 	}
 }

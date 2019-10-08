@@ -1,8 +1,8 @@
 package org.frameworkset.plugin.kafka;
 
 
-import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	private static final Logger logger = LoggerFactory.getLogger(KafkaBatchConsumerThread.class);
 
-	private List<MessageAndMetadata<byte[], byte[]>> messageQueue ;
+	private List<ConsumerRecord<Object,Object>> messageQueue ;
 	private Lock lock = new ReentrantLock();
 	/**
 	 * 批量处理数据大小
@@ -38,22 +38,20 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	 */
 	private boolean parallel = false;
 	private boolean discardRejectMessage ;
-	private BlockingQueue<List<MessageAndMetadata<byte[], byte[]>>> queue;
+	private BlockingQueue<List<ConsumerRecord<Object,Object>>> queue;
 //	private boolean lastReceive = false;
 //	private ThreadPoolExecutor executor = null;
 
 	private BatchCheckor batchCheckor;
 //	private HandleWork handleWork;
-	private String topic;
 
 
-	public KafkaBatchConsumerThread(BaseKafkaConsumer consumer,KafkaStream<byte[], byte[]> stream, StoreService storeService,
-									int batchsize , long checkinterval, int workerQueue,
-									int worker, String topic, boolean parallel , boolean discardRejectMessage) {
-		super(consumer,  "KafkaBatchConsumerThread-"+topic,topic,stream,  storeService);
+	public KafkaBatchConsumerThread(BaseKafkaConsumer consumer,String[] topics, StoreService storeService,
+									int batchsize , long checkinterval, long timeOut,int workerQueue,
+									int worker, boolean parallel , boolean discardRejectMessage) {
+		super(consumer,  topics, "KafkaBatchConsumerThread-"+topics[0], timeOut,storeService);
 		this.discardRejectMessage = discardRejectMessage;
 		this.parallel = parallel;
-		this.topic = topic;
 //		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
 		this.batchsize = batchsize;
 		if(checkinterval > 0l){
@@ -89,7 +87,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 			StringBuilder builder = new StringBuilder();
 			builder.append("KafkaBatchConsumerThread:batchsize=").append(batchsize).append(",checkinterval=").append(checkinterval)
 					.append("ms,workqueue=").append(workQueue > 0?workQueue:100)
-			        .append("parallel=").append(this.parallel).append(",worker=").append(worker);
+			        .append(",parallel=").append(this.parallel).append(",worker=").append(worker);
 			logger.debug(builder.toString());
 		}
 
@@ -108,13 +106,6 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		super.shutdown();
 	}
 
-	public String getTopic() {
-		return topic;
-	}
-
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
 
 	class BatchCheckor extends Thread{
 		private boolean shutdown;
@@ -153,7 +144,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 	}
 
-	private void _storeData(List<MessageAndMetadata<byte[], byte[]>> data){
+	private void _storeData(List<ConsumerRecord<Object,Object>> data){
 		lastSendedTime = System.currentTimeMillis();
 		if(data != null && data.size() > 0){
 			try {
@@ -219,7 +210,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		return (step > this.checkinterval) && (messageQueue.size() > 0) ;
 	}
 
-	protected void handleData(BaseKafkaConsumer consumer,MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
+	protected void handleData(BaseKafkaConsumer consumer,ConsumerRecord<Object,Object> mam)  throws Exception{
 		try{
 			lastReceiveTime = System.currentTimeMillis();
 			lock.lock();
@@ -279,7 +270,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		boolean needSend = idleToLimit() ;
 		boolean touchSize = messageQueue.size() >= this.batchsize;
 		if(touchSize || needSend){//第一次检查
-			List<MessageAndMetadata<byte[], byte[]>> data = new ArrayList<MessageAndMetadata<byte[], byte[]>>(messageQueue);
+			List<ConsumerRecord<Object,Object>> data = new ArrayList<ConsumerRecord<Object,Object>>(messageQueue);
 			messageQueue.clear();
 			_storeData(data);
 

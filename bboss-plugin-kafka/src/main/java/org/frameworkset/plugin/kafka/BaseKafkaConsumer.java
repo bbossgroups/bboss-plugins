@@ -1,44 +1,51 @@
 package org.frameworkset.plugin.kafka;
 
 import kafka.common.OffsetAndMetadata;
-import kafka.common.TopicAndPartition;
-import kafka.consumer.ConsumerConfig;
-
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+//import kafka.consumer.ConsumerConfig;
+//
+//import kafka.consumer.KafkaStream;
+//import kafka.javaapi.consumer.ConsumerConnector;
+
 public abstract class BaseKafkaConsumer extends ApplicationObjectSupport implements KafkaListener {
 //	private BaseApplicationContext applicationContext;
 	protected ConsumerConfig consumerConfig;
 	protected String topic;
-//	private String zookeeperConnect;
-	protected Properties productorPropes;
-	private boolean autoCommit;
-	
 
+	public Properties getConsumerPropes() {
+		return consumerPropes;
+	}
+
+	//	private String zookeeperConnect;
+	protected Properties consumerPropes;
+	private boolean autoCommit;
+	private KafkaConsumer consumer;
+	protected long pollTimeOut = 1000l;
 	protected int partitions = 4;
 	protected ExecutorService executor;
 
-	public ConsumerConnector getConsumer() {
+	public KafkaConsumer getConsumer() {
 		return consumer;
 	}
 
-	private ConsumerConnector consumer;
+//	private ConsumerConnector consumer;
 	public void shutdown(){
 		if(executor != null)
 			executor.shutdown();
 		if(consumer != null)
-			consumer.shutdown();
+			consumer.close();
 		if(storeService != null)
 			storeService.closeService();
 	}
@@ -68,34 +75,30 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
        
 	}
 	public void init(){
-		String _autoCommit = this.productorPropes.getProperty("enable.auto.commit","true");
+		String _autoCommit = this.consumerPropes.getProperty("enable.auto.commit","true");
 		if(_autoCommit.equals("true")){
 			this.autoCommit = true;
 		}
 		else{
 			this.autoCommit = false;
 		}
-		 consumerConfig = new ConsumerConfig(productorPropes);
+//		 consumerConfig = new ConsumerConfig(productorPropes);
 	}
 	protected StoreService storeService = null;
 
-	public Properties getProductorPropes(){
-		return this.productorPropes;
-	}
+
 	@Override
 	public void run() {
 
 	    Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-	    String[] topics = topic.split("\\,");
+	    final String[] topics = topic.split("\\,");
 	    int a_numThreads = partitions;
-	    for(String t:topics)
-	    {
-	    	String[] infos = t.split(":");
-	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
-	    }
-		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
-	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-	    executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
+//	    for(String t:topics)
+//	    {
+//	    	String[] infos = t.split(":");
+//	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
+//	    }
+		executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
 
 			@Override
 			public Thread newThread(Runnable r) {
@@ -103,7 +106,31 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 				return new Thread(r,r.toString());
 			}
 		});
+		for(int i = 0; i < a_numThreads; i ++) {
+			Runnable runnable =buildRunnable(topics);
+//			Runnable runnable = new Runnable() {
+//				@Override
+//				public void run() {
+//					consumer = new KafkaConsumer(productorPropes);
+//					consumer.subscribe(Arrays.asList(topics));
+//
+////					Map<String, List<PartitionInfo>> listMap = consumer.listTopics();
+//
+//					while (true) {
+//						ConsumerRecords<Object, Object> records = consumer.poll(1000l);
+//						List<ConsumerRecord<Object, Object>> precords = records.records((TopicPartition) null);
+//						for (ConsumerRecord<Object, Object> record : records)
+//							System.out.printf("offset = %d, key = %s, value = %s%", record.offset(), record.key(), record.value());
+//					}
+//				}
+//			};
+			executor.submit(runnable);
 
+		}
+
+//	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
+
+/**
 		for(String t:topics)
 	    {
 	    	String[] infos = t.split(":");
@@ -117,6 +144,7 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 		        executor.submit(buildRunnable(stream,infos[0]+"-"+i));
 		    }
 	    }
+ */
 	    BaseApplicationContext.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
@@ -126,7 +154,7 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 
 	}
 	
-	protected abstract Runnable buildRunnable(KafkaStream<byte[], byte[]> stream ,String topic);
+	protected abstract Runnable buildRunnable(String[] topic);
 
 	public boolean isAutoCommit() {
 		return autoCommit;
@@ -140,11 +168,12 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	 *
 	 */
 	public void commitOffset(){
-		this.consumer.commitOffsets();
+		this.consumer.commitSync();
 	}
 
 	public void commitOffsets(boolean retryOnFailure){
-		this.consumer.commitOffsets(retryOnFailure);
+		this.consumer.commitSync();
+//		this.consumer.commitOffsets(retryOnFailure);
 	}
 
 	/**
@@ -153,8 +182,8 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	 *  @param offsetsToCommit a map containing the offset to commit for each partition.
 	 *  @param retryOnFailure enable retries on the offset commit if it fails.
 	 */
-	public void commitOffsets(Map<TopicAndPartition, OffsetAndMetadata> offsetsToCommit, boolean retryOnFailure){
-		this.consumer.commitOffsets(offsetsToCommit,retryOnFailure);
+	public void commitOffsets(Map<TopicPartition, OffsetAndMetadata> offsetsToCommit, boolean retryOnFailure){
+		this.consumer.commitSync(offsetsToCommit);
 	}
 
 }
