@@ -1,7 +1,9 @@
 package org.frameworkset.plugin.kafka;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -82,12 +85,12 @@ public class KafkaProductor extends ApplicationObjectSupport {
 
 
 
-	public void send(final String topic, final Object msg){
-		send(  topic,    msg,this.sendAsyn);
-	}
-	public void send(final String topic,final Object key,final Object msg){
-		send(  topic,  key,  msg,this.sendAsyn);
-	}
+//	public void send(final String topic, final Object msg){
+//		send(  topic,    msg,this.sendAsyn);
+//	}
+//	public void send(final String topic,final Object key,final Object msg){
+//		send(  topic,  key,  msg,this.sendAsyn);
+//	}
 	private final static int workerThreadSize = 100;
 	private final static int workerThreadQueueSize = 1024;
 	private  ExecutorService initExecutorService(){
@@ -110,27 +113,7 @@ public class KafkaProductor extends ApplicationObjectSupport {
 		}
 		return worker;
 	}
-	public void send(final String topic, final Object msg,boolean sendAsyn){
-		if(sendDatatoKafka && producer != null){
-			if(!sendAsyn) {
-				producer.send(new ProducerRecord<Object, Object>(topic, null,msg));
-			}
-			else
-			{
-				try{
-					initExecutorService();
-					this.worker.execute(new Runnable() {
-						@Override
-						public void run() {
-							producer.send(new ProducerRecord<Object, Object>(topic, null,msg));
-						}
-					});
-				} catch (RejectedExecutionException ree) {
-					handleRejectedExecutionException(ree);
-				}
-			}
-		}
-	}
+
 
 	private void handleRejectedExecutionException(RejectedExecutionException ree) {
 		final int error = rejectedExecutionCount.incrementAndGet();
@@ -139,26 +122,50 @@ public class KafkaProductor extends ApplicationObjectSupport {
 			this.logger.warn("RejectedExecutionCount={}", error);
 		}
 	}
-	public void send(final String topic,final Object key,final Object msg,boolean sendAsyn){
+//	public Future<RecordMetadata> send(final String topic,final Object key,final Object msg){
+//		if(sendDatatoKafka && producer != null){
+//			if(!sendAsyn) {
+//				producer.send(new ProducerRecord<Object, Object>(topic, key, msg));
+//			}
+//			else
+//			{
+//				try{
+//					initExecutorService();
+//					this.worker.execute(new Runnable() {
+//						@Override
+//						public void run() {
+//							producer.send(new ProducerRecord<Object, Object>(topic, key, msg));
+//						}
+//					});
+//				} catch (RejectedExecutionException ree) {
+//					handleRejectedExecutionException(ree);
+//				}
+//			}
+//		}
+//	}
+
+	public Future<RecordMetadata> send(final String topic, final Object msg, Callback callback){
 		if(sendDatatoKafka && producer != null){
-			if(!sendAsyn) {
-				producer.send(new ProducerRecord<Object, Object>(topic, key, msg));
-			}
-			else
-			{
-				try{
-					initExecutorService();
-					this.worker.execute(new Runnable() {
-						@Override
-						public void run() {
-							producer.send(new ProducerRecord<Object, Object>(topic, key, msg));
-						}
-					});
-				} catch (RejectedExecutionException ree) {
-					handleRejectedExecutionException(ree);
-				}
-			}
+			return producer.send(new ProducerRecord<Object, Object>(topic, null,msg,callback));
 		}
+		if(logger.isInfoEnabled())
+			logger.info("Ignore send Data to Kafka:sendDatatoKafka={} or producer is null",sendDatatoKafka);
+		return null;
+	}
+	public Future<RecordMetadata> send(final String topic,final Object key,final Object msg,Callback callback){
+		if(sendDatatoKafka && producer != null){
+			return producer.send(new ProducerRecord<Object, Object>(topic, key, msg),callback);
+		}
+		if(logger.isInfoEnabled())
+			logger.info("Ignore send Data to Kafka:sendDatatoKafka={} or producer is null",sendDatatoKafka);
+		return null;
+	}
+
+	public Future<RecordMetadata> send(final String topic, final Object msg){
+		return send( topic,  msg, (Callback)null);
+	}
+	public Future<RecordMetadata> send(final String topic,final Object key,final Object msg){
+		return send( topic, key, msg, (Callback)null);
 	}
 
 	public Properties getProductorPropes() {
