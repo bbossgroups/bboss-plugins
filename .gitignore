@@ -14,3 +14,7 @@
 /settings.gradle.bak
 /.idea/
 /bboss-plugins.iml
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
+gradlew
+gradlew.bat

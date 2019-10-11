@@ -1,31 +1,35 @@
 package org.frameworkset.plugin.kafka;
 
 
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 public abstract class BaseKafkaConsumerThread implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(BaseKafkaConsumerThread.class);
-	protected KafkaStream<byte[], byte[]> stream;
-	 
+
 	protected StoreService storeService;
 	protected String name;
 	protected  boolean shutdown ;
 	protected BaseKafkaConsumer consumer;
-	protected  String topic;
+	private KafkaConsumer kafkaConsumer;
+	protected  String[] topics;
+	protected long timeOut;
 //	String topic,
 //	private HDFSService logstashService;
 //	protected ConsumerConnector consumer;
-	public BaseKafkaConsumerThread(BaseKafkaConsumer consumer,String topic,String name,KafkaStream<byte[], byte[]> stream,StoreService storeService) {
-		this.stream = stream;
+	public BaseKafkaConsumerThread(BaseKafkaConsumer consumer,String[] topics,String name ,long timeOut,StoreService storeService) {
 		this.storeService = storeService;
 		this.name = name;
 		this.consumer = consumer;
 		this.name = name;
-		this.topic = topic;
+		this.topics = topics;
+		this.timeOut = timeOut;
 
 		
 	}
@@ -38,51 +42,102 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 
 	@Override
 	public void run() {
-		ConsumerIterator<byte[], byte[]> it = stream.iterator();
+		try {
+			kafkaConsumer = new KafkaConsumer(consumer.getConsumerPropes());
+			kafkaConsumer.subscribe(Arrays.asList(topics));
+//					Map<String, List<PartitionInfo>> listMap = consumer.listTopics();
 
-		//logger.debug(Thread.currentThread().getName() + ": dddddddddddddddddddddddddd");
-
-		while (it.hasNext()) {
-			if(shutdown)
-				break;
-			MessageAndMetadata<byte[], byte[]> mam = it.next();
-			try {
-				if(storeService != null){
-					handleData( consumer,mam) ;
-				}
-				else
-				{
-					logger.debug(Thread.currentThread().getName() + ": partition[" + mam.partition() + "]," 
-							+ "offset[" + mam.offset() + "], " + new String(mam.message(),"UTF-8"));
-				}
+			while (true) {
+				if (shutdown)
+					break;
+				ConsumerRecords<Object, Object> records = kafkaConsumer.poll(timeOut);
+				for (ConsumerRecord<Object, Object> record : records) {
+					if (logger.isDebugEnabled())
+						logger.debug("offset = {}, key = {}, value = {}", record.offset(), record.key(), record.value());
+					try {
+						if (storeService != null) {
+							handleData(consumer, record);
+						} else {
+							if (logger.isDebugEnabled())
+								logger.debug(Thread.currentThread().getName() + ": partition[" + record.partition() + "],"
+										+ "offset[" + record.offset() + "], " + record.value());
+						}
 //				Map<TopicAndPartition, OffsetAndMetadata> var1 = new HashMap<TopicAndPartition, OffsetAndMetadata>();
 //				TopicAndPartition topicAndPartition = new TopicAndPartition(this.topic,mam.partition());
 //				OffsetAndMetadata offsetAndMetadata = new OffsetAndMetadata(0l);
 //				var1.put(topicAndPartition,null);
 //				this.consumer.commitOffset();
 
-			}
-			catch (InterruptedException e){
-				logger.error("中断异常：",e);
-				this.shutdown();
-				break;
-			}
-			catch (ShutdownException e){
-				logger.error("中断异常：",e);
-				this.shutdown();
-				break;
-			}
-			catch (Exception e) {
-				logger.error("系统异常：",e);
-			}
-			catch (Throwable e) {
-				logger.error("系统异常：",e);
+					} catch (InterruptedException e) {
+						if (logger.isErrorEnabled())
+							logger.error("中断异常：", e);
+						this.shutdown();
+						break;
+					} catch (ShutdownException e) {
+						if (logger.isErrorEnabled())
+							logger.error("中断异常：", e);
+						this.shutdown();
+						break;
+					} catch (Exception e) {
+						if (logger.isErrorEnabled())
+							logger.error("系统异常：", e);
+					} catch (Throwable e) {
+						if (logger.isErrorEnabled())
+							logger.error("系统异常：", e);
 
+					}
+				}
 			}
-
 		}
+		catch (Throwable e){
+			if(logger.isErrorEnabled())
+				logger.error("",e);
+		}
+//		ConsumerIterator<byte[], byte[]> it = stream.iterator();
+//
+//		//logger.debug(Thread.currentThread().getName() + ": dddddddddddddddddddddddddd");
+//
+//		while (it.hasNext()) {
+//			if(shutdown)
+//				break;
+//			MessageAndMetadata<byte[], byte[]> mam = it.next();
+//			try {
+//				if(storeService != null){
+//					handleData( consumer,mam) ;
+//				}
+//				else
+//				{
+//					logger.debug(Thread.currentThread().getName() + ": partition[" + mam.partition() + "],"
+//							+ "offset[" + mam.offset() + "], " + new String(mam.message(),"UTF-8"));
+//				}
+////				Map<TopicAndPartition, OffsetAndMetadata> var1 = new HashMap<TopicAndPartition, OffsetAndMetadata>();
+////				TopicAndPartition topicAndPartition = new TopicAndPartition(this.topic,mam.partition());
+////				OffsetAndMetadata offsetAndMetadata = new OffsetAndMetadata(0l);
+////				var1.put(topicAndPartition,null);
+////				this.consumer.commitOffset();
+//
+//			}
+//			catch (InterruptedException e){
+//				logger.error("中断异常：",e);
+//				this.shutdown();
+//				break;
+//			}
+//			catch (ShutdownException e){
+//				logger.error("中断异常：",e);
+//				this.shutdown();
+//				break;
+//			}
+//			catch (Exception e) {
+//				logger.error("系统异常：",e);
+//			}
+//			catch (Throwable e) {
+//				logger.error("系统异常：",e);
+//
+//			}
+//
+//		}
 	}
-	protected abstract void handleData(BaseKafkaConsumer consumer,MessageAndMetadata<byte[], byte[]> mam)  throws Exception;
+	protected abstract void handleData(BaseKafkaConsumer consumer,ConsumerRecord<Object, Object> record)  throws Exception;
 
 	public String getName() {
 		return name;

@@ -1,11 +1,11 @@
 package org.frameworkset.plugin.kafka;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+
 import java.util.List;
 
-import kafka.message.MessageAndMetadata;
-
 public interface StoreService {
-	public void store(List<MessageAndMetadata<byte[], byte[]>> message)  throws Exception ;
-	public void store(MessageAndMetadata<byte[], byte[]> message)  throws Exception ;
+	public void store(List<ConsumerRecord<Object,Object>> messages)  throws Exception ;
+	public void store(ConsumerRecord<Object,Object> message)  throws Exception ;
 	public void closeService();
 }
