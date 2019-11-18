@@ -12,21 +12,8 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	 */
 	protected long checkinterval = 3000l;
 
-	protected int worker = 10;
-	protected int workQueue = 100;
-	/**
-	 * 并行消费处理消息
-	 */
-	protected boolean parallel = false;
 	protected boolean discardRejectMessage = false ;
-	/**
-	 * lastreceive:最后一次接收的时间为基准
-	 * lastsend:最后一次发送的时间为基准
-	 */
-//	protected String checkmode = "lastsend";
- 
 
-//	String topic,String zookeeperConnect, HDFSService logstashService
 	
 	public KafkaBatchConsumer() {
 
@@ -37,10 +24,20 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 		// TODO Auto-generated method stub
 		if(this.batchsize > 0)
 			return new KafkaBatchConsumerThread(this,topic,storeService,this.batchsize,
-					this.checkinterval,pollTimeOut,workQueue,worker,  parallel,discardRejectMessage);
+					this.checkinterval,pollTimeOut,discardRejectMessage);
 		else
 			return new KafkaConsumerThread(this,topic,storeService,  pollTimeOut);
 	}
 
+	public void setBatchsize(int batchsize) {
+		this.batchsize = batchsize;
+	}
 
+	public void setDiscardRejectMessage(boolean discardRejectMessage) {
+		this.discardRejectMessage = discardRejectMessage;
+	}
+
+	public void setCheckinterval(long checkinterval) {
+		this.checkinterval = checkinterval;
+	}
 }

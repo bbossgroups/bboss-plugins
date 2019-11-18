@@ -1,7 +1,6 @@
 package org.frameworkset.plugin.kafka;
 
 import kafka.common.OffsetAndMetadata;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.frameworkset.spi.BaseApplicationContext;
@@ -21,7 +20,6 @@ import java.util.concurrent.ThreadFactory;
 
 public abstract class BaseKafkaConsumer extends ApplicationObjectSupport implements KafkaListener {
 //	private BaseApplicationContext applicationContext;
-	protected ConsumerConfig consumerConfig;
 	protected String topic;
 
 	public Properties getConsumerPropes() {
@@ -40,7 +38,23 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 		return consumer;
 	}
 
-//	private ConsumerConnector consumer;
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
+	public void setPollTimeOut(long pollTimeOut) {
+		this.pollTimeOut = pollTimeOut;
+	}
+
+	public void setPartitions(int partitions) {
+		this.partitions = partitions;
+	}
+
+	public void setConsumerPropes(Properties consumerPropes) {
+		this.consumerPropes = consumerPropes;
+	}
+
+	//	private ConsumerConnector consumer;
 	public void shutdown(){
 		if(executor != null)
 			executor.shutdown();

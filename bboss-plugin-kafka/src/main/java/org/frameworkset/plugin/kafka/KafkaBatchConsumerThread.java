@@ -36,7 +36,6 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	/**
 	 * 并行消费处理消息
 	 */
-	private boolean parallel = false;
 	private boolean discardRejectMessage ;
 	private BlockingQueue<List<ConsumerRecord<Object,Object>>> queue;
 //	private boolean lastReceive = false;
@@ -47,11 +46,9 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 
 	public KafkaBatchConsumerThread(BaseKafkaConsumer consumer,String[] topics, StoreService storeService,
-									int batchsize , long checkinterval, long timeOut,int workerQueue,
-									int worker, boolean parallel , boolean discardRejectMessage) {
+									int batchsize , long checkinterval, long timeOut , boolean discardRejectMessage) {
 		super(consumer,  topics, "KafkaBatchConsumerThread-"+topics[0], timeOut,storeService);
 		this.discardRejectMessage = discardRejectMessage;
-		this.parallel = parallel;
 //		this.lastReceive = checkmode != null && checkmode.equals("lastreceive")?true:false;
 		this.batchsize = batchsize;
 		if(checkinterval > 0l){
@@ -86,8 +83,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 		if(logger.isDebugEnabled()){
 			StringBuilder builder = new StringBuilder();
 			builder.append("KafkaBatchConsumerThread:batchsize=").append(batchsize).append(",checkinterval=").append(checkinterval)
-					.append("ms,workqueue=").append(workQueue > 0?workQueue:100)
-			        .append(",parallel=").append(this.parallel).append(",worker=").append(worker);
+					.append("ms");
 			logger.debug(builder.toString());
 		}
 
