@@ -42,7 +42,7 @@ public abstract class KafkaConsumersStarter {
 					return;
 				if(_service instanceof KafkaListener){
 					KafkaListener consumer = (KafkaListener)_service;
-					Thread t = new Thread(consumer);
+					Thread t = new Thread(consumer,"kafka-consumer-"+pro.getName());
 					t.start();
 					if(logger.isInfoEnabled()){
 						logger.info("Kafka Listener[name:{},class:{}] started.",pro.getName(),pro.getClazz());

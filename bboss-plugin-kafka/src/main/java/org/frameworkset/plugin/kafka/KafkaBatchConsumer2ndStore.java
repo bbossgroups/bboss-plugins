@@ -14,6 +14,7 @@ public abstract class KafkaBatchConsumer2ndStore extends KafkaBatchConsumer impl
 	 * as failure to set an essential property) or if initialization fails.
 	 */
 	public void afterPropertiesSet() throws Exception{
+		init();
 		this.storeService = this;
 	}
 

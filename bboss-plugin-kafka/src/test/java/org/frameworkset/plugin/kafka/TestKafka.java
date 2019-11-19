@@ -1,14 +1,67 @@
 package org.frameworkset.plugin.kafka;
 
+import com.frameworkset.util.SimpleStringUtil;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class TestKafka {
 	public static void main(String[] args){
 		TestKafka testKafka = new TestKafka();
-		testKafka.testSend(false);
+		testKafka.testSendJsonData(true);
+	}
+	public void testSendJsonData(boolean syn) {
+		KafkaUtil kafkaUtil = new KafkaUtil("kafka_2.12-2.3.0/kafka.xml");
+		KafkaProductor productor = kafkaUtil.getProductor("kafkaproductor");
+		List<Map> datas = new ArrayList<>();
+		for (int i = 0; i < 10; i++){
+			Map<String,Object> data = new HashMap<>();
+			data.put("name","duoduo_"+i);
+			data.put("classLevel",5);
+			data.put("school","师大附小");
+			data.put("class","1506");
+			data.put("birthDay",new Date());
+			datas.add(data);
+
+		}
+
+		Future<RecordMetadata> recordMetadataFuture = productor.send("blackcatstore", (long)12, SimpleStringUtil.object2json(datas));
+		if(syn) {
+			try {
+				RecordMetadata recordMetadata = recordMetadataFuture.get();
+				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+
+		datas = new ArrayList<>();
+		for (int i = 0; i < 10; i++){
+			Map<String,Object> data = new HashMap<>();
+			data.put("name","duoduo_"+(i+10));
+			data.put("classLevel",5);
+			data.put("school","师大附小");
+			data.put("class","1506");
+			data.put("birthDay",new Date());
+			datas.add(data);
+
+		}
+
+		recordMetadataFuture = productor.send("blackcatstore", (long)13, SimpleStringUtil.object2json(datas));
+		if(syn) {
+			try {
+				RecordMetadata recordMetadata = recordMetadataFuture.get();
+				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	public void testSend(boolean syn) {
 		KafkaUtil kafkaUtil = new KafkaUtil("kafka_2.12-2.3.0/kafka.xml");

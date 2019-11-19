@@ -113,11 +113,11 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 //	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
 //	    }
 		executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
-
+			private int i = 0;
 			@Override
 			public Thread newThread(Runnable r) {
 
-				return new Thread(r,r.toString());
+				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
 			}
 		});
 		for(int i = 0; i < a_numThreads; i ++) {

@@ -57,14 +57,14 @@
 
 	<!-- 单条消息消费 -->
 	<property name="kafkaconsumerstore"
-			  class="org.frameworkset.plugin.kafka.TestKafkaConsumer2ndStore" init-method="init"
+			  class="org.frameworkset.plugin.kafka.TestKafkaConsumer2ndStore"
 			  f:consumerPropes="attr:consumerPropes" f:topic="blackcatstore"
 			  f:pollTimeOut="2000"
 			  f:partitions="4" />
 
 	<!-- 支持单条和批量多条消息消费，batchsize大于0批量消费，否则单条消费 -->
 	<property name="kafkabatchconsumerstore"
-			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore" init-method="init"
+			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore"
 			  f:batchsize="1000"
 			  f:checkinterval="10000"
 			  f:pollTimeOut="2000"
