@@ -62,6 +62,24 @@ public class TestKafka {
 				e.printStackTrace();
 			}
 		}
+
+		Map<String,Object> data = new HashMap<>();
+		data.put("name","singleduoduo_"+(10000));
+		data.put("classLevel",5);
+		data.put("school","师大附小");
+		data.put("class","1506");
+		data.put("birthDay",new Date());
+		recordMetadataFuture = productor.send("blackcatstore", (long)14, SimpleStringUtil.object2json(data));
+		if(syn) {
+			try {
+				RecordMetadata recordMetadata = recordMetadataFuture.get();
+				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	public void testSend(boolean syn) {
 		KafkaUtil kafkaUtil = new KafkaUtil("kafka_2.12-2.3.0/kafka.xml");
