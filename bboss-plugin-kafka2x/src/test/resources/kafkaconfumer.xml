@@ -1,0 +1,60 @@
+<properties>
+	<property name="consumerPropes">
+		<propes>
+
+
+			<property name="group.id" value="test">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<property name="zookeeper.session.timeout.ms" value="30000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<property name="zookeeper.sync.time.ms" value="300">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+
+			<property name="auto.commit.interval.ms" value="3000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+
+			<property name="auto.offset.reset" value="smallest">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<property name="zookeeper.connect" value="hadoop86:2181,hadoop88:2181">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<property name="enable.auto.commit" value="true">
+				<description> <![CDATA[ If true the consumer's offset will be periodically committed in the background.]]></description>
+			</property>
+
+
+		</propes>
+	</property>
+	<!-- f:checkmode:
+	
+	lastsend
+	lastreceive -->
+	<property name="kafkaconsumer"
+		class="org.frameworkset.plugin.kafka.KafkaBatchConsumer" init-method="init"
+		f:batchsize="1000"
+		f:checkinterval="10000"
+		f:productorPropes="attr:consumerPropes" f:topic="blackcat"
+		f:storeService="attr:storeService" f:partitions="4" />
+	<property name="storeService"
+		 class="org.frameworkset.plugin.kafka.StoreServiceTest" />
+
+	<!-- 单条消息消费 -->
+	<property name="kafkaconsumerstore"
+			  class="org.frameworkset.plugin.kafka.TestKafkaConsumer2ndStore" init-method="init"
+			  f:productorPropes="attr:consumerPropes" f:topic="blackcatstore"
+			  f:partitions="4" />
+
+	<!-- 支持单条和批量多条消息消费，batchsize大于0批量消费，否则单条消费 -->
+	<property name="kafkabatchconsumerstore"
+			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore" init-method="init"
+			  f:batchsize="1000"
+			  f:checkinterval="10000"
+			  f:productorPropes="attr:consumerPropes" f:topic="blackcatbatchstore"
+			  f:partitions="4" />
+
+</properties>
