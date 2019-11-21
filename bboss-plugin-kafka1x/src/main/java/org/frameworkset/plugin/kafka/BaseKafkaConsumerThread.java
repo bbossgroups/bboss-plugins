@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class BaseKafkaConsumerThread implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(BaseKafkaConsumerThread.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected KafkaStream<byte[], byte[]> stream;
 	 
 	protected StoreService storeService;
