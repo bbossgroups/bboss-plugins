@@ -23,6 +23,7 @@ public class TestKafka {
 			data.put("school","师大附小");
 			data.put("class","1506");
 			data.put("birthDay",new Date());
+			data.put("_id",SimpleStringUtil.getUUID());
 			datas.add(data);
 
 		}
@@ -47,6 +48,7 @@ public class TestKafka {
 			data.put("school","师大附小");
 			data.put("class","1506");
 			data.put("birthDay",new Date());
+			data.put("_id",SimpleStringUtil.getUUID());
 			datas.add(data);
 
 		}
@@ -69,6 +71,7 @@ public class TestKafka {
 		data.put("school","师大附小");
 		data.put("class","1506");
 		data.put("birthDay",new Date());
+		data.put("_id",SimpleStringUtil.getUUID());
 		recordMetadataFuture = productor.send("blackcatstore", (long)14, SimpleStringUtil.object2json(data));
 		if(syn) {
 			try {
@@ -86,6 +89,7 @@ public class TestKafka {
 		data.put("school","师大附小-没有key");
 		data.put("class","1506");
 		data.put("birthDay",new Date());
+		data.put("_id",SimpleStringUtil.getUUID());
 		recordMetadataFuture = productor.send("blackcatstore",SimpleStringUtil.object2json(data));
 		if(syn) {
 			try {
