@@ -33,7 +33,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	 * 并行消费处理消息
 	 */
 	private boolean parallel = false;
-	private boolean discardRejectMessage ;
+	private String discardRejectMessage ;
 	private BlockingQueue<List<MessageAndMetadata<byte[], byte[]>>> queue;
 //	private boolean lastReceive = false;
 //	private ThreadPoolExecutor executor = null;
@@ -44,7 +44,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 
 
 	public KafkaBatchConsumerThread(BaseKafkaConsumer consumer,KafkaStream<byte[], byte[]> stream, StoreService storeService,
-									int batchsize , long checkinterval, String topic, boolean parallel , boolean discardRejectMessage) {
+									int batchsize , long checkinterval, String topic, boolean parallel , String discardRejectMessage) {
 		super(consumer,  "KafkaBatchConsumerThread-"+topic,topic,stream,  storeService);
 		this.discardRejectMessage = discardRejectMessage;
 		this.parallel = parallel;

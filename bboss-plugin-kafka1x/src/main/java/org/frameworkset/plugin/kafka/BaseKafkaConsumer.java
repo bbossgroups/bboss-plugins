@@ -24,10 +24,10 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 //	private String zookeeperConnect;
 	protected Properties consumerPropes;
 	private boolean autoCommit;
-	
 
 	protected int partitions = 4;
 	protected ExecutorService executor;
+
 
 	public int getPartitions() {
 		return partitions;

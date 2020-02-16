@@ -1,0 +1,51 @@
+<properties>
+	<property name="consumerPropes">
+		<propes>
+
+			<property name="socket.timeout.ms" value="30000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<property name="group.id" value="test">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			
+			<property name="zookeeper.session.timeout.ms" value="30000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<property name="zookeeper.sync.time.ms" value="3000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+
+			<property name="auto.commit.interval.ms" value="3000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+
+			<property name="auto.offset.reset" value="smallest">
+				<description> <![CDATA[ largest]]></description>
+			</property>
+
+			<property name="zookeeper.connect" value="10.19.85.65:2185">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+			<!-- <property name="zookeeper.connect" value="192.168.137.133:2183">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property> -->
+			<property name="auto.commit.enable" value="true">
+				<description> <![CDATA[ If true the consumer's offset will be periodically committed in the background.]]></description>
+			</property>
+
+
+		</propes>
+	</property>
+
+
+
+	<!-- 支持单条和批量多条消息消费，batchsize大于0批量消费，否则单条消费 -->
+	<property name="kafkabatchconsumerstore"
+			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore" init-method="init"
+			  f:batchsize="1000"
+			  f:checkinterval="1000"
+			  f:consumerPropes="attr:consumerPropes" f:topic="xinkonglog"
+			  f:partitions="4" />
+
+</properties>

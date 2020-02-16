@@ -9,7 +9,7 @@
     </appender>
 
     <logger name="org.frameworkset.plugin.kafka" additivity="false">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
         <appender-ref ref="console"/>
     </logger>
 

@@ -1,14 +1,9 @@
 package org.frameworkset.plugin.kafka;
 
-import kafka.common.OffsetAndMetadata;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.TopicPartition;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -18,8 +13,9 @@ import java.util.concurrent.ThreadFactory;
 //import kafka.consumer.KafkaStream;
 //import kafka.javaapi.consumer.ConsumerConnector;
 
-public abstract class BaseKafkaConsumer extends ApplicationObjectSupport implements KafkaListener {
+public class BaseKafkaConsumer extends ApplicationObjectSupport implements KafkaListener {
 //	private BaseApplicationContext applicationContext;
+	protected List<BaseKafkaConsumerThread> baseKafkaConsumerThreadList = new ArrayList<>();
 	protected String topic;
 
 	public Properties getConsumerPropes() {
@@ -29,26 +25,103 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	//	private String zookeeperConnect;
 	protected Properties consumerPropes;
 	private boolean autoCommit;
-	private KafkaConsumer consumer;
-	protected long pollTimeOut = 1000l;
-	protected int partitions = 4;
+//	private KafkaConsumer consumer;
+	protected long pollTimeout = 1000l;
+	protected int threads = 4;
+	protected Boolean batch = true;
 	protected ExecutorService executor;
-
-	public KafkaConsumer getConsumer() {
-		return consumer;
+	protected String keyDeserializer;
+	protected String valueDeserializer;
+	protected Integer maxPollRecords;
+	protected Integer workThreads ;
+	protected Integer workQueue = 100;
+	private String groupId;
+	public void setThreads(int threads) {
+		this.threads = threads;
 	}
+	protected String discardRejectMessage;
+	public String getDiscardRejectMessage() {
+		return discardRejectMessage;
+	}
+
+	public void setDiscardRejectMessage(String discardRejectMessage) {
+		this.discardRejectMessage = discardRejectMessage;
+	}
+
+	public int getThreads() {
+		return threads;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setBatch(Boolean batch) {
+		this.batch = batch;
+	}
+
+	public Boolean getBatch() {
+		return batch;
+	}
+
+	public void setWorkQueue(Integer workQueue) {
+		this.workQueue = workQueue;
+	}
+
+	public void setWorkThreads(Integer workThreads) {
+		this.workThreads = workThreads;
+	}
+
+	public Integer getWorkQueue() {
+		return workQueue;
+	}
+
+	public Integer getWorkThreads() {
+		return workThreads;
+	}
+
+	public void setKeyDeserializer(String keyDeserializer) {
+		this.keyDeserializer = keyDeserializer;
+	}
+
+	public String getKeyDeserializer() {
+		return keyDeserializer;
+	}
+
+	public void setValueDeserializer(String valueDeserializer) {
+		this.valueDeserializer = valueDeserializer;
+	}
+
+	public String getValueDeserializer() {
+		return valueDeserializer;
+	}
+
+
+
+	public long getPollTimeout() {
+		return pollTimeout;
+	}
+
+	public void setMaxPollRecords(Integer maxPollRecords) {
+		this.maxPollRecords = maxPollRecords;
+	}
+
+	public Integer getMaxPollRecords() {
+		return maxPollRecords;
+	}
+//	public KafkaConsumer getConsumer() {
+//		return consumer;
+//	}
 
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
 
-	public void setPollTimeOut(long pollTimeOut) {
-		this.pollTimeOut = pollTimeOut;
+	public void setPollTimeout(long pollTimeout) {
+		this.pollTimeout = pollTimeout;
 	}
 
-	public void setPartitions(int partitions) {
-		this.partitions = partitions;
-	}
+
 
 	public void setConsumerPropes(Properties consumerPropes) {
 		this.consumerPropes = consumerPropes;
@@ -56,12 +129,17 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 
 	//	private ConsumerConnector consumer;
 	public void shutdown(){
+		if(baseKafkaConsumerThreadList.size() > 0){
+			for(BaseKafkaConsumerThread baseKafkaConsumerThread:baseKafkaConsumerThreadList){
+				baseKafkaConsumerThread.shutdown();
+			}
+		}
 		if(executor != null)
 			executor.shutdown();
-		if(consumer != null)
-			consumer.close();
-		if(storeService != null)
-			storeService.closeService();
+//		if(consumer != null)
+//			consumer.close();
+//		if(storeService != null)
+//			storeService.closeService();
 	}
 
 //	String topic,String zookeeperConnect, HDFSService logstashService
@@ -106,13 +184,13 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 
 	    Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 	    final String[] topics = topic.split("\\,");
-	    int a_numThreads = partitions;
+	    int a_numThreads = threads;
 //	    for(String t:topics)
 //	    {
 //	    	String[] infos = t.split(":");
 //	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
 //	    }
-		executor = Executors.newFixedThreadPool(a_numThreads*topics.length+10,new ThreadFactory(){
+		executor = Executors.newFixedThreadPool(a_numThreads,new ThreadFactory(){
 			private int i = 0;
 			@Override
 			public Thread newThread(Runnable r) {
@@ -121,7 +199,8 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 			}
 		});
 		for(int i = 0; i < a_numThreads; i ++) {
-			Runnable runnable =buildRunnable(topics);
+			BaseKafkaConsumerThread runnable =buildRunnable(i,topics);
+			baseKafkaConsumerThreadList.add(runnable);
 //			Runnable runnable = new Runnable() {
 //				@Override
 //				public void run() {
@@ -168,7 +247,19 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 
 	}
 	
-	protected abstract Runnable buildRunnable(String[] topic);
+	protected BaseKafkaConsumerThread buildRunnable(int partition,String[] topic){
+		BaseKafkaConsumerThread baseKafkaConsumerThread = new BaseKafkaConsumerThread(partition,this,topic,storeService);
+		baseKafkaConsumerThread.setKeyDeserializer(keyDeserializer);
+		baseKafkaConsumerThread.setValueDeserializer(valueDeserializer);
+		baseKafkaConsumerThread.setMaxPollRecords(maxPollRecords);
+		baseKafkaConsumerThread.setPollTimeout(pollTimeout);
+		baseKafkaConsumerThread.setWorkThreads(workThreads);
+		baseKafkaConsumerThread.setWorkQueue(workQueue);
+		baseKafkaConsumerThread.setBatch(batch);
+		baseKafkaConsumerThread.setDiscardRejectMessage(discardRejectMessage);
+		baseKafkaConsumerThread.setGroupId(groupId);
+		return baseKafkaConsumerThread;
+	}
 
 	public boolean isAutoCommit() {
 		return autoCommit;
@@ -178,26 +269,34 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 		this.autoCommit = autoCommit;
 	}
 
-	/**
-	 *
-	 */
-	public void commitOffset(){
-		this.consumer.commitSync();
+	public String getGroupId() {
+		return groupId;
 	}
 
-	public void commitOffsets(boolean retryOnFailure){
-		this.consumer.commitSync();
-//		this.consumer.commitOffsets(retryOnFailure);
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
 	}
 
-	/**
-	 *  Commit offsets using the provided offsets map
-	 *
-	 *  @param offsetsToCommit a map containing the offset to commit for each partition.
-	 *  @param retryOnFailure enable retries on the offset commit if it fails.
-	 */
-	public void commitOffsets(Map<TopicPartition, OffsetAndMetadata> offsetsToCommit, boolean retryOnFailure){
-		this.consumer.commitSync(offsetsToCommit);
-	}
+//	/**
+//	 *
+//	 */
+//	public void commitOffset(){
+//		this.consumer.commitSync();
+//	}
+//
+//	public void commitOffsets(boolean retryOnFailure){
+//		this.consumer.commitSync();
+////		this.consumer.commitOffsets(retryOnFailure);
+//	}
+//
+//	/**
+//	 *  Commit offsets using the provided offsets map
+//	 *
+//	 *  @param offsetsToCommit a map containing the offset to commit for each partition.
+//	 *  @param retryOnFailure enable retries on the offset commit if it fails.
+//	 */
+//	public void commitOffsets(Map<TopicPartition, OffsetAndMetadata> offsetsToCommit, boolean retryOnFailure){
+//		this.consumer.commitSync(offsetsToCommit);
+//	}
 
 }

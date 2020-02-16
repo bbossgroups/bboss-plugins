@@ -16,8 +16,7 @@ package org.frameworkset.plugin.kafka;
  */
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-
-import java.util.List;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 /**
  * <p>Description: </p>
@@ -29,7 +28,7 @@ import java.util.List;
  */
 public class TestKafkaBatchConsumer2ndStore extends KafkaBatchConsumer2ndStore{
 	@Override
-	public void store(List<ConsumerRecord<Object,Object>> messages) throws Exception {
+	public void store(ConsumerRecords<Object, Object> messages) throws Exception {
 		for(ConsumerRecord<Object,Object> message:messages){
 			Object data = message.value();
 			Object key =  message.key();
@@ -37,10 +36,7 @@ public class TestKafkaBatchConsumer2ndStore extends KafkaBatchConsumer2ndStore{
 		}
 	}
 
-	@Override
-	public void closeService() {
 
-	}
 
 	@Override
 	public void store(ConsumerRecord<Object,Object> message) throws Exception {

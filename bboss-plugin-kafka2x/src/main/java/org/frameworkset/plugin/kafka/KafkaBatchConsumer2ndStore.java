@@ -2,7 +2,7 @@ package org.frameworkset.plugin.kafka;
 
 import org.frameworkset.spi.InitializingBean;
 
-public abstract class KafkaBatchConsumer2ndStore extends KafkaBatchConsumer implements StoreService, InitializingBean {
+public abstract class KafkaBatchConsumer2ndStore extends BaseKafkaConsumer implements StoreService, InitializingBean {
 
 	/**
 	 * Invoked by a BeanFactory after it has set all bean properties supplied

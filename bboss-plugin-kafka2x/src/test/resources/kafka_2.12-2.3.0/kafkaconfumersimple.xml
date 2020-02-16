@@ -2,15 +2,12 @@
 	<property name="consumerPropes">
 		<propes>
 
-			<property name="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer">
-				<description> <![CDATA[ Deserializer class for value that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.]]></description>
+			<property name="request.timeout.ms" value="30000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
 			</property>
-			<property name="key.deserializer" value="org.apache.kafka.common.serialization.LongDeserializer">
-				<description> <![CDATA[ Deserializer class for key that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.]]></description>
-			</property>
-			<property name="group.id" value="test">
-				<description> <![CDATA[ A unique string that identifies the consumer group this consumer belongs to. This property is required if the consumer uses either the group management functionality by using <code>subscribe(topic)</code> or the Kafka-based offset management strategy.]]></description>
-			</property>
+
+
+
 			<property name="session.timeout.ms" value="30000">
 				<description> <![CDATA[ The timeout used to detect client failures when using "
                                                         + "Kafka's group management facility. The client sends periodic heartbeats to indicate its liveness "
@@ -28,7 +25,7 @@
 			<property name="auto.offset.reset" value="latest">
 				<description> <![CDATA[ What to do when there is no initial offset in Kafka or if the current offset does not exist any more on the server (e.g. because that data has been deleted): <ul><li>earliest: automatically reset the offset to the earliest offset<li>latest: automatically reset the offset to the latest offset</li><li>none: throw exception to the consumer if no previous offset is found for the consumer's group</li><li>anything else: throw exception to the consumer.</li></ul>]]></description>
 			</property>
-			<property name="bootstrap.servers" value="192.168.137.133:9093">
+			<property name="bootstrap.servers" value="10.19.85.65:19092">
 				<description> <![CDATA[ A list of host/port pairs to use for establishing the initial connection to the Kafka cluster. The client will make use of all servers irrespective of which servers are specified here for bootstrapping&mdash;this list only impacts the initial hosts used to discover the full set of servers. This list should be in the form "
                                                        + "<code>host1:port1,host2:port2,...</code>. Since these servers are just used for the initial connection to "
                                                        + "discover the full cluster membership (which may change dynamically), this list need not contain the full set of "
@@ -38,37 +35,48 @@
 				<description> <![CDATA[If true the consumer's offset will be periodically committed in the background.]]></description>
 			</property>
 
+			<!--可以在代码级覆盖的配置开始-->
+			<property name="max.poll.records" value="1000">
+				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
+			</property>
+
+			<property name="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer">
+				<description> <![CDATA[ Deserializer class for value that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.]]></description>
+			</property>
+			<property name="key.deserializer" value="org.apache.kafka.common.serialization.LongDeserializer">
+				<description> <![CDATA[ Deserializer class for key that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.]]></description>
+			</property>
+			<property name="group.id" value="test">
+				<description> <![CDATA[ A unique string that identifies the consumer group this consumer belongs to. This property is required if the consumer uses either the group management functionality by using <code>subscribe(topic)</code> or the Kafka-based offset management strategy.]]></description>
+			</property>
+			<!--可以在代码级覆盖的配置完毕-->
 
 		</propes>
 	</property>
-	<!-- f:checkmode:
-	
-	lastsend
-	lastreceive -->
-	<!--<property name="kafkaconsumer"
-		class="org.frameworkset.plugin.kafka.KafkaBatchConsumer" init-method="init"
-		f:batchsize="1000"
-		f:checkinterval="10000"
-		f:consumerPropes="attr:consumerPropes" f:topic="blackcat"
-		f:storeService="attr:storeService" f:partitions="4" />
-	<property name="storeService"
-		 class="org.frameworkset.plugin.kafka.StoreServiceTest" />
-		 -->
 
-	<!-- 单条消息消费 -->
-	<property name="kafkaconsumerstore"
-			  class="org.frameworkset.plugin.kafka.TestKafkaConsumer2ndStore"
-			  f:consumerPropes="attr:consumerPropes" f:topic="blackcatstore"
-			  f:pollTimeOut="2000"
-			  f:partitions="4" />
 
-	<!-- 支持单条和批量多条消息消费，batchsize大于0批量消费，否则单条消费 -->
+
+	<!-- 支持单条和批量多条消息消费，batchsize大于0批量消费，否则单条消费
+	threads:启动接收消息线程数，默认4，可以根据kafka topic分区总数来决定
+	workThreads: 每个接收消息线程会派生workThreads个线程来处理接收到消息
+	workQueue: 派生线程池等待队列长度
+	 f:pollTimeout="5000" 从kafka拉取消息超时时间
+			  f:maxPollRecords="1000"  每次从kafka拉取的消息数量
+			  f:batch="true" true调用批量store方法， false调用单条store方法
+	-->
 	<property name="kafkabatchconsumerstore"
-			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore"
-			  f:batchsize="1000"
-			  f:checkinterval="10000"
-			  f:pollTimeOut="2000"
-			  f:consumerPropes="attr:consumerPropes" f:topic="blackcatbatchstore"
-			  f:partitions="4" />
+			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore" init-method="init"
+			  f:consumerPropes="attr:consumerPropes"
+			  f:topic="xinkonglog"
+			  f:threads="4"
+			  f:pollTimeout="5000"
+			  f:maxPollRecords="1000"
+			  f:batch="true"
+	          f:workThreads="10"
+			  f:workQueue="100"
+			  f:groupId="test"
+			  f:keyDeserializer="org.apache.kafka.common.serialization.LongDeserializer"
+			  f:valueDeserializer="org.apache.kafka.common.serialization.StringDeserializer"
+	/>
 
 </properties>

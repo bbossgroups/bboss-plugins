@@ -17,7 +17,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 	 * 并行消费处理消息
 	 */
 	protected boolean parallel = false;
-	protected boolean discardRejectMessage = false ;
+	protected String discardRejectMessage  ;
 	/**
 	 * lastreceive:最后一次接收的时间为基准
 	 * lastsend:最后一次发送的时间为基准
@@ -43,7 +43,7 @@ public class KafkaBatchConsumer extends BaseKafkaConsumer {
 		this.parallel = parallel;
 	}
 
-	public void setDiscardRejectMessage(boolean discardRejectMessage) {
+	public void setDiscardRejectMessage(String discardRejectMessage) {
 		this.discardRejectMessage = discardRejectMessage;
 	}
 
