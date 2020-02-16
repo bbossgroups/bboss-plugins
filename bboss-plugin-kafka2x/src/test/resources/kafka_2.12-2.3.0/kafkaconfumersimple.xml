@@ -1,11 +1,11 @@
 <properties>
 	<property name="consumerPropes">
 		<propes>
-
+<!-- 
 			<property name="request.timeout.ms" value="30000">
 				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
 			</property>
-
+ -->
 
 
 			<property name="session.timeout.ms" value="30000">
@@ -68,7 +68,7 @@
 			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore" init-method="init"
 			  f:consumerPropes="attr:consumerPropes"
 			  f:topic="xinkonglog"
-			  f:threads="4"
+			  f:threads="2"
 			  f:pollTimeout="5000"
 			  f:maxPollRecords="1000"
 			  f:batch="true"

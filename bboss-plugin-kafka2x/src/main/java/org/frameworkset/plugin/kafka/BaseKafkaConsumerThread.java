@@ -162,7 +162,7 @@ public class BaseKafkaConsumerThread implements Runnable {
 			threadProperties.put("value.deserializer",valueDeserializer);
 		}
 		if(maxPollRecords != null){
-			threadProperties.put("max.poll.records",maxPollRecords);
+			threadProperties.put("max.poll.records",maxPollRecords+"");
 		}
 		if(groupId != null && !groupId.equals(""))
 		{
