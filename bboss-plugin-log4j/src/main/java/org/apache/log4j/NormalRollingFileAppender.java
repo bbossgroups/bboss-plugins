@@ -30,7 +30,7 @@ public class NormalRollingFileAppender  extends FileAppender {
      */
     protected int currentIndex = 1;
     protected String datePattern = "yyyyMMddHHmmss";
-    protected boolean useDatePattern = false;
+    protected boolean useDatePattern = true;
     /**
      * 
      */
