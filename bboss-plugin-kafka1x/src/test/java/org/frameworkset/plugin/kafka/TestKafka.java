@@ -1,6 +1,7 @@
 package org.frameworkset.plugin.kafka;
 
 import com.frameworkset.util.SimpleStringUtil;
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.*;
@@ -10,8 +11,110 @@ import java.util.concurrent.Future;
 public class TestKafka {
 	public static void main(String[] args){
 		TestKafka testKafka = new TestKafka();
-		testKafka.testSendJsonData(true);
+		testKafka.testSendJsonData1(true);
+		/**
+		 * ./kafka-consumer-groups.sh --new-consumer --bootstrap-server 10.13.11.12:19092 --describe --group test
+		 */
 	}
+
+	public void testSendJsonData1(boolean syn) {
+		KafkaUtil kafkaUtil = new KafkaUtil("kafka.xml");
+		KafkaProductor productor = kafkaUtil.getProductor("kafkaproductor");
+		List<Map> datas = new ArrayList<>();
+		for (int i = 0; i < 10; i++){
+			Map<String,Object> data = new HashMap<>();
+			data.put("name","duoduo_"+i);
+			data.put("classLevel",5);
+			data.put("school","师大附小");
+			data.put("class","1506");
+			data.put("birthDay",new Date());
+			data.put("_id",SimpleStringUtil.getUUID());
+			datas.add(data);
+
+		}
+
+		Future<RecordMetadata> recordMetadataFuture = productor.send("ecps-crm-calllog", SimpleStringUtil.object2json(datas), new Callback() {
+			@Override
+			public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+				if(e != null){
+					e.printStackTrace();
+				}
+			}
+		});
+		if(syn) {
+			try {
+				RecordMetadata recordMetadata = recordMetadataFuture.get();
+				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+
+//		datas = new ArrayList<>();
+//		for (int i = 0; i < 10; i++){
+//			Map<String,Object> data = new HashMap<>();
+//			data.put("name","duoduo_"+(i+10));
+//			data.put("classLevel",5);
+//			data.put("school","师大附小");
+//			data.put("class","1506");
+//			data.put("birthDay",new Date());
+//			data.put("_id",SimpleStringUtil.getUUID());
+//			datas.add(data);
+//
+//		}
+//
+//		recordMetadataFuture = productor.send("ecps-crm-calllog", (long)13, SimpleStringUtil.object2json(datas));
+//		if(syn) {
+//			try {
+//				RecordMetadata recordMetadata = recordMetadataFuture.get();
+//				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		Map<String,Object> data = new HashMap<>();
+//		data.put("name","singleduoduo_"+(10000));
+//		data.put("classLevel",5);
+//		data.put("school","师大附小");
+//		data.put("class","1506");
+//		data.put("birthDay",new Date());
+//		data.put("_id",SimpleStringUtil.getUUID());
+//		recordMetadataFuture = productor.send("ecps-crm-calllog", (long)14, SimpleStringUtil.object2json(data));
+//		if(syn) {
+//			try {
+//				RecordMetadata recordMetadata = recordMetadataFuture.get();
+//				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		data = new HashMap<>();
+//		data.put("name","singleduoduo_"+(10001));
+//		data.put("classLevel",5);
+//		data.put("school","师大附小-没有key");
+//		data.put("class","1506");
+//		data.put("birthDay",new Date());
+//		data.put("_id",SimpleStringUtil.getUUID());
+//		recordMetadataFuture = productor.send("ecps-crm-calllog",SimpleStringUtil.object2json(data));
+//		if(syn) {
+//			try {
+//				RecordMetadata recordMetadata = recordMetadataFuture.get();
+//				System.out.println(recordMetadata.topic() + "," + recordMetadata.offset() + "," + recordMetadata.partition());
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				e.printStackTrace();
+//			}
+//		}
+	}
+
 	public void testSendJsonData(boolean syn) {
 		KafkaUtil kafkaUtil = new KafkaUtil("kafka.xml");
 		KafkaProductor productor = kafkaUtil.getProductor("kafkaproductor");

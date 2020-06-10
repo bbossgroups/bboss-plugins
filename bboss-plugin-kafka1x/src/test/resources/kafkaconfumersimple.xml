@@ -24,7 +24,7 @@
 				<description> <![CDATA[ largest]]></description>
 			</property>
 
-			<property name="zookeeper.connect" value="10.19.85.65:2185">
+			<property name="zookeeper.connect" value="10.13.11.12:12181">
 				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
 			</property>
 			<!-- <property name="zookeeper.connect" value="192.168.137.133:2183">
@@ -45,7 +45,7 @@
 			  class="org.frameworkset.plugin.kafka.TestKafkaBatchConsumer2ndStore" init-method="init"
 			  f:batchsize="1000"
 			  f:checkinterval="1000"
-			  f:consumerPropes="attr:consumerPropes" f:topic="xinkonglog"
+			  f:consumerPropes="attr:consumerPropes" f:topic="ecps-crm-calllog"
 			  f:partitions="4" />
 
 </properties>
