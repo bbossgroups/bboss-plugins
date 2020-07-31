@@ -1,0 +1,41 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDir 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+           
+        }
+        resources {
+			srcDir 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+}
+
+dependencies {
+
+	compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true] )
+	compile([group: 'com.ctrip.framework.apollo', name: 'apollo-client', version: "1.6.2", transitive: true] )
+	{
+		exclude group: 'log4j', module: 'log4j'
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+		exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+	}
+	testCompile([group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: "${jacksonversion}",transitive: false],
+			[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksondatabaindversion}",transitive: false],
+			[group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "${jacksonversion}",transitive: false]
+	)
+}
