@@ -54,7 +54,11 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	}
 
 	private ConsumerConnector consumer;
-	public void shutdown(){
+	private boolean shutdowned;
+	public synchronized void shutdown(){
+		if(shutdowned )
+			return ;
+		shutdowned = true;
 		if(executor != null)
 			executor.shutdown();
 		if(consumer != null)

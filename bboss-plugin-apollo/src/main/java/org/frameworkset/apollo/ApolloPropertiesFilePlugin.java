@@ -21,6 +21,7 @@ import com.ctrip.framework.apollo.ConfigFile;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import org.frameworkset.spi.BaseApplicationContext;
+import org.frameworkset.spi.assemble.PropertiesContainer;
 import org.frameworkset.spi.assemble.plugin.PropertiesFilePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	//Properties("properties"), XML("xml"), JSON("json"), YML("yml"), YAML("yaml");
 
 	@Override
-	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes) {
+	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 		return extendsAttributes.get("apolloNamespace");
 	}
 
@@ -52,7 +53,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		return ns;
 	}
 	private void configProperties(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes,String ns,
-								  ConfigFileFormat configFileFormat,ConfigChangeListener configChangeListener,Map datas ){
+								  ConfigFileFormat configFileFormat,ConfigChangeListener configChangeListener,Map datas,boolean changeReload ){
 
 		Config config = null;
 		if(configFileFormat == null)
@@ -62,8 +63,14 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 			ConfigFile configFile = ConfigService.getConfigFile(ns, configFileFormat);
 			String content = configFile.getContent();
 		}
-		if(configChangeListener != null){
-			config.addChangeListener(configChangeListener);
+		if(!ResetTag.isFromReset()) {//如果是重置热加载，
+			if (configChangeListener != null) {
+				config.addChangeListener(configChangeListener);
+			} else if (changeReload) {
+				ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
+				applicationContenxtPropertiesListener.setApplicationContext(applicationContext);
+				config.addChangeListener(applicationContenxtPropertiesListener);
+			}
 		}
 		Set<String> pros = config.getPropertyNames();
 		if(pros == null || pros.size() == 0)
@@ -73,12 +80,15 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		}
 	}
 	@Override
-	public Map getConfigProperties(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes) {
+	public Map getConfigProperties(BaseApplicationContext applicationContext, Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 		String namespace = extendsAttributes.get("apolloNamespace");
 		if(namespace == null){
 			throw new IllegalArgumentException("must set apolloNamespace for config element. ");
 
 		}
+		String _changeReload = extendsAttributes.get("changeReload");
+		boolean changeReload = _changeReload != null && _changeReload.equals("true");
+
 		String _configChangeListener  = extendsAttributes.get("configChangeListener");
 
 		String _configFileFormat = extendsAttributes.get("configFileFormat");
@@ -91,6 +101,9 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		if(_configChangeListener != null && !_configChangeListener.equals("")){
 			try {
 				configChangeListener = (ConfigChangeListener) Class.forName(_configChangeListener).newInstance();
+				if(configChangeListener instanceof PropertiesChangeListener){
+					((PropertiesChangeListener)configChangeListener).setPropertiesContainer(propertiesContainer);
+				}
 			}
 			catch (Exception e){
 				logger.error("Init configChangeListener:"+configChangeListener +" failed:",e);
@@ -101,18 +114,18 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		String[] ns = parserNamespaces(namespace);
 		for(String n:ns){
 			configProperties( applicationContext, extendsAttributes,namespace,
-					configFileFormat, configChangeListener,datas );
+					configFileFormat, configChangeListener,datas,changeReload );
 		}
 		return datas;
 	}
 
 	@Override
-	public int getInitType(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes) {
+	public int getInitType(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 		return PropertiesFilePlugin.INIT_TYPE_OUTMAP;
 	}
 
 	@Override
-	public void restore(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes) {
+	public void restore(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 
 	}
 }
