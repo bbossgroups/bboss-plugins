@@ -47,11 +47,16 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 			List<HttpHost> httpHosts = new ArrayList<HttpHost>();
 			HttpHost host = null;
 			for(int i = 0; i < hosts.length; i ++){
-				host = new HttpHost(hosts[i]);
-				httpHosts.add(host);
+				String hosts_ = hosts[i].trim();
+				if(!hosts_.equals("")) {
+					host = new HttpHost(hosts_);
+					httpHosts.add(host);
+				}
 			}
 			//将被动获取到的地址清单加入服务地址组report中
-			HttpProxyUtil.handleDiscoverHosts(poolName,httpHosts,changeRouting);
+			if(httpHosts.size() > 0){
+				HttpProxyUtil.handleDiscoverHosts(poolName,httpHosts,changeRouting);
+			}
 		}
 	}
 	private void poolChange(ConfigChangeEvent changeEvent ,String pool){
