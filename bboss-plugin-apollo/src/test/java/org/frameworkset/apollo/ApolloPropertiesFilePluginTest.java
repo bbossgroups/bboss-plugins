@@ -36,6 +36,7 @@ public class ApolloPropertiesFilePluginTest{
 	public void init(){
 		propertiesContainer = new PropertiesContainer();
 		propertiesContainer.addConfigPropertiesFromApollo("application",true);
+		propertiesContainer.afterLoaded(propertiesContainer);
 	}
 	@Test
 	public void test(){

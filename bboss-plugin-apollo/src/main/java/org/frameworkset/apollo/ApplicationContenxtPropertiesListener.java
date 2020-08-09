@@ -16,33 +16,24 @@ package org.frameworkset.apollo;
  */
 
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
-import org.frameworkset.spi.BaseApplicationContext;
 
 /**
  * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @Date 2020/8/1 8:58
+ * @date 2020/8/1 8:58
  * @author biaoping.yin
  * @version 1.0
  */
 public class ApplicationContenxtPropertiesListener extends PropertiesChangeListener {
 
-	public BaseApplicationContext getApplicationContext() {
-		return applicationContext;
-	}
 
-	public void setApplicationContext(BaseApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
-
-	private BaseApplicationContext applicationContext;
 	@Override
 	public void onChange(ConfigChangeEvent changeEvent) {
-		if(applicationContext != null){
+		if(getProperties != null){
 			try {
 				ResetTag.setLocal();
-				applicationContext.reset();
+				getProperties.reset();
 			}
 			finally {
 				ResetTag.clean();

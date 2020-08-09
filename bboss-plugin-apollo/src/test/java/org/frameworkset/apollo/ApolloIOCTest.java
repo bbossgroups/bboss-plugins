@@ -17,6 +17,8 @@ package org.frameworkset.apollo;
 
 import org.frameworkset.nosql.redis.RedisTool;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Description: </p>
@@ -27,6 +29,7 @@ import org.junit.Test;
  * @version 1.0
  */
 public class ApolloIOCTest {
+	private Logger logger = LoggerFactory.getLogger(ApolloIOCTest.class);
 	@Test
 	public void testRedis(){
 		RedisTool.getInstance().set("apolloTest","good");
@@ -35,6 +38,7 @@ public class ApolloIOCTest {
 				synchronized (this) {
 					Thread.currentThread().wait(1000l);
 				}
+				logger.info("apolloTest:"+RedisTool.getInstance().get("apolloTest"));
 			}
 			catch (Exception e){
 

@@ -21,7 +21,7 @@ import com.ctrip.framework.apollo.model.ConfigChangeEvent;
  * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @Date 2020/8/1 9:37
+ * @date 2020/8/1 9:37
  * @author biaoping.yin
  * @version 1.0
  */

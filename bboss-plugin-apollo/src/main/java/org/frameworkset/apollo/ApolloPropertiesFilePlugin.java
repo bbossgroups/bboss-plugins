@@ -21,6 +21,7 @@ import com.ctrip.framework.apollo.ConfigFile;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import org.frameworkset.spi.BaseApplicationContext;
+import org.frameworkset.spi.assemble.GetProperties;
 import org.frameworkset.spi.assemble.PropertiesContainer;
 import org.frameworkset.spi.assemble.plugin.PropertiesFilePlugin;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import java.util.Set;
  * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @Date 2020/7/31 11:34
+ * @date 2020/7/31 11:34
  * @author biaoping.yin
  * @version 1.0
  */
@@ -42,7 +43,9 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	private static Logger logger = LoggerFactory.getLogger(ApolloPropertiesFilePlugin.class);
 
 	//Properties("properties"), XML("xml"), JSON("json"), YML("yml"), YAML("yaml");
-
+	private String[] namespaces;
+	private ConfigChangeListener configChangeListener;
+	private boolean changeReload;
 	@Override
 	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 		return extendsAttributes.get("apolloNamespace");
@@ -53,7 +56,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		return ns;
 	}
 	private void configProperties(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes,String ns,
-								  ConfigFileFormat configFileFormat,ConfigChangeListener configChangeListener,Map datas,boolean changeReload ){
+								  ConfigFileFormat configFileFormat,Map datas ){
 
 		Config config = null;
 		if(configFileFormat == null)
@@ -63,15 +66,15 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 			ConfigFile configFile = ConfigService.getConfigFile(ns, configFileFormat);
 			String content = configFile.getContent();
 		}
-		if(!ResetTag.isFromReset()) {//如果是重置热加载，
-			if (configChangeListener != null) {
-				config.addChangeListener(configChangeListener);
-			} else if (changeReload) {
-				ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
-				applicationContenxtPropertiesListener.setApplicationContext(applicationContext);
-				config.addChangeListener(applicationContenxtPropertiesListener);
-			}
-		}
+//		if(!ResetTag.isFromReset()) {//如果是重置热加载，
+//			if (configChangeListener != null) {
+//				config.addChangeListener(configChangeListener);
+//			} else if (changeReload) {
+//				ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
+//				applicationContenxtPropertiesListener.setGetProperties(applicationContext);
+//				config.addChangeListener(applicationContenxtPropertiesListener);
+//			}
+//		}
 		Set<String> pros = config.getPropertyNames();
 		if(pros == null || pros.size() == 0)
 			return ;
@@ -88,7 +91,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		}
 		String _changeReload = extendsAttributes.get("changeReload");
 		boolean changeReload = _changeReload != null && _changeReload.equals("true");
-
+		this.changeReload = changeReload;
 		String _configChangeListener  = extendsAttributes.get("configChangeListener");
 
 		String _configFileFormat = extendsAttributes.get("configFileFormat");
@@ -104,6 +107,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 				if(configChangeListener instanceof PropertiesChangeListener){
 					((PropertiesChangeListener)configChangeListener).setPropertiesContainer(propertiesContainer);
 				}
+				this.configChangeListener = configChangeListener;
 			}
 			catch (Exception e){
 				logger.error("Init configChangeListener:"+configChangeListener +" failed:",e);
@@ -114,8 +118,9 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		String[] ns = parserNamespaces(namespace);
 		for(String n:ns){
 			configProperties( applicationContext, extendsAttributes,namespace,
-					configFileFormat, configChangeListener,datas,changeReload );
+					configFileFormat, datas);
 		}
+		namespaces = ns;
 		return datas;
 	}
 
@@ -128,4 +133,32 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	public void restore(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 
 	}
+
+	@Override
+	/**
+	 * 第一次初始化完毕后注册监听器
+	 */
+	public void afterLoaded(GetProperties applicationContext, PropertiesContainer propertiesContainer) {
+		if(!ResetTag.isFromReset()) {//如果是重置热加载，不需重新添加监听器
+			if(namespaces != null ) {
+				if(configChangeListener instanceof PropertiesChangeListener){
+					((PropertiesChangeListener)configChangeListener).completeLoaded();
+				}
+				for (String ns : namespaces) {
+					Config config = ConfigService.getConfig(ns);
+					if(config == null)
+						continue;
+					if (configChangeListener != null) {
+						config.addChangeListener(configChangeListener);
+					} else if (changeReload) {
+						ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
+						applicationContenxtPropertiesListener.setGetProperties(applicationContext);
+						config.addChangeListener(applicationContenxtPropertiesListener);
+					}
+				}
+			}
+		}
+	}
+
+
 }

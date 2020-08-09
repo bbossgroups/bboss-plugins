@@ -16,24 +16,37 @@ package org.frameworkset.apollo;
  */
 
 import com.ctrip.framework.apollo.ConfigChangeListener;
+import org.frameworkset.spi.assemble.GetProperties;
 import org.frameworkset.spi.assemble.PropertiesContainer;
 
 /**
  * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @Date 2020/8/1 9:48
+ * @date 2020/8/1 9:48
  * @author biaoping.yin
  * @version 1.0
  */
 public abstract class PropertiesChangeListener implements ConfigChangeListener {
 	protected PropertiesContainer propertiesContainer;
 
+	public GetProperties getGetProperties() {
+		return getProperties;
+	}
+
+	public void setGetProperties(GetProperties getProperties) {
+		this.getProperties = getProperties;
+	}
+
+	protected GetProperties getProperties;
 	public void setPropertiesContainer(PropertiesContainer propertiesContainer) {
 		this.propertiesContainer = propertiesContainer;
 	}
 
 	public PropertiesContainer getPropertiesContainer() {
 		return propertiesContainer;
+	}
+	public void completeLoaded(){
+
 	}
 }
