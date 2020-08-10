@@ -25,9 +25,10 @@ sourceSets {
 }
 
 dependencies {
+	compile([group: 'com.bbossgroups', name: 'bboss-http', version: "${PROJ_HTTP_VERSION}", transitive: true] )
 
 	compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true] )
-	compile([group: 'com.ctrip.framework.apollo', name: 'apollo-client', version: "1.6.2", transitive: true] )
+	compile([group: 'com.ctrip.framework.apollo', name: 'apollo-client', version: "${apollo_version}", transitive: true] )
 	{
 		exclude group: 'log4j', module: 'log4j'
 		exclude group: 'org.slf4j', module: 'slf4j-api'

@@ -18,62 +18,63 @@ package org.frameworkset.apollo;
 import com.ctrip.framework.apollo.enums.PropertyChangeType;
 import com.ctrip.framework.apollo.model.ConfigChange;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
-import org.frameworkset.spi.remote.http.HttpHost;
-import org.frameworkset.spi.remote.http.proxy.HttpProxyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * <p>Description: http proxy apollo 服务自动发现和路由动态切换监听器 </p>
+ * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @date 2020/8/2 20:07
+ * @Date 2020/8/9 23:10
  * @author biaoping.yin
  * @version 1.0
  */
-public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
-	private static Logger logger = LoggerFactory.getLogger(HttpProxyConfigChangeListener.class);
-	private Set<String> httpPools;
-	String defaultHostsKey = "http.hosts";
-	String defaultRoutingKey = "http.routing";
-	private void handleDiscoverHosts(String _hosts,String poolName,String changeRouting){
+public class ESNodeChangeListener extends PropertiesChangeListener {
+	private Set<String> elasticsearchPools;
+	private static Logger logger = LoggerFactory.getLogger(ESNodeChangeListener.class);
+	private static Method handleDiscoverHosts;
+	static {
+		try {
+			Class clazz = Class.forName("org.frameworkset.elasticsearch.client.HostDiscoverUtil");
+			handleDiscoverHosts = clazz.getMethod("handleDiscoverHosts", String[].class, String.class);
+		}
+		catch (Exception e){
+
+		}
+	}
+	String defaultHostsKey = "elasticsearch.rest.hostNames";
+	private void handleDiscoverHosts(String _hosts,String poolName){
 		if(_hosts != null && !_hosts.equals("")){
 			String[] hosts = _hosts.split(",");
-			List<HttpHost> httpHosts = new ArrayList<HttpHost>();
-			HttpHost host = null;
-			for(int i = 0; i < hosts.length; i ++){
-				String hosts_ = hosts[i].trim();
-				if(!hosts_.equals("")) {
-					host = new HttpHost(hosts_);
-					httpHosts.add(host);
+
+			//将被动获取到的地址清单加入服务地址组poolName中
+			if(handleDiscoverHosts != null) {
+				try {
+					handleDiscoverHosts.invoke(null,hosts,poolName);
+				} catch (IllegalAccessException e) {
+					logger.error("handleDiscoverHosts failed:hosts["+_hosts+"],pool["+poolName+"]",e);
+				} catch (InvocationTargetException e) {
+					logger.error("handleDiscoverHosts failed:hosts["+_hosts+"],pool["+poolName+"]",e.getTargetException());
 				}
-			}
-			//将被动获取到的地址清单加入服务地址组report中
-			if(httpHosts.size() > 0){
-				HttpProxyUtil.handleDiscoverHosts(poolName,httpHosts,changeRouting);
 			}
 		}
 	}
 	private void poolChange(ConfigChangeEvent changeEvent ,String pool){
 		Set<String> changedKeys = changeEvent.changedKeys();
 		ConfigChange hostsChange = null;
-		ConfigChange routingChange = null;
 		boolean isdefault = pool == null || pool.equals("default");
 		String hostsKey = null;
-		String routingKey = null;
 
 		if(!isdefault){
-			hostsKey = pool+".http.hosts";
-			routingKey = pool+".http.routing";
+			hostsKey = pool+".elasticsearch.rest.hostNames";
 		}
 		else{
-			hostsKey = "default.http.hosts";
-			routingKey = "default.http.routing";
+			hostsKey = "default.elasticsearch.rest.hostNames";
 		}
 
 		for (String key : changedKeys) {
@@ -83,9 +84,7 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 
 			}
 
-			else if(key.equals(routingKey) || (isdefault && key.equals(defaultRoutingKey))){
-				routingChange = changeEvent.getChange(key);
-			}
+
 
 		}
 		if(hostsChange != null && hostsChange.getChangeType() == PropertyChangeType.MODIFIED){
@@ -95,11 +94,8 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 
 			String _hosts = hostsChange.getNewValue();
 			//连通host和rounting一同更新
-			handleDiscoverHosts(_hosts, pool,
-					routingChange != null && routingChange.getChangeType() == PropertyChangeType.MODIFIED?routingChange.getNewValue():null);
+			handleDiscoverHosts(_hosts, pool);
 
-		} else if(routingChange != null && routingChange.getChangeType() == PropertyChangeType.MODIFIED){//切换路由组
-			HttpProxyUtil.changeRouting(pool,routingChange.getNewValue());
 		}
 
 	}
@@ -122,34 +118,33 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 		if(logger.isInfoEnabled()) {
 			logger.info("Changes for namespace {}", changeEvent.getNamespace());
 		}
-		if(httpPools == null || httpPools.size() == 0){
-			logger.info("Changes for httpPools ignored: httpPools is not setted yet.");
+		if(elasticsearchPools == null || elasticsearchPools.size() == 0){
+			logger.info("Changes for elasticsearch hosts ignored: elasticsearchPools is not setted yet.");
 			return;
 		}
-		for(String pool:httpPools) {
+		for(String pool:elasticsearchPools) {
 			poolChange(changeEvent, pool);
 		}
 
 	}
 
-	public Set<String> getHttpPools() {
-		return httpPools;
-	}
+
+
 
 	@Override
 	public void completeLoaded() {
-		httpPools =  new TreeSet<String>();
+		elasticsearchPools =  new TreeSet<String>();
 		if(this.propertiesContainer != null){
-			String poolNames = propertiesContainer.getProperty("http.poolNames");
+			String poolNames = propertiesContainer.getProperty("elasticsearch.serverNames");
 			if(poolNames != null){
 
 				String tmp[] = poolNames.split(",");
 				for(int i = 0; i < tmp.length; i ++){
-					this.httpPools.add(tmp[i]);
+					this.elasticsearchPools.add(tmp[i].trim());
 				}
 			}
 			else{
-				this.httpPools.add("default");
+				this.elasticsearchPools.add("default");
 			}
 		}
 	}
