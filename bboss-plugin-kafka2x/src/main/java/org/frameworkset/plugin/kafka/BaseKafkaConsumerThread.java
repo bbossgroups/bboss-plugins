@@ -33,6 +33,26 @@ public class BaseKafkaConsumerThread implements Runnable {
 	protected Boolean batch = true;
 	protected int partition;
 	protected String discardRejectMessage;
+
+	public long getBlockedWaitTimeout() {
+		return blockedWaitTimeout;
+	}
+
+	public void setBlockedWaitTimeout(long blockedWaitTimeout) {
+		this.blockedWaitTimeout = blockedWaitTimeout;
+	}
+
+	protected long blockedWaitTimeout = -1l;
+
+	public int getWarnMultsRejects() {
+		return warnMultsRejects;
+	}
+
+	public void setWarnMultsRejects(int warnMultsRejects) {
+		this.warnMultsRejects = warnMultsRejects;
+	}
+
+	protected int warnMultsRejects = 500;
 	public String getDiscardRejectMessage() {
 		return discardRejectMessage;
 	}
@@ -170,7 +190,7 @@ public class BaseKafkaConsumerThread implements Runnable {
 		}
 		if(workThreads != null){
 			executor = ThreadPoolFactory.buildThreadPool(name,discardRejectMessage == null?"Kafka consumer message handle":discardRejectMessage,
-					workThreads,workQueue,5000,1000,true,true);
+					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,true);
 		}
 		kafkaConsumer = new KafkaConsumer(threadProperties);
 		kafkaConsumer.subscribe(Arrays.asList(topics));

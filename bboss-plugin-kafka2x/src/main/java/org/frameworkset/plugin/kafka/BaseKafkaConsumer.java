@@ -34,6 +34,26 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 	protected String valueDeserializer;
 	protected Integer maxPollRecords;
 	protected Integer workThreads ;
+
+	public long getBlockedWaitTimeout() {
+		return blockedWaitTimeout;
+	}
+
+	public void setBlockedWaitTimeout(long blockedWaitTimeout) {
+		this.blockedWaitTimeout = blockedWaitTimeout;
+	}
+
+	protected long blockedWaitTimeout = -1;
+
+	public int getWarnMultsRejects() {
+		return warnMultsRejects;
+	}
+
+	public void setWarnMultsRejects(int warnMultsRejects) {
+		this.warnMultsRejects = warnMultsRejects;
+	}
+
+	protected int warnMultsRejects = 500;
 	protected Integer workQueue = 100;
 	private String groupId;
 	public void setThreads(int threads) {
@@ -256,7 +276,9 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 		baseKafkaConsumerThread.setWorkThreads(workThreads);
 		baseKafkaConsumerThread.setWorkQueue(workQueue);
 		baseKafkaConsumerThread.setBatch(batch);
+		baseKafkaConsumerThread.setBlockedWaitTimeout(blockedWaitTimeout);
 		baseKafkaConsumerThread.setDiscardRejectMessage(discardRejectMessage);
+		baseKafkaConsumerThread.setWarnMultsRejects(warnMultsRejects);
 		baseKafkaConsumerThread.setGroupId(groupId);
 		return baseKafkaConsumerThread;
 	}
