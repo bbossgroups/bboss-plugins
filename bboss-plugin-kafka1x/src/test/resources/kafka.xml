@@ -27,8 +27,7 @@ A small batch size will make batching less common and may reduce throughput (a b
 			</property>
 		</propes>
 	</property>
-	<property name="workerThreadSize" value="100"/>
-	<property name="workerThreadQueueSize" value="10240"/>
+
 	<property name="kafkaproductor" 
 		class="org.frameworkset.plugin.kafka.KafkaProductor"
 		init-method="init"
