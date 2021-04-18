@@ -24,11 +24,11 @@ sourceSets {
     }
     
 }
-project.tasks.compileJava.dependsOn(project(':bboss-plugin-wordpdf').tasks.install)
+project.tasks.compileJava.dependsOn(project(':bboss-plugin-wordpdf').tasks.publishToMavenLocal)
 
 dependencies {
    
-    compile  (
+    api  (
 			
 			[group: 'com.bbossgroups.plugins', name: 'bboss-plugin-wordpdf', version: "${PROJ_VERSION}", transitive: false],
             [group: 'com.bbossgroups.plugins', name: 'bboss-jodconverter-core', version: "${PROJ_VERSION}", transitive: true],

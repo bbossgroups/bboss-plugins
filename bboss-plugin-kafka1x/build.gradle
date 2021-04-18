@@ -25,25 +25,25 @@ sourceSets {
 }
 
 dependencies {
-    compile (
+    api (
         [group: 'org.apache.kafka', name: 'kafka_2.12', version: "${kafka1x}", transitive: true],
     ){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-    compile ([group: 'org.apache.kafka', name: 'kafka-tools', version: "${kafka1x}", transitive: true],){
+    api ([group: 'org.apache.kafka', name: 'kafka-tools', version: "${kafka1x}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-    compile ([group: 'org.apache.kafka', name: 'kafka-clients', version: "${kafka1x}", transitive: true],){
+    api ([group: 'org.apache.kafka', name: 'kafka-clients', version: "${kafka1x}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-    compile ([group: 'org.apache.kafka', name: 'kafka-streams', version: "${kafka1x}", transitive: true],){
+    api ([group: 'org.apache.kafka', name: 'kafka-streams', version: "${kafka1x}", transitive: true],){
    		exclude group: 'log4j', module: 'log4j'
     }
     
-   compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )    
+   api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
     
     
     

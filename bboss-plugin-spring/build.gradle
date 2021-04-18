@@ -26,7 +26,7 @@ sourceSets {
 
 dependencies {
 
-	compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: false] )
+	api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: false] )
 
 
 }

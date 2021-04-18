@@ -28,8 +28,8 @@ dependencies {
 
     
      //compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    
-    compile(
+
+	api(
    	 
            	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25', transitive: true],
     )

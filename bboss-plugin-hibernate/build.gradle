@@ -22,7 +22,7 @@ sourceSets {
 }
 
 dependencies {
-    compile (
+    api (
              
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: false],
@@ -51,8 +51,8 @@ dependencies {
                 
                
     )
-  
-     testCompile (            
+
+     testImplementation (
              [group: 'mysql', name: 'mysql-connector-java', version: "3.1.14", transitive: false],
             //fileTree(dir: 'lib-compile', include: '**/*.jar')
     )

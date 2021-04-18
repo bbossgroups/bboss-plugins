@@ -9,10 +9,10 @@ sourceSets {
     }
    
 }
-project.tasks.compileJava.dependsOn(project(':bboss-jodconverter-core').tasks.install)
+project.tasks.compileJava.dependsOn(project(':bboss-jodconverter-core').tasks.publishToMavenLocal)
 dependencies {
 	
-    compile(
+    api(
     				
             [group: 'com.bbossgroups.plugins', name: 'bboss-jodconverter-core', version: "${PROJ_VERSION}", transitive: true],
              [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],

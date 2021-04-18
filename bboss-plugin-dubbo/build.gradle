@@ -18,7 +18,7 @@ sourceSets {
 }
 
 dependencies {
-    compile (
+    api (
               
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
              [group: 'com.alibaba', name: 'dubbo', version: "2.5.3", transitive: false],
@@ -30,10 +30,10 @@ dependencies {
                 
                
     )
-    
-    compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )    
-    
-    compile([group: 'com.github.sgroschupf', name: 'zkclient', version: "0.1", transitive: true],   )    
+
+    api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
+
+    api([group: 'com.github.sgroschupf', name: 'zkclient', version: "0.1", transitive: true],   )
     {
    		exclude group: 'log4j', module: 'log4j'
     }

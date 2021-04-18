@@ -25,7 +25,7 @@ sourceSets {
 }
 
 dependencies {
-    compile (
+    api (
 
 
             // https://mvnrepository.com/artifact/org.apache.activemq/activemq-client
@@ -43,7 +43,7 @@ dependencies {
                 
                
     )
-    compile([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )    
+    api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
     //{
    	//	exclude group: 'log4j', module: 'log4j'
     //}
