@@ -72,28 +72,53 @@ public class KafkaProductor  {
 
 	}
 	public Future<RecordMetadata> send(ProducerRecord<Object, Object> record, Callback callback){
-		if(sendDatatoKafka && producer != null){
-			return producer.send(record,callback);
+		if(sendDatatoKafka ){
+			if(producer != null) {
+				return producer.send(record,callback);
+			}
+			if(logger.isInfoEnabled())
+				logger.info("Ignore send Data to Kafka:sendDatatoKafka={} and producer is null",sendDatatoKafka);
+			return null;
 		}
-		if(logger.isInfoEnabled())
-			logger.info("Ignore send Data to Kafka:sendDatatoKafka={} or producer is null",sendDatatoKafka);
-		return null;
+		else{
+			if(logger.isInfoEnabled())
+				logger.info("Ignore send Data to Kafka:sendDatatoKafka={} ",sendDatatoKafka);
+			return null;
+		}
+
+
 	}
 	public Future<RecordMetadata> send(final String topic, final Object msg, Callback callback){
-		if(sendDatatoKafka && producer != null){
-			return producer.send(new ProducerRecord<Object, Object>(topic, null,msg),callback);
+		if(sendDatatoKafka ){
+			if(producer != null) {
+				return producer.send(new ProducerRecord<Object, Object>(topic, null,msg),callback);
+			}
+			if(logger.isInfoEnabled())
+				logger.info("Ignore send Data to Kafka:sendDatatoKafka={} and producer is null",sendDatatoKafka);
+			return null;
 		}
-		if(logger.isInfoEnabled())
-			logger.info("Ignore send Data to Kafka:sendDatatoKafka={} or producer is null",sendDatatoKafka);
-		return null;
+		else{
+			if(logger.isInfoEnabled())
+				logger.info("Ignore send Data to Kafka:sendDatatoKafka={} ",sendDatatoKafka);
+			return null;
+		}
+
 	}
 	public Future<RecordMetadata> send(final String topic,final Object key,final Object msg,Callback callback){
-		if(sendDatatoKafka && producer != null){
-			return producer.send(new ProducerRecord<Object, Object>(topic, key, msg),callback);
+
+		if(sendDatatoKafka ){
+			if(producer != null) {
+				return producer.send(new ProducerRecord<Object, Object>(topic, key, msg),callback);
+			}
+			if(logger.isInfoEnabled())
+				logger.info("Ignore send Data to Kafka:sendDatatoKafka={} and producer is null",sendDatatoKafka);
+			return null;
 		}
-		if(logger.isInfoEnabled())
-			logger.info("Ignore send Data to Kafka:sendDatatoKafka={} or producer is null",sendDatatoKafka);
-		return null;
+		else{
+			if(logger.isInfoEnabled())
+				logger.info("Ignore send Data to Kafka:sendDatatoKafka={} ",sendDatatoKafka);
+			return null;
+		}
 	}
 
 	public Future<RecordMetadata> send(final String topic, final Object msg){
