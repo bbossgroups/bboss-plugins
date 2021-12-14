@@ -38,8 +38,8 @@ dependencies {
               [group: 'commons-collections', name: 'commons-collections', version: "3.2.1", transitive: false],
                   [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
               
-              [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25', transitive: false],
-           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25', transitive: false],
+              [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32', transitive: false],
+           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.32', transitive: false],
           
               
               [group: 'oro', name: 'oro', version: '2.0.8', transitive: false],
