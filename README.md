@@ -2,6 +2,15 @@
  
 bboss-plugins project.包含kafka、log4j、spring、dubbo、activemq、word转pdf、pdf转swf项目，持久层hibernate/hibernate4插件
 
+# 版本构建方法
+
+gradle clean publishToMavenLocal
+
+需要通过gradle构建发布版本,gradle安装配置参考文档：
+
+https://esdoc.bbossgroups.com/#/bboss-build
+
+
 # bboss hibernate插件工程
 
 hihernate插件包含以下两个功能：
