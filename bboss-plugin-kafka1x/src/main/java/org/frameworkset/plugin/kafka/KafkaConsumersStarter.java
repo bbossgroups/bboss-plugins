@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class KafkaConsumersStarter {
 	private static Logger logger = LoggerFactory.getLogger(KafkaConsumersStarter.class);
-	public static void startConsumers(String applicationContextIOC){
+	public static BaseApplicationContext startConsumers(String applicationContextIOC){
 		BaseApplicationContext context = DefaultApplicationContext.getApplicationContext(applicationContextIOC);
 		context.start(new Starter() {
 			@Override
@@ -62,7 +62,7 @@ public abstract class KafkaConsumersStarter {
 				}
 			}
 		});
-
+		return context;
 
 	}
 }
