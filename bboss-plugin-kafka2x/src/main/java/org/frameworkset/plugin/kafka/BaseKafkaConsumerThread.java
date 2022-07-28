@@ -4,8 +4,8 @@ package org.frameworkset.plugin.kafka;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.util.concurrent.ThreadPoolFactory;
+import org.frameworkset.util.shutdown.ShutdownUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +70,7 @@ public class BaseKafkaConsumerThread implements Runnable {
 		this.consumer = consumer;
 		this.topics = topics;
 
-		BaseApplicationContext.addShutdownHook(new Runnable() {
+		ShutdownUtil.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
 				shutdown();

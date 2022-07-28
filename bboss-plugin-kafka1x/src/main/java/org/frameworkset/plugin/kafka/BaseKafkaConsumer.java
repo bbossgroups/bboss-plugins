@@ -3,11 +3,10 @@ package org.frameworkset.plugin.kafka;
 import kafka.common.OffsetAndMetadata;
 import kafka.common.TopicAndPartition;
 import kafka.consumer.ConsumerConfig;
-
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
-import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
+import org.frameworkset.util.shutdown.ShutdownUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -139,7 +138,7 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 		        executor.submit(buildRunnable(stream,infos[0]+"-"+i));
 		    }
 	    }
-	    BaseApplicationContext.addShutdownHook(new Runnable() {
+		ShutdownUtil.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
 				shutdown();

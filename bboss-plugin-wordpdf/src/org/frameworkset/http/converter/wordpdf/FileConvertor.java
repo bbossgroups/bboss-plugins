@@ -1,18 +1,9 @@
 package org.frameworkset.http.converter.wordpdf;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Map;
-import java.util.Set;
-
-import org.frameworkset.spi.BaseApplicationContext;
-
 import bboss.org.artofsolving.jodconverter.OfficeDocumentConverter;
 import bboss.org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import bboss.org.artofsolving.jodconverter.office.OfficeException;
 import bboss.org.artofsolving.jodconverter.office.OfficeManager;
-
 import com.frameworkset.util.Util;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
@@ -21,6 +12,13 @@ import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
+import org.frameworkset.util.shutdown.ShutdownUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Map;
+import java.util.Set;
 
 public class FileConvertor {
 	 private static OfficeManager officeManager ;
@@ -68,7 +66,7 @@ public class FileConvertor {
 							config.setOfficeHome(officeHome);
 						officeManager = config.buildOfficeManager();
 						officeManager.start();
-						BaseApplicationContext.addShutdownHook(new Runnable(){
+						ShutdownUtil.addShutdownHook(new Runnable(){
 
 							@Override
 							public void run() {

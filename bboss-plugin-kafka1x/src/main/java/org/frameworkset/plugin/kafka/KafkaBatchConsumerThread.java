@@ -3,7 +3,7 @@ package org.frameworkset.plugin.kafka;
 
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
-import org.frameworkset.spi.BaseApplicationContext;
+import org.frameworkset.util.shutdown.ShutdownUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -74,7 +74,7 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 //
 //		}
 
-		BaseApplicationContext.addShutdownHook(new Runnable() {
+		ShutdownUtil.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
 				shutdown();

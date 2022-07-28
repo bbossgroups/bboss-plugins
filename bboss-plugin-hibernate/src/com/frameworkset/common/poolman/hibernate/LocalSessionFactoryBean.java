@@ -16,23 +16,15 @@
 package com.frameworkset.common.poolman.hibernate;
 
 
-import java.io.File;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
-import org.frameworkset.spi.BaseApplicationContext;
+import com.frameworkset.orm.transaction.TransactionManager;
+import com.frameworkset.util.BeanUtils;
+import com.frameworkset.util.SimpleStringUtil;
 import org.frameworkset.spi.DefaultApplicationContext;
 import org.frameworkset.util.ClassUtils;
 import org.frameworkset.util.ReflectionUtils;
 import org.frameworkset.util.io.ClassPathResource;
 import org.frameworkset.util.io.Resource;
+import org.frameworkset.util.shutdown.ShutdownUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
@@ -41,9 +33,15 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.cfg.NamingStrategy;
 import org.hibernate.event.EventListeners;
 
-import com.frameworkset.orm.transaction.TransactionManager;
-import com.frameworkset.util.BeanUtils;
-import com.frameworkset.util.SimpleStringUtil;
+import javax.sql.DataSource;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -556,7 +554,7 @@ public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 			logger.info("Building new Hibernate SessionFactory");
 			this.configuration = config;
 			final SessionFactory SessionFactory = newSessionFactory(config);
-			BaseApplicationContext.addShutdownHook(new Runnable(){
+			ShutdownUtil.addShutdownHook(new Runnable(){
 
 				@Override
 				public void run() {

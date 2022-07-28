@@ -1,7 +1,7 @@
 package org.frameworkset.plugin.kafka;
 
-import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
+import org.frameworkset.util.shutdown.ShutdownUtil;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -258,7 +258,7 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 		    }
 	    }
  */
-	    BaseApplicationContext.addShutdownHook(new Runnable() {
+		ShutdownUtil.addShutdownHook(new Runnable() {
 			@Override
 			public void run() {
 				shutdown();
