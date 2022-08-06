@@ -18,7 +18,23 @@ public class KafkaProductor  {
 	private Properties productorPropes;
 	private boolean sendDatatoKafka = false;
 
+	private boolean destroied;
+	public void destroy(){
+		synchronized (this) {
+			if(destroied)
+				return;
+			destroied = true;
+		}
 
+		try {
+			if (producer != null) {
+				producer.close();
+			}
+		}
+		catch (Exception e){
+			logger.warn("",e);
+		}
+	}
 	public KafkaProductor() {
 		 
 //		Properties props = new Properties();

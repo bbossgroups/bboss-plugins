@@ -54,16 +54,34 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 
 	private ConsumerConnector consumer;
 	private boolean shutdowned;
-	public synchronized void shutdown(){
-		if(shutdowned )
-			return ;
-		shutdowned = true;
-		if(executor != null)
-			executor.shutdown();
-		if(consumer != null)
-			consumer.shutdown();
-		if(storeService != null)
-			storeService.closeService();
+	public  void shutdown(){
+		synchronized (this) {
+			if (shutdowned)
+				return;
+			shutdowned = true;
+		}
+		try {
+			if(executor != null)
+				executor.shutdown();
+		}
+		catch (Exception e){
+			logger.warn("",e);
+		}
+		try {
+			if(consumer != null)
+				consumer.shutdown();
+		}
+		catch (Exception e){
+			logger.warn("",e);
+		}
+		try {
+			if(storeService != null)
+				storeService.closeService();
+		}
+		catch (Exception e){
+			logger.warn("",e);
+		}
+
 	}
 
 //	String topic,String zookeeperConnect, HDFSService logstashService

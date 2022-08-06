@@ -4,8 +4,8 @@ package org.frameworkset.plugin.kafka;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.errors.InterruptException;
 import org.frameworkset.util.concurrent.ThreadPoolFactory;
-import org.frameworkset.util.shutdown.ShutdownUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,11 +13,11 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 
-public class BaseKafkaConsumerThread implements Runnable {
+public class BaseKafkaConsumerThread extends Thread {
 	private static final Logger logger = LoggerFactory.getLogger(BaseKafkaConsumerThread.class);
 
 	protected StoreService storeService;
-	protected String name;
+	protected String workThreadname;
 	protected  boolean shutdown ;
 	protected BaseKafkaConsumer consumer;
 	private KafkaConsumer kafkaConsumer;
@@ -33,6 +33,8 @@ public class BaseKafkaConsumerThread implements Runnable {
 	protected Boolean batch = true;
 	protected int partition;
 	protected String discardRejectMessage;
+
+
 
 	public long getBlockedWaitTimeout() {
 		return blockedWaitTimeout;
@@ -64,18 +66,13 @@ public class BaseKafkaConsumerThread implements Runnable {
 //	private HDFSService logstashService;
 //	protected ConsumerConnector consumer;
 	public BaseKafkaConsumerThread(int partition,BaseKafkaConsumer consumer,String[] topics,StoreService storeService) {
+		super("KafkaBatchConsumer-"+topicsStr(topics)+"-p"+partition);
+		workThreadname = this.getName() + "-work";
 		this.storeService = storeService;
 		this.partition = partition;
-		this.name = "KafkaBatchConsumer-"+topicsStr(topics)+"-p"+partition;
 		this.consumer = consumer;
 		this.topics = topics;
 
-		ShutdownUtil.addShutdownHook(new Runnable() {
-			@Override
-			public void run() {
-				shutdown();
-			}
-		});
 
 	}
 	private static String topicsStr(String[] topics){
@@ -151,11 +148,44 @@ public class BaseKafkaConsumerThread implements Runnable {
 	public String getKeyDeserializer() {
 		return keyDeserializer;
 	}
+	private boolean consumerClosed;
+	private void closeConsumer(){
+		synchronized (this){
+			if(consumerClosed)
+				return;;
+			consumerClosed = true;
+		}
+		try {
+			if (this.kafkaConsumer != null) {
+				kafkaConsumer.close();
+			}
+		}
+		catch (Exception e){
+			logger.warn("",e);
+		}
+	}
 
 	public void shutdown(){
-		if(shutdown)
-			return;
-		this.shutdown = true;
+		synchronized (this) {
+			if (shutdown)
+				return;
+			this.shutdown = true;
+		}
+
+
+//		try {
+//
+//			interrupt();
+//
+//		}
+//		catch (Exception e){
+//			logger.warn("",e);
+//		}
+		try {
+			this.join();
+		} catch (InterruptedException e) {
+
+		}
 		if(executor != null){
 			try {
 				executor.shutdown();
@@ -164,12 +194,7 @@ public class BaseKafkaConsumerThread implements Runnable {
 				logger.warn("",e);
 			}
 		}
-		try {
-			Thread.currentThread().interrupt();
-		}
-		catch (Exception e){
-			logger.warn("",e);
-		}
+
 	}
 	private void buildConsumerAndSubscribe(){
 		Properties properties = consumer.getConsumerPropes();
@@ -189,7 +214,7 @@ public class BaseKafkaConsumerThread implements Runnable {
 			threadProperties.put("group.id",groupId);
 		}
 		if(workThreads != null){
-			executor = ThreadPoolFactory.buildThreadPool(name,discardRejectMessage == null?"Kafka consumer message handle":discardRejectMessage,
+			executor = ThreadPoolFactory.buildThreadPool(workThreadname,discardRejectMessage == null?"Kafka consumer message handle":discardRejectMessage,
 					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,true);
 		}
 		kafkaConsumer = new KafkaConsumer(threadProperties);
@@ -203,46 +228,22 @@ public class BaseKafkaConsumerThread implements Runnable {
 //					Map<String, List<PartitionInfo>> listMap = consumer.listTopics();
 
 			while (true) {
-				if (shutdown)
+				if (shutdown) {
+					closeConsumer();
 					break;
-				ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
-				if(records != null && !records.isEmpty()){
-					handleDatas( executor, kafkaConsumer, consumer, records);
 				}
-				/**
-				for (ConsumerRecord<Object, Object> record : records) {
-					if (logger.isDebugEnabled())
-						logger.debug("offset = {}, key = {}, value = {}", record.offset(), record.key(), record.value());
-					try {
-						if (storeService != null) {
-							handleData(consumer, record);
-						} else {
-							if (logger.isDebugEnabled())
-								logger.debug(Thread.currentThread().getName() + ": partition[" + record.partition() + "],"
-										+ "offset[" + record.offset() + "], " + record.value());
-						}
-
-
-					} catch (InterruptedException e) {
-						if (logger.isErrorEnabled())
-							logger.error("涓柇寮傚父锛�", e);
-						this.shutdown();
-						break;
-					} catch (ShutdownException e) {
-						if (logger.isErrorEnabled())
-							logger.error("涓柇寮傚父锛�", e);
-						this.shutdown();
-						break;
-					} catch (Exception e) {
-						if (logger.isErrorEnabled())
-							logger.error("绯荤粺寮傚父锛�", e);
-					} catch (Throwable e) {
-						if (logger.isErrorEnabled())
-							logger.error("绯荤粺寮傚父锛�", e);
-
+				try {
+					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
+					if(records != null && !records.isEmpty()){
+						handleDatas( executor, kafkaConsumer, consumer, records);
 					}
 				}
-				 */
+				catch (InterruptException e){
+					closeConsumer();
+					break;
+				}
+
+
 			}
 		}
 		catch (Throwable e){
@@ -287,13 +288,6 @@ public class BaseKafkaConsumerThread implements Runnable {
 	}
 //	protected abstract void handleData(BaseKafkaConsumer consumer,ConsumerRecord<Object, Object> record)  throws Exception;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getGroupId() {
 		return groupId;

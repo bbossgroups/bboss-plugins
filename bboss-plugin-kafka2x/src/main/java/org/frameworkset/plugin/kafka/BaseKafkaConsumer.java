@@ -4,9 +4,6 @@ import org.frameworkset.spi.support.ApplicationObjectSupport;
 import org.frameworkset.util.shutdown.ShutdownUtil;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 //import kafka.consumer.ConsumerConfig;
 //
@@ -29,7 +26,7 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 	protected long pollTimeout = 1000l;
 	protected int threads = 4;
 	protected Boolean batch = true;
-	protected ExecutorService executor;
+//	protected ExecutorService executor;
 	protected String keyDeserializer;
 	protected String valueDeserializer;
 	protected Integer maxPollRecords;
@@ -147,15 +144,21 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 		this.consumerPropes = consumerPropes;
 	}
 
-	//	private ConsumerConnector consumer;
+	protected  boolean shutdown ;
 	public void shutdown(){
+		synchronized (this) {
+			if(shutdown)
+				return;
+			shutdown = true;
+		}
+
 		if(baseKafkaConsumerThreadList.size() > 0){
 			for(BaseKafkaConsumerThread baseKafkaConsumerThread:baseKafkaConsumerThreadList){
 				baseKafkaConsumerThread.shutdown();
 			}
 		}
-		if(executor != null)
-			executor.shutdown();
+//		if(executor != null)
+//			executor.shutdown();
 //		if(consumer != null)
 //			consumer.close();
 //		if(storeService != null)
@@ -210,17 +213,18 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 //	    	String[] infos = t.split(":");
 //	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
 //	    }
-		executor = Executors.newFixedThreadPool(a_numThreads,new ThreadFactory(){
-			private int i = 0;
-			@Override
-			public Thread newThread(Runnable r) {
-
-				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
-			}
-		});
+//		executor = Executors.newFixedThreadPool(a_numThreads,new ThreadFactory(){
+//			private int i = 0;
+//			@Override
+//			public Thread newThread(Runnable r) {
+//
+//				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
+//			}
+//		});
 		for(int i = 0; i < a_numThreads; i ++) {
 			BaseKafkaConsumerThread runnable =buildRunnable(i,topics);
 			baseKafkaConsumerThreadList.add(runnable);
+			runnable.start();
 //			Runnable runnable = new Runnable() {
 //				@Override
 //				public void run() {
@@ -237,7 +241,7 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 //					}
 //				}
 //			};
-			executor.submit(runnable);
+//			executor.submit(runnable);
 
 		}
 

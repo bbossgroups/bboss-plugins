@@ -46,6 +46,22 @@ public class KafkaProductor  {
 
 	}
 
+	private boolean destroied;
+	public  void destroy(){
+		synchronized (this) {
+			if (destroied)
+				return;
+			destroied = true;
+		}
+		try {
+			if (producer != null) {
+				producer.close();
+			}
+		}
+		catch (Exception e){
+			logger.warn("",e);
+		}
+	}
 	public void init(){
 //		Properties props = new Properties();
 //		props.put("zookeeper.connect", "hadoop85:2181,hadoop86:2181,hadoop88:2181");
