@@ -134,8 +134,9 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 				if(this.shutdown)
 					break;
 				logger.debug("Batch idle time check after {} 毫秒",checkinterval);
+				lock.lock();
 				try {
-					lock.lock();
+
 					handleDatas();
 				}
 				finally {
@@ -214,9 +215,9 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 	}
 
 	protected void handleData(BaseKafkaConsumer consumer,MessageAndMetadata<byte[], byte[]> mam)  throws Exception{
+		lock.lock();
 		try{
 			lastReceiveTime = System.currentTimeMillis();
-			lock.lock();
 			messageQueue.add(mam);
 			if(logger.isDebugEnabled())
 				logger.debug("Thread["+this.getName() +"] handleData messageQueue size:"+messageQueue.size());
