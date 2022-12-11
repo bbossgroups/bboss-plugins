@@ -144,7 +144,7 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 		this.consumerPropes = consumerPropes;
 	}
 
-	protected  boolean shutdown ;
+	protected  volatile boolean shutdown ;
 	public void shutdown(){
 		synchronized (this) {
 			if(shutdown)
@@ -163,6 +163,10 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 //			consumer.close();
 //		if(storeService != null)
 //			storeService.closeService();
+	}
+
+	public boolean isShutdown(){
+		return shutdown;
 	}
 
 //	String topic,String zookeeperConnect, HDFSService logstashService

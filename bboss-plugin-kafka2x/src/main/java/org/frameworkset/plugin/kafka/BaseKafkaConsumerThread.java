@@ -158,11 +158,14 @@ public class BaseKafkaConsumerThread extends Thread {
 		try {
 			if (this.kafkaConsumer != null) {
 				kafkaConsumer.close();
+				logger.info("kafkaConsumer[{}] closed topic:{}",workThreadname,topics);
 			}
 		}
 		catch (Exception e){
-			logger.warn("",e);
+//			consumerClosed = false;
+			logger.warn("kafkaConsumer["+workThreadname+"] closed topic:"+topics,e);
 		}
+
 	}
 
 	public void shutdown(){
@@ -170,6 +173,7 @@ public class BaseKafkaConsumerThread extends Thread {
 			if (shutdown)
 				return;
 			this.shutdown = true;
+			this.notify();
 		}
 
 
@@ -234,6 +238,10 @@ public class BaseKafkaConsumerThread extends Thread {
 				}
 				try {
 					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
+					if (shutdown) {
+						closeConsumer();
+						break;
+					}
 					if(records != null && !records.isEmpty()){
 						handleDatas( executor, kafkaConsumer, consumer, records);
 					}
