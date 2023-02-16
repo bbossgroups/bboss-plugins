@@ -45,11 +45,7 @@
 		<appender-ref ref = "invoke_log4j" />
 	</logger>
 
-	<!-- <logger name="com.ai.ecs.ecsite.common.http.HttpClientUtil"
-		additivity="false">
-		<level value = "info" />
-		<appender-ref ref = "httpclientutils_log4j" />
-	</logger> -->
+
 
 
 
