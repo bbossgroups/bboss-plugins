@@ -191,7 +191,7 @@ public class BaseKafkaConsumerThread extends Thread {
 
 		}
 		catch (Exception e){
-			logger.warn("",e);
+
 		}
 		if(executor != null){
 			try {
