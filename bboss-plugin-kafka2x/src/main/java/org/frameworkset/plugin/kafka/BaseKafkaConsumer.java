@@ -205,13 +205,10 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 	}
 	protected StoreService storeService = null;
 
-
-	@Override
-	public void run() {
-
-	    Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-	    final String[] topics = topic.split("\\,");
-	    int a_numThreads = threads;
+    public void run(boolean addShutdownHook){
+        Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+        final String[] topics = topic.split("\\,");
+        int a_numThreads = threads;
 //	    for(String t:topics)
 //	    {
 //	    	String[] infos = t.split(":");
@@ -225,53 +222,27 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 //				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
 //			}
 //		});
-		for(int i = 0; i < a_numThreads; i ++) {
-			BaseKafkaConsumerThread runnable =buildRunnable(i,topics);
-			baseKafkaConsumerThreadList.add(runnable);
-			runnable.start();
-//			Runnable runnable = new Runnable() {
-//				@Override
-//				public void run() {
-//					consumer = new KafkaConsumer(productorPropes);
-//					consumer.subscribe(Arrays.asList(topics));
-//
-////					Map<String, List<PartitionInfo>> listMap = consumer.listTopics();
-//
-//					while (true) {
-//						ConsumerRecords<Object, Object> records = consumer.poll(1000l);
-//						List<ConsumerRecord<Object, Object>> precords = records.records((TopicPartition) null);
-//						for (ConsumerRecord<Object, Object> record : records)
-//							System.out.printf("offset = %d, key = %s, value = %s%", record.offset(), record.key(), record.value());
-//					}
-//				}
-//			};
-//			executor.submit(runnable);
+        for(int i = 0; i < a_numThreads; i ++) {
+            BaseKafkaConsumerThread runnable =buildRunnable(i,topics);
+            baseKafkaConsumerThreadList.add(runnable);
+            runnable.start();
 
-		}
+        }
 
-//	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
+        if(addShutdownHook) {
+            ShutdownUtil.addShutdownHook(new Runnable() {
+                @Override
+                public void run() {
+                    shutdown();
+                }
+            });
+        }
+    }
 
-/**
-		for(String t:topics)
-	    {
-	    	String[] infos = t.split(":");
-		    List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(infos[0]);
-//		    System.out.println("-----------------------------------------:"+infos[0]+"-------------"+streams);
-			int i = 0;
-		    for (final KafkaStream<byte[], byte[]> stream : streams) {
-//				StoreService storeService = this.getApplicationContext().getTBeanObject("storeService",StoreService.class);
-//				if(this.storeService == null)
-//					this.storeService = storeService;
-		        executor.submit(buildRunnable(stream,infos[0]+"-"+i));
-		    }
-	    }
- */
-		ShutdownUtil.addShutdownHook(new Runnable() {
-			@Override
-			public void run() {
-				shutdown();
-			}
-		});
+	@Override
+	public void run() {
+
+        run(true);
 
 	}
 	

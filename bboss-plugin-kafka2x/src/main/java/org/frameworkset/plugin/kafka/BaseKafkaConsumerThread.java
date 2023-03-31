@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.InterruptException;
+import org.apache.kafka.common.errors.WakeupException;
 import org.frameworkset.util.concurrent.ThreadPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,7 +153,7 @@ public class BaseKafkaConsumerThread extends Thread {
 	private void closeConsumer(){
 		synchronized (this){
 			if(consumerClosed)
-				return;;
+				return;
 			consumerClosed = true;
 		}
 		try {
@@ -173,22 +174,24 @@ public class BaseKafkaConsumerThread extends Thread {
 			if (shutdown)
 				return;
 			this.shutdown = true;
-			this.notify();
+
 		}
 
+        try {
+            if(kafkaConsumer != null)
+                kafkaConsumer.wakeup();
+        }
+        catch (Exception e){
 
-//		try {
-//
-//			interrupt();
-//
-//		}
-//		catch (Exception e){
-//			logger.warn("",e);
-//		}
-		try {
-			this.join();
-		} catch (InterruptedException e) {
+        }
 
+//            closeConsumer();
+        try {
+            this.join();
+
+		}
+		catch (Exception e){
+			logger.warn("",e);
 		}
 		if(executor != null){
 			try {
@@ -200,7 +203,9 @@ public class BaseKafkaConsumerThread extends Thread {
 		}
 
 	}
-	private void buildConsumerAndSubscribe(){
+	private synchronized void buildConsumerAndSubscribe(){
+        if(shutdown)
+            return;
 		Properties properties = consumer.getConsumerPropes();
 		Properties threadProperties = new Properties();
 		threadProperties.putAll(properties);
@@ -238,18 +243,30 @@ public class BaseKafkaConsumerThread extends Thread {
 				}
 				try {
 					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
-					if (shutdown) {
-						closeConsumer();
-						break;
-					}
+
 					if(records != null && !records.isEmpty()){
 						handleDatas( executor, kafkaConsumer, consumer, records);
 					}
+                    if (shutdown) {
+                        closeConsumer();
+                        break;
+                    }
 				}
+                catch (WakeupException wakeupException){
+                    closeConsumer();
+                    break;
+                }
+
 				catch (InterruptException e){
 					closeConsumer();
 					break;
 				}
+                catch (Exception wakeupException){
+                    logger.error("",wakeupException);
+                    closeConsumer();
+                    break;
+                }
+
 
 
 			}
