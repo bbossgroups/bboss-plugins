@@ -224,7 +224,7 @@ public class BaseKafkaConsumerThread extends Thread {
 		}
 		if(workThreads != null){
 			executor = ThreadPoolFactory.buildThreadPool(workThreadname,discardRejectMessage == null?"Kafka consumer message handle":discardRejectMessage,
-					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,true);
+					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,false);
 		}
 		kafkaConsumer = new KafkaConsumer(threadProperties);
 		kafkaConsumer.subscribe(Arrays.asList(topics));
