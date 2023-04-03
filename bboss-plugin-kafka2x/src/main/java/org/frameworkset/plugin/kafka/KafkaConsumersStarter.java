@@ -34,17 +34,22 @@ import java.util.*;
  */
 public abstract class KafkaConsumersStarter {
 	private static Logger logger = LoggerFactory.getLogger(KafkaConsumersStarter.class);
-    private static Map<String, List<KafkaListener>> iocKafkaListeners = new LinkedHashMap<>();
 
+    private static Map<String, List<KafkaListener>> iocKafkaListeners = new LinkedHashMap<>();
+    private static Object lock = new Object();
     /**
      * 销毁ioc配置对应的容器中管理的kafka消费程序
      * @param applicationContextIOC
      */
     public static void shutdownConsumers(String applicationContextIOC){
-        List<KafkaListener> kafkaListeners = iocKafkaListeners.get(applicationContextIOC);
-        if(kafkaListeners != null && kafkaListeners.size() > 0) {
-            for(KafkaListener kafkaListener: kafkaListeners){
-                kafkaListener.shutdown();
+        synchronized (lock) {
+            List<KafkaListener> kafkaListeners = iocKafkaListeners.get(applicationContextIOC);
+            if (kafkaListeners != null && kafkaListeners.size() > 0) {
+                for (KafkaListener kafkaListener : kafkaListeners) {
+                    kafkaListener.shutdown();
+                }
+                kafkaListeners.clear();
+                iocKafkaListeners.remove(applicationContextIOC);
             }
         }
     }
@@ -52,14 +57,17 @@ public abstract class KafkaConsumersStarter {
      * 销毁所有容器中管理的kafka消费程序
      */
     public static void shutdownAllConsumers(){
-        Iterator<Map.Entry<String, List<KafkaListener>>> iterator = iocKafkaListeners.entrySet().iterator();
-        while (iterator.hasNext()) {
-            List<KafkaListener> kafkaListeners = iterator.next().getValue();
-            if (kafkaListeners != null && kafkaListeners.size() > 0) {
-                for (KafkaListener kafkaListener : kafkaListeners) {
-                    kafkaListener.shutdown();
+        synchronized (lock) {
+            Iterator<Map.Entry<String, List<KafkaListener>>> iterator = iocKafkaListeners.entrySet().iterator();
+            while (iterator.hasNext()) {
+                List<KafkaListener> kafkaListeners = iterator.next().getValue();
+                if (kafkaListeners != null && kafkaListeners.size() > 0) {
+                    for (KafkaListener kafkaListener : kafkaListeners) {
+                        kafkaListener.shutdown();
+                    }
                 }
             }
+            iocKafkaListeners.clear();
         }
     }
     /**
@@ -80,42 +88,43 @@ public abstract class KafkaConsumersStarter {
      */
     public static void startConsumers(String applicationContextIOC,boolean addShutdownHook){
         BaseApplicationContext context = DefaultApplicationContext.getApplicationContext(applicationContextIOC);
-        context.start(new Starter() {
-            @Override
-            public void start(Pro pro, BaseApplicationContext ioc) {
-                Object _service = ioc.getBeanObject(pro.getName());
-                if(_service == null)
-                    return;
-                List<KafkaListener> kafkaListeners = iocKafkaListeners.get(applicationContextIOC);
-                if(kafkaListeners == null) {
-                    kafkaListeners = new ArrayList<>();
-                    iocKafkaListeners.put(applicationContextIOC,kafkaListeners);
-                }
+        synchronized (lock) {
+            context.start(new Starter() {
+                @Override
+                public void start(Pro pro, BaseApplicationContext ioc) {
+                    Object _service = ioc.getBeanObject(pro.getName());
+                    if (_service == null)
+                        return;
+                    List<KafkaListener> kafkaListeners = iocKafkaListeners.get(applicationContextIOC);
+                    if (kafkaListeners == null) {
+                        kafkaListeners = new ArrayList<>();
+                        iocKafkaListeners.put(applicationContextIOC, kafkaListeners);
+                    }
 
-                if(_service instanceof KafkaListener){
-                    KafkaListener consumer = (KafkaListener)_service;
+                    if (_service instanceof KafkaListener) {
+                        KafkaListener consumer = (KafkaListener) _service;
 //					Thread t = new Thread(consumer,"kafka-consumer-"+pro.getName());
 //					t.start();
-                    consumer.run(addShutdownHook);
-                    kafkaListeners.add(consumer);
-                    if(logger.isInfoEnabled()){
-                        logger.info("Kafka Listener[name:{},class:{}] started.",pro.getName(),pro.getClazz());
+                        consumer.run(addShutdownHook);
+                        kafkaListeners.add(consumer);
+                        if (logger.isInfoEnabled()) {
+                            logger.info("Kafka Listener[name:{},class:{}] started.", pro.getName(), pro.getClazz());
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void failed(Pro bean, BaseApplicationContext baseApplicationContext,Throwable e) {
-                if (logger.isErrorEnabled())
-                {
-                    logger.error(new StringBuilder().append("Kafka Listener[name:").append(bean.getName())
-                                    .append(",class:").append(bean.getClazz())
-                                    .append("] start failed:").toString(),
-                            e);
+                @Override
+                public void failed(Pro bean, BaseApplicationContext baseApplicationContext, Throwable e) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(new StringBuilder().append("Kafka Listener[name:").append(bean.getName())
+                                        .append(",class:").append(bean.getClazz())
+                                        .append("] start failed:").toString(),
+                                e);
 
+                    }
                 }
-            }
-        });
+            });
+        }
 
 
     }
