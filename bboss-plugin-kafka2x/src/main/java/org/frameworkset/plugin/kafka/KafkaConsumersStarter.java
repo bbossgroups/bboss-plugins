@@ -87,8 +87,16 @@ public abstract class KafkaConsumersStarter {
      * @param addShutdownHook
      */
     public static void startConsumers(String applicationContextIOC,boolean addShutdownHook){
+        List<KafkaListener> kafkaListeners_ = iocKafkaListeners.get(applicationContextIOC);
+        if(kafkaListeners_ != null){
+            logger.info("Kafka Consumers in ioc {}, addShutdownHook {} 已经启动，忽略本次操作，",applicationContextIOC, addShutdownHook);
+        }
         BaseApplicationContext context = DefaultApplicationContext.getApplicationContext(applicationContextIOC);
         synchronized (lock) {
+            kafkaListeners_ = iocKafkaListeners.get(applicationContextIOC);
+            if(kafkaListeners_ != null){
+                logger.info("Kafka Consumers in ioc {}, addShutdownHook {} 已经启动，忽略本次操作，",applicationContextIOC, addShutdownHook);
+            }
             context.start(new Starter() {
                 @Override
                 public void start(Pro pro, BaseApplicationContext ioc) {
