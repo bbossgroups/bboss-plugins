@@ -195,7 +195,7 @@ public class BaseKafkaConsumerThread extends Thread {
 		}
 		if(executor != null){
 			try {
-				executor.shutdown();
+                ThreadPoolFactory.shutdownExecutor(executor);
 			}
 			catch (Exception e){
 				logger.warn("",e);
