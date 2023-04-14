@@ -1,6 +1,7 @@
 package org.frameworkset.plugin.kafka;
 
 
+import com.frameworkset.util.SimpleStringUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -21,6 +22,7 @@ public class BaseKafkaConsumerThread extends Thread {
 	protected String workThreadname;
 	protected  boolean shutdown ;
 	protected BaseKafkaConsumer consumer;
+    protected boolean autoCommit = true;
 	private KafkaConsumer kafkaConsumer;
 	protected  String[] topics;
 	protected long pollTimeout;
@@ -226,6 +228,9 @@ public class BaseKafkaConsumerThread extends Thread {
 			executor = ThreadPoolFactory.buildThreadPool(workThreadname,discardRejectMessage == null?"Kafka consumer message handle":discardRejectMessage,
 					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,false);
 		}
+        String _autoCommit = properties.getProperty("enable.auto.commit");
+        if(SimpleStringUtil.isNotEmpty(_autoCommit) && _autoCommit.equals("flase"))
+            this.autoCommit = false;
 		kafkaConsumer = new KafkaConsumer(threadProperties);
 		kafkaConsumer.subscribe(Arrays.asList(topics));
 	}
@@ -245,7 +250,9 @@ public class BaseKafkaConsumerThread extends Thread {
 					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
 
 					if(records != null && !records.isEmpty()){
-						handleDatas( executor, kafkaConsumer, consumer, records);
+						handleDatas( executor, kafkaConsumer,  records);
+                        if(!autoCommit)
+                            kafkaConsumer.commitSync();
 					}
                     if (shutdown) {
                         closeConsumer();
@@ -296,7 +303,7 @@ public class BaseKafkaConsumerThread extends Thread {
 			logger.error("", e);
 		}
 	}
-	protected void handleDatas(ExecutorService executor, KafkaConsumer kafkaConsumer, BaseKafkaConsumer consumer, final ConsumerRecords<Object, Object> records){
+	protected void handleDatas(ExecutorService executor, KafkaConsumer kafkaConsumer,  final ConsumerRecords<Object, Object> records){
 		if(executor != null) {
 			executor.submit(new Runnable() {
 				@Override
