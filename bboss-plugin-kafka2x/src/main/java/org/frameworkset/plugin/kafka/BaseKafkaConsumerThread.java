@@ -1,7 +1,6 @@
 package org.frameworkset.plugin.kafka;
 
 
-import com.frameworkset.util.SimpleStringUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -228,9 +227,8 @@ public class BaseKafkaConsumerThread extends Thread {
 			executor = ThreadPoolFactory.buildThreadPool(workThreadname,discardRejectMessage == null?"Kafka consumer message handle":discardRejectMessage,
 					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,false);
 		}
-        String _autoCommit = properties.getProperty("enable.auto.commit");
-        if(SimpleStringUtil.isNotEmpty(_autoCommit) && _autoCommit.equals("flase"))
-            this.autoCommit = false;
+
+        this.autoCommit = consumer.isAutoCommit();
 		kafkaConsumer = new KafkaConsumer(threadProperties);
 		kafkaConsumer.subscribe(Arrays.asList(topics));
 	}
