@@ -117,7 +117,12 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 				return;
 			shutdown = true;
 			this.interrupt();
-		}
+            try {
+                this.join();
+            } catch (InterruptedException e) {
+
+            }
+        }
 		@Override
 		public void run() {
 			while(true){

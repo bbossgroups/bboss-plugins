@@ -34,7 +34,11 @@ public abstract class BaseKafkaConsumerThread implements Runnable {
 			return;
 		this.shutdown = true;
 		Thread.currentThread().interrupt();
-	}
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+        }
+    }
 
 	@Override
 	public void run() {
