@@ -105,7 +105,9 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 			try {
 				configChangeListener = (ConfigChangeListener) Class.forName(_configChangeListener).newInstance();
 				if(configChangeListener instanceof PropertiesChangeListener){
-					((PropertiesChangeListener)configChangeListener).setPropertiesContainer(propertiesContainer);
+                    PropertiesChangeListener propertiesChangeListener = (PropertiesChangeListener)configChangeListener;
+                    propertiesChangeListener.setPropertiesContainer(propertiesContainer);
+                    propertiesChangeListener.setApplicationContext(applicationContext);
 				}
 				this.configChangeListener = configChangeListener;
 			}

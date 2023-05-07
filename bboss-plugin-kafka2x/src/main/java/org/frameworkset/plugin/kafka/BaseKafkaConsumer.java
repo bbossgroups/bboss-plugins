@@ -272,6 +272,25 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
         logger.info("Consumer theads:{} after increament ",threads);
 
     }
+
+    /**
+     * 重置消费线程数量
+     * @param newThreads
+     */
+    public void resetConsumerThreads(int newThreads){
+        if(newThreads <= 0){
+            throw new IllegalArgumentException("Consumer Theads " + newThreads + " must > 0. ");
+        }
+        synchronized (lock) {
+            if(newThreads > threads){
+                this.increamentConsumerThead(newThreads - threads);
+            }
+            else if(newThreads < threads){
+                this.decreamentConsumerThead(threads - newThreads);
+            }
+
+        }
+    }
     /**
      * 消减给定数量的消费线程
      * @param decreamentConsumerTheads

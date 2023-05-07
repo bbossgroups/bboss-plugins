@@ -16,6 +16,7 @@ package org.frameworkset.apollo;
  */
 
 import com.ctrip.framework.apollo.ConfigChangeListener;
+import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.assemble.GetProperties;
 import org.frameworkset.spi.assemble.PropertiesContainer;
 
@@ -29,6 +30,16 @@ import org.frameworkset.spi.assemble.PropertiesContainer;
  */
 public abstract class PropertiesChangeListener implements ConfigChangeListener {
 	protected PropertiesContainer propertiesContainer;
+
+    protected BaseApplicationContext applicationContext;
+    public BaseApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    public void setApplicationContext(BaseApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
 
 	public GetProperties getGetProperties() {
 		return getProperties;
