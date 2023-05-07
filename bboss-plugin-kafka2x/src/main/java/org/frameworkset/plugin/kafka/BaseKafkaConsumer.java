@@ -25,12 +25,14 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 //	private KafkaConsumer consumer;
 	protected long pollTimeout = 1000l;
 	protected int threads = 4;
+    private int oldThreads ;
 	protected Boolean batch = true;
 //	protected ExecutorService executor;
 	protected String keyDeserializer;
 	protected String valueDeserializer;
 	protected Integer maxPollRecords;
 	protected Integer workThreads ;
+    private Object lock = new Object();
 
 	public long getBlockedWaitTimeout() {
 		return blockedWaitTimeout;
@@ -145,18 +147,21 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 	}
 
 	protected  volatile boolean shutdown ;
+    private Object shutdownlock = new Object();
 	public void shutdown(){
-		synchronized (this) {
+		synchronized (shutdownlock) {
 			if(shutdown)
 				return;
 			shutdown = true;
 		}
 
-		if(baseKafkaConsumerThreadList.size() > 0){
-			for(BaseKafkaConsumerThread baseKafkaConsumerThread:baseKafkaConsumerThreadList){
-				baseKafkaConsumerThread.shutdown();
-			}
-		}
+        synchronized (lock) {
+            if (baseKafkaConsumerThreadList.size() > 0) {
+                for (BaseKafkaConsumerThread baseKafkaConsumerThread : baseKafkaConsumerThreadList) {
+                    baseKafkaConsumerThread.shutdown();
+                }
+            }
+        }
 //		if(executor != null)
 //			executor.shutdown();
 //		if(consumer != null)
@@ -166,7 +171,9 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 	}
 
 	public boolean isShutdown(){
-		return shutdown;
+        synchronized (shutdownlock) {
+            return shutdown;
+        }
 	}
 
 //	String topic,String zookeeperConnect, HDFSService logstashService
@@ -222,11 +229,13 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
 //				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
 //			}
 //		});
-        for(int i = 0; i < a_numThreads; i ++) {
-            BaseKafkaConsumerThread runnable =buildRunnable(i,topics);
-            baseKafkaConsumerThreadList.add(runnable);
-            runnable.start();
+        synchronized (lock) {
+            for (int i = 0; i < a_numThreads; i++) {
+                BaseKafkaConsumerThread runnable = buildRunnable(i, topics);
+                baseKafkaConsumerThreadList.add(runnable);
+                runnable.start();
 
+            }
         }
 
         if(addShutdownHook) {
@@ -237,6 +246,61 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
                 }
             });
         }
+    }
+
+    /**
+     * 增加给定数量的消费线程
+     * @param increamentConsumerTheads
+     */
+    public void increamentConsumerThead(int increamentConsumerTheads){
+        if(increamentConsumerTheads <= 0){
+            throw new IllegalArgumentException("Increament Consumer Theads " + increamentConsumerTheads + " must > 0. ");
+        }
+        final String[] topics = topic.split("\\,");
+        synchronized (lock) {
+            this.oldThreads = threads;
+            threads = increamentConsumerTheads + threads;
+            logger.info("Consumer theads:{} before increament ", oldThreads);
+            int a_numThreads = increamentConsumerTheads;
+            for (int i = 0; i < a_numThreads; i++) {
+                BaseKafkaConsumerThread runnable = buildRunnable(oldThreads + i, topics);
+                baseKafkaConsumerThreadList.add(runnable);
+                runnable.start();
+
+            }
+        }
+        logger.info("Consumer theads:{} after increament ",threads);
+
+    }
+    /**
+     * 消减给定数量的消费线程
+     * @param decreamentConsumerTheads
+     */
+    public void decreamentConsumerThead(int decreamentConsumerTheads){
+        if(decreamentConsumerTheads <= 0){
+            throw new IllegalArgumentException("Decreament Consumer Theads " + decreamentConsumerTheads + " must > 0. ");
+        }
+        final String[] topics = topic.split("\\,");
+        synchronized (lock) {
+            this.oldThreads = threads;
+
+            threads = threads - decreamentConsumerTheads;
+            if (threads < 0)
+                threads = 0;
+            logger.info("Consumer theads:{} before decreament ", oldThreads);
+            for (int i = 0; i < decreamentConsumerTheads; i++) {
+                int pos = oldThreads - i - 1;
+                if (pos >= 0) {
+                    BaseKafkaConsumerThread baseKafkaConsumerThread = baseKafkaConsumerThreadList.remove(pos);
+                    baseKafkaConsumerThread.shutdown();
+                } else {
+
+                    break;
+                }
+            }
+        }
+        logger.info("Consumer theads:{} after decreament ",threads);
+
     }
 
 	@Override

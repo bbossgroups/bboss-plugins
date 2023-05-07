@@ -39,6 +39,12 @@ public class KafkaUtil {
 		KafkaProductor kafkaProductor = getContext().getTBeanObject(name, KafkaProductor.class);
 		return kafkaProductor;
 	}
+
+    public BaseKafkaConsumer getKafkaConsumer(String name){
+
+        BaseKafkaConsumer kafkaConsumer = getContext().getTBeanObject(name, BaseKafkaConsumer.class);
+        return kafkaConsumer;
+    }
 	public  String getProperty(String name){
 		return context.getProperty(name);
 	}
