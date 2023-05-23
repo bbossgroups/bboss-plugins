@@ -13,7 +13,7 @@ public class TestKafka {
 		TestKafka testKafka = new TestKafka();
 		testKafka.testSendJsonData1(true);
 		/**
-		 * ./kafka-consumer-groups.sh --new-consumer --bootstrap-server 10.13.11.12:19092 --describe --group test
+		 * ./kafka-consumer-groups.sh --new-consumer --bootstrap-server 192.168.137.1:19092 --describe --group test
 		 */
 	}
 

@@ -24,7 +24,7 @@
 				<description> <![CDATA[ largest]]></description>
 			</property>
 
-			<property name="zookeeper.connect" value="10.13.11.12:12181">
+			<property name="zookeeper.connect" value="192.168.137.1:12181">
 				<description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
 			</property>
 			<!-- <property name="zookeeper.connect" value="192.168.137.133:2183">
