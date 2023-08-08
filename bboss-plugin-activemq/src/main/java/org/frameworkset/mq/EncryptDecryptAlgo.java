@@ -14,7 +14,7 @@ import org.frameworkset.util.encoder.Base64Commons;
  * Copyright: Copyright (c) 2009
  * </p>
  * <p>
- * Company: 湖南科创信息股份有限公司
+ * Company: bboss
  * </p>
  * 
  * @Date May 17, 2009
