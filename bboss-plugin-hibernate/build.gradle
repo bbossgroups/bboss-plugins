@@ -35,17 +35,21 @@ dependencies {
              [group: 'javax.transaction', name: 'jta', version: "1.1", transitive: false],
                [group: 'hibernate', name: 'antlr', version: "2.7.5H3", transitive: false],
  
-              [group: 'commons-collections', name: 'commons-collections', version: "3.2.1", transitive: false],
-                  [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
+              [group: 'commons-collections', name: 'commons-collections', version: "3.2.2", transitive: false],
+                  [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.3.0', transitive: false],
               
-              [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36', transitive: false],
-           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36', transitive: false],
+              [group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12', transitive: false],
+           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.12', transitive: false],
           
               
               [group: 'oro', name: 'oro', version: '2.0.8', transitive: false],
               [group: 'commons-lang', name: 'commons-lang', version: '2.6', transitive: false],
-              [group: 'org.ow2.asm', name: 'asm', version: '5.0.3', transitive: false],
-                 [group: 'cglib', name: 'cglib-nodep', version: '3.1', transitive: false],
+            [group: 'org.ow2.asm', name: 'asm', version: '9.6', transitive: false],
+            [group: 'org.ow2.asm', name: 'asm-util', version: '9.6', transitive: false],
+            [group: 'org.ow2.asm', name: 'asm-analysis', version: '9.6', transitive: false],
+            [group: 'org.ow2.asm', name: 'asm-tree', version: '9.6', transitive: false],
+            [group: 'org.ow2.asm', name: 'asm-commons', version: '9.6', transitive: false],
+                 [group: 'cglib', name: 'cglib-nodep', version: '3.3.0', transitive: false],
               
                 [group: 'commons-logging', name: 'commons-logging', version: '1.1', transitive: false],
                 

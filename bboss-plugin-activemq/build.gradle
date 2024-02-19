@@ -34,7 +34,7 @@ dependencies {
                     [group: 'org.apache.activemq', name: 'activemq-jms-pool', version: "5.14.5", transitive: false],
             [group: 'org.apache.activemq', name: 'activemq-pool', version: "5.14.5", transitive: false],
             [group: 'org.apache.activemq', name: 'activemq-client', version: "5.14.5", transitive: true],
-             [group: 'org.apache.commons', name: 'commons-pool2', version: "2.4.2", transitive: false],
+             [group: 'org.apache.commons', name: 'commons-pool2', version: "2.12.0", transitive: false],
           
             
    			
