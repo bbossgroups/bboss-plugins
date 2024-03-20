@@ -22,7 +22,7 @@ dependencies {
           [group: 'org.openoffice', name: 'unoil', version: '4.1.2', transitive: true],
            
             [group: 'org.openoffice', name: 'juh', version: '4.1.2', transitive: false],
-           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.12', transitive: true],
+           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36', transitive: true],
           
             [group: 'org.fusesource', name: 'sigar', version: '1.6.4', transitive: false],
     )
