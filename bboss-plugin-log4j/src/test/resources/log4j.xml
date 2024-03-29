@@ -28,7 +28,7 @@
 	</appender>
 
 	<!-- <appender name="httpclientutils_log4j" class="org.apache.log4j.RollingFileAppender">
-	 	<param name="file" value="/ecslog/interface/httpclientutils.log" /> 
+	 	<param name="file" value="/log/interface/httpclientutils.log" /> 
 		<param name="file" value="d:/httpclientutils.log" />
 		<param name="append" value="true" />
 		<param name="maxFileSize" value="100M" />
