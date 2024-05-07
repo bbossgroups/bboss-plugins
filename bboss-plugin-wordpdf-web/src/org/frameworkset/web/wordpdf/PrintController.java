@@ -22,11 +22,11 @@ public class PrintController {
 				"FinanceAmt", "FinanceFC", "LackAmtPayDate",
 				"LackAmtFinalPayDate", "ReceiverName", "ReceiverID",   
 				"ReceiverTel", "Insurer","authoriate" };
-		String[] mapValue = new String[] { "湖南三一工程机械有限公司", "湖南三一工程机械有限公司",
+		String[] mapValue = new String[] { "bboss", "bboss",
 				"六桥泵车", "SY5419THB 52E(6)", "2", "风冷", "V09660", "300.00",
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
-				"2012年8月31日", "卿琳", "430111199910102121", "13800138200", "卿琳","bboss" };
+				"2012年8月31日", "bboss", "430111199910102121", "13800138200", "bboss","bboss" };
 		for(int i = 0; i < bookMarks.length; i ++)
 		{
 			
@@ -57,11 +57,11 @@ public class PrintController {
 				"FinanceAmt", "FinanceFC", "LackAmtPayDate",
 				"LackAmtFinalPayDate", "ReceiverName", "ReceiverID",   
 				"ReceiverTel", "Insurer","authoriate" };
-		String[] mapValue = new String[] { "湖南三一工程机械有限公司", "湖南三一工程机械有限公司",
+		String[] mapValue = new String[] { "bboss", "bboss",
 				"六桥泵车", "SY5419THB 52E(6)", "2", "风冷", "V09660", "300.00",
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
-				"2012年8月31日", "卿琳", "430111199910102121", "13800138200", "卿琳","bboss" };
+				"2012年8月31日", "bboss", "430111199910102121", "13800138200", "bboss","bboss" };
 		for(int i = 0; i < bookMarks.length; i ++)
 		{
 			
@@ -96,11 +96,11 @@ public class PrintController {
 				"FinanceAmt", "FinanceFC", "LackAmtPayDate",
 				"LackAmtFinalPayDate", "ReceiverName", "ReceiverID",   
 				"ReceiverTel", "Insurer","authoriate" };
-		String[] mapValue = new String[] { "湖南三一工程机械有限公司", "湖南三一工程机械有限公司",
+		String[] mapValue = new String[] { "bboss", "bboss",
 				"六桥泵车", "SY5419THB 52E(6)", "2", "风冷", "V09660", "300.00",
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
-				"2012年8月31日", "卿琳", "430111199910102121", "13800138200", "卿琳","bboss" };
+				"2012年8月31日", "bboss", "430111199910102121", "13800138200", "bboss","bboss" };
 		for(int i = 0; i < bookMarks.length; i ++)
 		{
 			
@@ -131,11 +131,11 @@ public class PrintController {
 				"FinanceAmt", "FinanceFC", "LackAmtPayDate",
 				"LackAmtFinalPayDate", "ReceiverName", "ReceiverID",   
 				"ReceiverTel", "Insurer","authoriate" };
-		String[] mapValue = new String[] { "湖南三一工程机械有限公司", "湖南三一工程机械有限公司",
+		String[] mapValue = new String[] { "bboss", "bboss",
 				"六桥泵车", "SY5419THB 52E(6)", "2", "风冷sdfsdf", "V09660ffff", "300.00",
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
-				"2012年8月31日", "卿琳", "430111199910102121", "13800138200", "卿琳","bboss" };
+				"2012年8月31日", "bboss", "430111199910102121", "13800138200", "bboss","bboss" };
 		for(int i = 0; i < bookMarks.length; i ++)
 		{
 			
@@ -167,11 +167,11 @@ public class PrintController {
 				"FinanceAmt", "FinanceFC", "LackAmtPayDate",
 				"LackAmtFinalPayDate", "ReceiverName", "ReceiverID",   
 				"ReceiverTel", "Insurer","authoriate" };
-		String[] mapValue = new String[] { "湖南三一工程机械有限公司", "湖南三一工程机械有限公司",
+		String[] mapValue = new String[] { "bboss", "bboss",
 				"六桥泵车", "SY5419THB 52E(6)", "2", "风冷sdfsdf", "V09660ffff", "300.00",
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
-				"2012年8月31日", "卿琳", "430111199910102121", "13800138200", "卿琳","bboss" };
+				"2012年8月31日", "bboss", "430111199910102121", "13800138200", "bboss","bboss" };
 		for(int i = 0; i < bookMarks.length; i ++)
 		{
 			
@@ -203,11 +203,11 @@ public class PrintController {
 				"FinanceAmt", "FinanceFC", "LackAmtPayDate",
 				"LackAmtFinalPayDate", "ReceiverName", "ReceiverID",   
 				"ReceiverTel", "Insurer","authoriate" };
-		String[] mapValue = new String[] { "湖南三一工程机械有限公司", "湖南三一工程机械有限公司",
+		String[] mapValue = new String[] { "bboss", "bboss",
 				"六桥泵车", "SY5419THB 52E(6)", "2", "风冷sdfsdf", "V09660ffff", "300.00",
 				"600.00", "陆佰万元整", "7", "100", "2012年8月31日", "60", "5", "3",
 				"10", "6", "10", "5", "10", "21", "540", "10", "2012年8月31日",
-				"2012年8月31日", "卿琳", "430111199910102121", "13800138200", "卿琳","bboss" };
+				"2012年8月31日", "bboss", "430111199910102121", "13800138200", "bboss","bboss" };
 		for(int i = 0; i < bookMarks.length; i ++)
 		{
 			
