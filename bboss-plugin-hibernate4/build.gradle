@@ -59,7 +59,7 @@ dependencies {
     )
 
     testImplementation (
-             [group: 'mysql', name: 'mysql-connector-java', version: "8.0.28", transitive: false],
+             [group: 'mysql', name: 'mysql-connector-java', version: "8.0.33", transitive: false],
             //fileTree(dir: 'lib-compile', include: '**/*.jar')
     )
 }
