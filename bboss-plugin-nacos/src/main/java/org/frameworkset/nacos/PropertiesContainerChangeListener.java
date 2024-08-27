@@ -1,4 +1,4 @@
-package org.frameworkset.apollo;
+package org.frameworkset.nacos;
 /**
  * Copyright 2020 bboss
  * <p>
@@ -15,17 +15,27 @@ package org.frameworkset.apollo;
  * limitations under the License.
  */
 
-import com.ctrip.framework.apollo.ConfigChangeListener;
-import org.frameworkset.config.BasePropertiesChangeListener;
+import org.frameworkset.config.ResetTag;
 
 /**
  * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @date 2020/8/1 9:48
+ * @date 2020/8/1 9:37
  * @author biaoping.yin
  * @version 1.0
  */
-public abstract class PropertiesChangeListener extends BasePropertiesChangeListener implements ConfigChangeListener {
-     
+public class PropertiesContainerChangeListener extends PropertiesChangeListener {
+	@Override
+    public void receiveConfigInfo(String configInfo) {
+		if(propertiesContainer != null){
+			try {
+				ResetTag.setLocal();
+				propertiesContainer.reset();
+			}
+			finally {
+				ResetTag.clean();
+			}
+		}
+	}
 }

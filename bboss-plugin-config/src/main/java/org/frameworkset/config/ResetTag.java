@@ -1,4 +1,4 @@
-package org.frameworkset.apollo;
+package org.frameworkset.config;
 /**
  * Copyright 2020 bboss
  * <p>

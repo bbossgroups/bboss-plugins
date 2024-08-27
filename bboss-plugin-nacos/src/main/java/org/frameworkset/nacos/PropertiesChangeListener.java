@@ -1,4 +1,4 @@
-package org.frameworkset.apollo;
+package org.frameworkset.nacos;
 /**
  * Copyright 2020 bboss
  * <p>
@@ -15,8 +15,10 @@ package org.frameworkset.apollo;
  * limitations under the License.
  */
 
-import com.ctrip.framework.apollo.ConfigChangeListener;
+import com.alibaba.nacos.api.config.listener.Listener;
 import org.frameworkset.config.BasePropertiesChangeListener;
+
+import java.util.concurrent.Executor;
 
 /**
  * <p>Description: </p>
@@ -26,6 +28,22 @@ import org.frameworkset.config.BasePropertiesChangeListener;
  * @author biaoping.yin
  * @version 1.0
  */
-public abstract class PropertiesChangeListener extends BasePropertiesChangeListener implements ConfigChangeListener {
-     
+public abstract class PropertiesChangeListener extends BasePropertiesChangeListener implements Listener {
+    protected NacosPropertiesFilePlugin nacosPropertiesFilePlugin;
+    /**
+     * Get executor for execute this receive.
+     *
+     * @return Executor
+     */
+    public Executor getExecutor(){
+        return null;
+    }
+
+    public NacosPropertiesFilePlugin getNacosPropertiesFilePlugin() {
+        return nacosPropertiesFilePlugin;
+    }
+
+    public void setNacosPropertiesFilePlugin(NacosPropertiesFilePlugin nacosPropertiesFilePlugin) {
+        this.nacosPropertiesFilePlugin = nacosPropertiesFilePlugin;
+    }
 }

@@ -16,6 +16,7 @@ package org.frameworkset.apollo;
  */
 
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
+import org.frameworkset.config.ResetTag;
 
 /**
  * <p>Description: </p>

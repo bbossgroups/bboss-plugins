@@ -15,17 +15,34 @@ package org.frameworkset.apollo;
  * limitations under the License.
  */
 
-import com.ctrip.framework.apollo.ConfigChangeListener;
-import org.frameworkset.config.BasePropertiesChangeListener;
+import org.frameworkset.nosql.redis.RedisTool;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Description: </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
- * @date 2020/8/1 9:48
+ * @Date 2020/8/1 10:38
  * @author biaoping.yin
  * @version 1.0
  */
-public abstract class PropertiesChangeListener extends BasePropertiesChangeListener implements ConfigChangeListener {
-     
+public class NacosIOCTest {
+	private Logger logger = LoggerFactory.getLogger(NacosIOCTest.class);
+	@Test
+	public void testRedis(){
+		RedisTool.getInstance().set("apolloTest","good");
+		while(true){
+			try {
+				synchronized (this) {
+					Thread.currentThread().wait(1000l);
+				}
+				logger.info("apolloTest:"+RedisTool.getInstance().get("apolloTest"));
+			}
+			catch (Exception e){
+
+			}
+		}
+	}
 }

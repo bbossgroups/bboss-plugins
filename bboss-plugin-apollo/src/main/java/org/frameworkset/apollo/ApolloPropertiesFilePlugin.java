@@ -20,6 +20,7 @@ import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigFile;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
+import org.frameworkset.config.ResetTag;
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.assemble.GetProperties;
 import org.frameworkset.spi.assemble.PropertiesContainer;
@@ -119,7 +120,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 
 		String[] ns = parserNamespaces(namespace);
 		for(String n:ns){
-			configProperties( applicationContext, extendsAttributes,namespace,
+			configProperties( applicationContext, extendsAttributes,n,
 					configFileFormat, datas);
 		}
 		namespaces = ns;

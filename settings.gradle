@@ -9,4 +9,7 @@ include 'bboss-plugin-kafka1x'
 include 'bboss-plugin-activemq'
 include 'bboss-plugin-log4j'
 include 'bboss-plugin-spring'
+include 'bboss-plugin-config'
 include 'bboss-plugin-apollo'
+include 'bboss-plugin-nacos'
+
