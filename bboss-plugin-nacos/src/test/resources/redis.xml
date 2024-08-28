@@ -3,7 +3,8 @@
             serverAddr="localhost:8848" 
             dataId="redis" 
             group="DEFAULT_GROUP" 
-            timeOut="5000" 
+            timeOut="5000"
+            remote-first="false"
             changeReload="false"/>
     <property name="default" class="org.frameworkset.nosql.redis.RedisDB">
         <property name="servers">

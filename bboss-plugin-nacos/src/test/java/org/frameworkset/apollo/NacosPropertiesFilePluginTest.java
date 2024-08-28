@@ -21,6 +21,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>Description: </p>
  * <p></p>
@@ -43,7 +46,14 @@ public class NacosPropertiesFilePluginTest {
          *             timeOut="5000" 
          *             changeReload="false"
          */
-		propertiesContainer.addConfigPropertiesFromNacos("test","localhost:8848","dbinfo","DEFAULT_GROUP" ,5000L,true);
+        Map<String,String> config = new HashMap<>();
+        config.put("remote-first","false");
+
+        config.put("auto-refresh","true");
+        config.put("max-retry","10");
+        config.put("username","nacos");
+        config.put("password","nacos");
+		propertiesContainer.addConfigPropertiesFromNacos("test","localhost:8848","dbinfo","DEFAULT_GROUP" ,5000L,"org.frameworkset.apollo.DemoTestListener");
 		propertiesContainer.afterLoaded(propertiesContainer);
 	}
 	@Test
@@ -52,9 +62,9 @@ public class NacosPropertiesFilePluginTest {
 		dbinfo("ecop.");
 		while(true){
 			try {
-				synchronized (this) {
-					Thread.currentThread().wait(1000l);
-				}
+//				synchronized (this) {
+					Thread.sleep(1000l);
+//				}
 			}
 			catch (Exception e){
 

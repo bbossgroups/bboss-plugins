@@ -33,10 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>Description: </p>
@@ -58,9 +55,10 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 	private Listener configChangeListener;
     private ConfigService configService = null;
 	private boolean changeReload;
+    private Map<String,String> extendsAttributes;
 	@Override
 	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
-		return extendsAttributes.get("nacosNamespace");
+		return extendsAttributes.get(PropertiesContainer.nacosNamespaceName);
 	}
 
  
@@ -80,35 +78,130 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
             }
         }
     }
+
+    /**
+     * public static final String IS_USE_CLOUD_NAMESPACE_PARSING = "isUseCloudNamespaceParsing";
+     *
+     *     public static final String IS_USE_ENDPOINT_PARSING_RULE = "isUseEndpointParsingRule";
+     *
+     *     public static final String ENDPOINT = "endpoint";
+     *
+     *     public static final String ENDPOINT_QUERY_PARAMS = "endpointQueryParams";
+     *
+     *     public static final String ENDPOINT_PORT = "endpointPort";
+     *
+     *     public static final String ENDPOINT_CONTEXT_PATH = "endpointContextPath";
+     *
+     *     public static final String ENDPOINT_CLUSTER_NAME = "endpointClusterName";
+     *
+     *     public static final String SERVER_NAME = "serverName";
+     *
+     *     public static final String NAMESPACE = "namespace";
+     *
+     *     public static final String USERNAME = "username";
+     *
+     *     public static final String PASSWORD = "password";
+     *
+     *     public static final String ACCESS_KEY = "accessKey";
+     *
+     *     public static final String SECRET_KEY = "secretKey";
+     *
+     *     public static final String RAM_ROLE_NAME = "ramRoleName";
+     *
+     *     public static final String SERVER_ADDR = "serverAddr";
+     *
+     *     public static final String CONTEXT_PATH = "contextPath";
+     *
+     *     public static final String CLUSTER_NAME = "clusterName";
+     *
+     *     public static final String ENCODE = "encode";
+     *
+     *     public static final String CONFIG_LONG_POLL_TIMEOUT = "configLongPollTimeout";
+     *
+     *     public static final String CONFIG_RETRY_TIME = "configRetryTime";
+     *
+     *     public static final String CLIENT_WORKER_MAX_THREAD_COUNT = "clientWorkerMaxThreadCount";
+     *
+     *     public static final String CLIENT_WORKER_THREAD_COUNT = "clientWorkerThreadCount";
+     *
+     *     public static final String MAX_RETRY = "maxRetry";
+     *
+     *     public static final String ENABLE_REMOTE_SYNC_CONFIG = "enableRemoteSyncConfig";
+     *
+     *     public static final String NAMING_LOAD_CACHE_AT_START = "namingLoadCacheAtStart";
+     *
+     *     public static final String NAMING_CACHE_REGISTRY_DIR = "namingCacheRegistryDir";
+     *
+     *     public static final String NAMING_CLIENT_BEAT_THREAD_COUNT = "namingClientBeatThreadCount";
+     *
+     *     public static final String NAMING_POLLING_MAX_THREAD_COUNT = "namingPollingMaxThreadCount";
+     *
+     *     public static final String NAMING_POLLING_THREAD_COUNT = "namingPollingThreadCount";
+     *
+     *     public static final String NAMING_REQUEST_DOMAIN_RETRY_COUNT = "namingRequestDomainMaxRetryCount";
+     *
+     *     public static final String NAMING_PUSH_EMPTY_PROTECTION = "namingPushEmptyProtection";
+     *
+     *     public static final String NAMING_ASYNC_QUERY_SUBSCRIBE_SERVICE = "namingAsyncQuerySubscribeService";
+     *
+     *     public static final String REDO_DELAY_TIME = "redoDelayTime";
+     *
+     *     public static final String REDO_DELAY_THREAD_COUNT = "redoDelayThreadCount";
+     *
+     *     public static final String SIGNATURE_REGION_ID = "signatureRegionId";
+     *
+     *     public static final String LOG_ALL_PROPERTIES = "logAllProperties";
+     * @param ns
+     * @param serverAddr
+     * @param extendsAttributes
+     * @return
+     */
+    private Properties buildProperties(String ns,String serverAddr,Map<String,String> extendsAttributes){
+        Properties properties = new Properties();
+        properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
+        properties.put(PropertyKeyConst.NAMESPACE, ns);
+        Map<String,String> configs = new HashMap<String,String>();
+        configs.putAll(extendsAttributes);
+        configs.remove(PropertiesContainer.nacosNamespaceName);
+        configs.remove(PropertyKeyConst.SERVER_ADDR);
+        configs.remove(PropertyKeyConst.NAMESPACE);
+
+        configs.remove("dataId");
+
+        configs.remove("group");
+
+        configs.remove("timeOut");
+        configs.remove("changeReload");
+        configs.remove("configChangeListener");
+        configs.remove("configFileFormat");
+        properties.putAll(configs);
+        return properties;
+    }
 	private void configProperties(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes,
                                   String ns,String serverAddr,String dataId,String group,long timeOut,
 								  Map datas ){
         StringReader reader = null;
         try {
-            Properties properties = new Properties();
-            properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
-            properties.put(PropertyKeyConst.NAMESPACE, ns);
-            ConfigService configService = NacosFactory.createConfigService(properties);
-            this.configService = configService;
-            String configInfo = configService.getConfig(dataId, group, timeOut);
-//		if(!ResetTag.isFromReset()) {//如果是重置热加载，
-//			if (configChangeListener != null) {
-//				config.addChangeListener(configChangeListener);
-//			} else if (changeReload) {
-//				ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
-//				applicationContenxtPropertiesListener.setGetProperties(applicationContext);
-//				config.addChangeListener(applicationContenxtPropertiesListener);
-//			}
-//		}
-            Properties properties1 = getProperties(configInfo) ;
-            if (properties1.size() == 0)
-                return;
-            datas.putAll(properties1);
+            if(configService == null) {
+                Properties properties = buildProperties(  ns,  serverAddr,  extendsAttributes);
+//                properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
+//                properties.put(PropertyKeyConst.NAMESPACE, ns);
+                ConfigService configService = NacosFactory.createConfigService(properties);
+                this.configService = configService;
+            }
+            String[] dataIds = dataId.split(",");
+            for(String dataId_:dataIds) {
+                String configInfo = configService.getConfig(dataId_, group, timeOut);
+
+                Properties properties1 = getProperties(configInfo);
+                if (properties1.size() == 0)
+                    continue;
+                datas.putAll(properties1);
+            }
             
         }
         catch (Exception e){
-            throw new AssembleException("Nacos Properties load failed:serverAddr="+serverAddr
-                    +",NAMESPACE="+ns+",dataId="+dataId+",group="+group+",timeOut="+timeOut,e);
+            throw new AssembleException("Nacos Properties load failed:"+SimpleStringUtil.object2json(extendsAttributes),e);
         }
         finally {
             if(reader != null) {
@@ -119,11 +212,12 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 	}
 	@Override
 	public Map getConfigProperties(BaseApplicationContext applicationContext, Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
-		String namespace = extendsAttributes.get("nacosNamespace");
+		String namespace = extendsAttributes.get(PropertiesContainer.nacosNamespaceName);
 		if(namespace == null){
 			throw new IllegalArgumentException("must set nacosNamespace for config element. ");
 
 		}
+        this.extendsAttributes = extendsAttributes;
         serverAddr = extendsAttributes.get("serverAddr");
         dataId = extendsAttributes.get("dataId");
         group = extendsAttributes.get("group");
@@ -140,7 +234,7 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 		String _configFileFormat = extendsAttributes.get("configFileFormat");
 		 
 		Listener configChangeListener = null;
-		if(_configChangeListener != null && !_configChangeListener.equals("")){
+		if(this.configChangeListener == null && _configChangeListener != null && !_configChangeListener.equals("")){
 			try {
 				configChangeListener = (Listener) Class.forName(_configChangeListener).newInstance();
 				if(configChangeListener instanceof PropertiesChangeListener){

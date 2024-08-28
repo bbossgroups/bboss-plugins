@@ -49,7 +49,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	private boolean changeReload;
 	@Override
 	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
-		return extendsAttributes.get("apolloNamespace");
+		return extendsAttributes.get(PropertiesContainer.apolloNamespaceName);
 	}
 
 	private String[] parserNamespaces(String namespace){
@@ -85,7 +85,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	}
 	@Override
 	public Map getConfigProperties(BaseApplicationContext applicationContext, Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
-		String namespace = extendsAttributes.get("apolloNamespace");
+		String namespace = extendsAttributes.get(PropertiesContainer.apolloNamespaceName);
 		if(namespace == null){
 			throw new IllegalArgumentException("must set apolloNamespace for config element. ");
 
@@ -102,7 +102,7 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 			configFileFormat = ConfigFileFormat.fromString(_configFileFormat);
 		}
 		ConfigChangeListener configChangeListener = null;
-		if(_configChangeListener != null && !_configChangeListener.equals("")){
+		if(this.configChangeListener != null && _configChangeListener != null && !_configChangeListener.equals("")){
 			try {
 				configChangeListener = (ConfigChangeListener) Class.forName(_configChangeListener).newInstance();
 				if(configChangeListener instanceof PropertiesChangeListener){
