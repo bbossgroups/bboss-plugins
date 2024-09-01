@@ -53,7 +53,7 @@ public class NacosPropertiesFilePluginTest {
         config.put("max-retry","10");
         config.put("username","nacos");
         config.put("password","nacos");
-		propertiesContainer.addConfigPropertiesFromNacos("test","localhost:8848","dbinfo","DEFAULT_GROUP" ,5000L,"org.frameworkset.apollo.DemoTestListener");
+		propertiesContainer.addConfigPropertiesFromNacos("test","localhost:8848","dbinfo","DEFAULT_GROUP" ,5000L,"org.frameworkset.apollo.DemoTestListener",config);
 		propertiesContainer.afterLoaded(propertiesContainer);
 	}
 	@Test
