@@ -144,21 +144,22 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	public void afterLoaded(GetProperties applicationContext, PropertiesContainer propertiesContainer) {
 		if(!ResetTag.isFromReset()) {//如果是重置热加载，不需重新添加监听器
 			if(namespaces != null ) {
-				if(configChangeListener instanceof PropertiesChangeListener){
-					((PropertiesChangeListener)configChangeListener).completeLoaded();
-				}
-				for (String ns : namespaces) {
-					Config config = ConfigService.getConfig(ns);
-					if(config == null)
-						continue;
-					if (configChangeListener != null) {
-						config.addChangeListener(configChangeListener);
-					} else if (changeReload) {
-						ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
-						applicationContenxtPropertiesListener.setGetProperties(applicationContext);
-						config.addChangeListener(applicationContenxtPropertiesListener);
-					}
-				}
+                if(configChangeListener == null && changeReload){
+                    ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
+                    applicationContenxtPropertiesListener.setGetProperties(applicationContext);
+                    configChangeListener = applicationContenxtPropertiesListener;
+                }
+                if(configChangeListener != null) {
+                    if (configChangeListener instanceof PropertiesChangeListener) {
+                        ((PropertiesChangeListener) configChangeListener).completeLoaded();
+                    }
+                    for (String ns : namespaces) {
+                        Config config = ConfigService.getConfig(ns);
+                        if (config == null)
+                            continue;
+                        config.addChangeListener(configChangeListener);
+                    }
+                }
 			}
 		}
 	}

@@ -50,6 +50,7 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 	private String namespace;
     private String serverAddr;
     private String dataId;
+    private String dataIds[];
     private String group;
     private long timeOut;
 	private Listener configChangeListener;
@@ -182,14 +183,29 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 								  Map datas ){
         StringReader reader = null;
         try {
+            if(SimpleStringUtil.isEmpty(ns)){
+                throw new AssembleException("Nacos Properties load failed:namespace is null or empty,extendsAttributes is "+SimpleStringUtil.object2json(extendsAttributes));
+            }
+            if(SimpleStringUtil.isEmpty(serverAddr)){
+                throw new AssembleException("Nacos Properties load failed:serverAddr is null or empty,extendsAttributes is "+SimpleStringUtil.object2json(extendsAttributes));
+            }
+            if(SimpleStringUtil.isEmpty(dataId)){
+                throw new AssembleException("Nacos Properties load failed:dataId is null or empty,extendsAttributes is "+SimpleStringUtil.object2json(extendsAttributes));
+            }
+            if(SimpleStringUtil.isEmpty(group)){
+                throw new AssembleException("Nacos Properties load failed:group is null or empty,extendsAttributes is "+SimpleStringUtil.object2json(extendsAttributes));
+            }
+            String[] dataIds = dataId.split(",");
+            this.dataIds = dataIds;
             if(configService == null) {
                 Properties properties = buildProperties(  ns,  serverAddr,  extendsAttributes);
 //                properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
 //                properties.put(PropertyKeyConst.NAMESPACE, ns);
                 ConfigService configService = NacosFactory.createConfigService(properties);
+              
                 this.configService = configService;
             }
-            String[] dataIds = dataId.split(",");
+            
             for(String dataId_:dataIds) {
                 String configInfo = configService.getConfig(dataId_, group, timeOut);
 
@@ -241,6 +257,7 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
                     PropertiesChangeListener propertiesChangeListener = (PropertiesChangeListener)configChangeListener;
                     propertiesChangeListener.setPropertiesContainer(propertiesContainer);
                     propertiesChangeListener.setApplicationContext(applicationContext);
+                    propertiesChangeListener.setNacosPropertiesFilePlugin(this);
 				}
 				this.configChangeListener = configChangeListener;
 			}
@@ -275,29 +292,27 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 	 */
 	public void afterLoaded(GetProperties applicationContext, PropertiesContainer propertiesContainer) {
 		if(!ResetTag.isFromReset()) {//如果是重置热加载，不需重新添加监听器
-			if(namespace != null ) {
-				if(configChangeListener instanceof PropertiesChangeListener){
-					((PropertiesChangeListener)configChangeListener).completeLoaded();
-				}
-				
-				 
-                if (configChangeListener != null) {
-                    try {
-                        configService.addListener(dataId,group,configChangeListener);
-                    } catch (NacosException e) {
-                        throw new AssembleException(e);
-                    }
-                } else if (changeReload) {
-                    ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
-                    applicationContenxtPropertiesListener.setGetProperties(applicationContext);
-                    try {
-                        configService.addListener(dataId,group,configChangeListener);
-                    } catch (NacosException e) {
-                        throw new AssembleException(e);
-                    }
+			if(configChangeListener == null && changeReload) {
+                ApplicationContenxtPropertiesListener applicationContenxtPropertiesListener = new ApplicationContenxtPropertiesListener();
+                applicationContenxtPropertiesListener.setGetProperties(applicationContext);
+                applicationContenxtPropertiesListener.setNacosPropertiesFilePlugin(this);
+                configChangeListener = applicationContenxtPropertiesListener;
+			}           
+
+
+            if (configChangeListener != null) {
+                if(configChangeListener instanceof PropertiesChangeListener){
+                    ((PropertiesChangeListener)configChangeListener).completeLoaded();
                 }
-				
-			}
+                try {
+                    for (String dataId_ : dataIds) {
+                        configService.addListener(dataId_, group, configChangeListener);
+                    }
+//                        configService.addListener(dataId,group,configChangeListener);
+                } catch (NacosException e) {
+                    throw new AssembleException(e);
+                }
+            }
 		}
 	}
 
