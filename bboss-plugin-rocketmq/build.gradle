@@ -1,0 +1,44 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDir 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+           
+        }
+        resources {
+			srcDir 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+}
+
+dependencies {
+    api 'org.apache.rocketmq:rocketmq-client:5.3.1'
+    api 'org.apache.rocketmq:rocketmq-acl:5.3.1'
+//    api ([group: 'org.apache.rocketmq', name: 'rocketmq-client-java-noshade', version: "${rocketmq_version}", transitive: true])
+//    {
+//        exclude group: 'log4j', module: 'log4j'
+//        exclude group: 'org.slf4j', module: 'slf4j-api'
+//        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+//        exclude group: 'org.slf4j', module: 'jcl-over-slf4j'       
+//        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+//        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+//        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+//    }
+
+    api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
+
+
+}

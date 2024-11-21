@@ -1,6 +1,6 @@
-package org.frameworkset.apollo;
+package org.frameworkset.nacos;
 /**
- * Copyright 2020 bboss
+ * Copyright 2024 bboss
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,21 @@ package org.frameworkset.apollo;
  * limitations under the License.
  */
 
-import org.frameworkset.nosql.redis.RedisTool;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * <p>Description: </p>
  * <p></p>
- * <p>Copyright (c) 2020</p>
- * @Date 2020/8/1 10:38
+ *
  * @author biaoping.yin
- * @version 1.0
+ * @Date 2024/8/28
  */
-public class NacosIOCTest {
-	private Logger logger = LoggerFactory.getLogger(NacosIOCTest.class);
-	@Test
-	public void testRedis(){
-		RedisTool.getInstance().set("apolloTest","good");
-		while(true){
-			try {
-//				synchronized (this) {
-					Thread.currentThread().sleep(1000l);
-//				}
-				logger.info("apolloTest:"+RedisTool.getInstance().get("apolloTest"));
-			}
-			catch (Exception e){
-                logger.error("",e);
-			}
-		}
-	}
+public class DemoTestListener extends PropertiesChangeListener {
+    private Logger logger = LoggerFactory.getLogger(DemoTestListener.class);
+
+    @Override
+    public void receiveConfigInfo(String configInfo) {
+        logger.info("receiveConfigInfo:{}",configInfo);
+    }
 }

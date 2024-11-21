@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class BaseKafkaConsumerThread extends Thread {
 	private static final Logger logger = LoggerFactory.getLogger(BaseKafkaConsumerThread.class);
@@ -247,12 +248,12 @@ public class BaseKafkaConsumerThread extends Thread {
 				try {
 					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
 
+                    Future future = null;
 					if(records != null && !records.isEmpty()){
-						handleDatas( executor, kafkaConsumer,  records);
-                        if(!autoCommit)
-                            kafkaConsumer.commitSync();
+                        future = handleDatas( executor,   records);                        
 					}
                     if (shutdown) {
+                        future.get();
                         closeConsumer();
                         break;
                     }
@@ -261,24 +262,27 @@ public class BaseKafkaConsumerThread extends Thread {
                     closeConsumer();
                     break;
                 }
-
 				catch (InterruptException e){
 					closeConsumer();
 					break;
 				}
                 catch (Exception wakeupException){
-                    logger.error("",wakeupException);
                     closeConsumer();
-                    break;
+                    throw new KafkaConsumerException(wakeupException);
+                    
                 }
 
 
 
 			}
 		}
+        catch (KafkaConsumerException e){
+            throw e;
+        }
 		catch (Throwable e){
-			if(logger.isErrorEnabled())
-				logger.error("",e);
+//			if(logger.isErrorEnabled())
+//				logger.error("",e);
+            throw new KafkaConsumerException(e);
 		}
 
 	}
@@ -291,19 +295,21 @@ public class BaseKafkaConsumerThread extends Thread {
 					storeService.store(consumerRecord);
 				}
 			}
+            if(!autoCommit)
+                kafkaConsumer.commitSync();
 		}
 		catch (ShutdownException e){
 			throw e;
 		}
 		catch (Exception e) {
-			logger.error("", e);
+			throw new KafkaConsumerException(e);
 		} catch (Throwable e) {
-			logger.error("", e);
+            throw new KafkaConsumerException(e);
 		}
 	}
-	protected void handleDatas(ExecutorService executor, KafkaConsumer kafkaConsumer,  final ConsumerRecords<Object, Object> records){
+	protected Future handleDatas(ExecutorService executor , final ConsumerRecords<Object, Object> records){
 		if(executor != null) {
-			executor.submit(new Runnable() {
+			return executor.submit(new Runnable() {
 				@Override
 				public void run() {
 					doHandle( records);
@@ -313,6 +319,7 @@ public class BaseKafkaConsumerThread extends Thread {
 		}
 		else{
 			doHandle( records);
+            return null;
 		}
 
 	}

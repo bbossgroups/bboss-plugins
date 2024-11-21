@@ -94,7 +94,8 @@ configure(subprojects) { subproject ->
 configure([project(":bboss-plugin-hibernate"),project(":bboss-plugin-hibernate4"),project(":bboss-jodconverter-core"),project(":bboss-plugin-wordpdf"),
 		   project(":bboss-plugin-dubbo"),project(":bboss-plugin-kafka1x"),project(":bboss-plugin-kafka2x"),
            project(":bboss-plugin-config"),project(":bboss-plugin-apollo"),project(":bboss-plugin-nacos")
-		   ,project(":bboss-plugin-activemq"),project(":bboss-plugin-log4j"),project(":bboss-plugin-spring")]) { subproject ->
+		   ,project(":bboss-plugin-activemq"),project(":bboss-plugin-log4j"),
+           project(":bboss-plugin-spring"),project(":bboss-plugin-rocketmq")]) { subproject ->
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {

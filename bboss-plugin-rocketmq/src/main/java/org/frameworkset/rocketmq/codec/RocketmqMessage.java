@@ -1,4 +1,4 @@
-package org.frameworkset.apollo;
+package org.frameworkset.rocketmq.codec;
 /**
  * Copyright 2024 bboss
  * <p>
@@ -15,22 +15,41 @@ package org.frameworkset.apollo;
  * limitations under the License.
  */
 
-import org.frameworkset.nacos.PropertiesChangeListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.rocketmq.common.message.MessageExt;
 
 /**
  * <p>Description: </p>
  * <p></p>
  *
  * @author biaoping.yin
- * @Date 2024/8/28
+ * @Date 2024/11/20
  */
-public class DemoTestListener extends PropertiesChangeListener {
-    private Logger logger = LoggerFactory.getLogger(DemoTestListener.class);
+public class RocketmqMessage<T> {
+    private T data;
+    private MessageExt messageExt;
+    
+    public RocketmqMessage(){
+        
+    }
 
-    @Override
-    public void receiveConfigInfo(String configInfo) {
-        logger.info("receiveConfigInfo:{}",configInfo);
+    public RocketmqMessage(T data, MessageExt messageExt) {
+        this.data = data;
+        this.messageExt = messageExt;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public MessageExt getMessageExt() {
+        return messageExt;
+    }
+
+    public void setMessageExt(MessageExt messageExt) {
+        this.messageExt = messageExt;
     }
 }

@@ -1,4 +1,4 @@
-package org.frameworkset.apollo;
+package org.frameworkset.nacos;
 /**
  * Copyright 2024 bboss
  * <p>

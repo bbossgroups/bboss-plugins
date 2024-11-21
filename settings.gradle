@@ -12,4 +12,5 @@ include 'bboss-plugin-spring'
 include 'bboss-plugin-config'
 include 'bboss-plugin-apollo'
 include 'bboss-plugin-nacos'
+include 'bboss-plugin-rocketmq'
 
