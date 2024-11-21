@@ -25,8 +25,29 @@ sourceSets {
 }
 
 dependencies {
-    api 'org.apache.rocketmq:rocketmq-client:5.3.1'
-    api 'org.apache.rocketmq:rocketmq-acl:5.3.1'
+    api ([group: 'org.apache.rocketmq', name: 'rocketmq-client', version: "${rocketmq_version}", transitive: true]) {
+        exclude group: 'com.alibaba.fastjson2', module: 'fastjson2'
+//        exclude group: 'com.alibaba', module: 'fastjson'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-*'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-otlp'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-logging-otlp'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-logging'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-prometheus'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-sdk'
+        exclude group: 'org.apache.tomcat', module: 'annotations-api'
+    }
+
+    api ([group: 'org.apache.rocketmq', name: 'rocketmq-acl', version: "${rocketmq_version}", transitive: true]) {
+        exclude group: 'com.alibaba.fastjson2', module: 'fastjson2'
+//        exclude group: 'com.alibaba', module: 'fastjson'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-*'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-otlp'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-logging-otlp'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-logging'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-prometheus'
+        exclude group: 'io.opentelemetry', module: 'opentelemetry-sdk'
+        exclude group: 'org.apache.tomcat', module: 'annotations-api'
+    }
 //    api ([group: 'org.apache.rocketmq', name: 'rocketmq-client-java-noshade', version: "${rocketmq_version}", transitive: true])
 //    {
 //        exclude group: 'log4j', module: 'log4j'

@@ -11,6 +11,7 @@ import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.frameworkset.rocketmq.codec.CodecSerial;
+import org.frameworkset.rocketmq.codec.RocketmqCodecUtil;
 import org.frameworkset.rocketmq.codec.StringBytesCodecSerial;
 import org.frameworkset.rocketmq.codec.StringCodecSerial;
 import org.slf4j.Logger;
@@ -110,16 +111,14 @@ public class RocketmqProductor {
                 }
                 DefaultMQProducer producer = new DefaultMQProducer(productGroup,auth);
                 if(SimpleStringUtil.isNotEmpty(valueCodecSerial) ){
-                    Class c = Class.forName(valueCodecSerial);
-                    valueCodecSerial_ = (CodecSerial) c.getDeclaredConstructor().newInstance();
+                    valueCodecSerial_ = RocketmqCodecUtil.convertCodecSerial(valueCodecSerial,false,productorPropes);
                 }
                 else{
                     valueCodecSerial_ = new StringBytesCodecSerial();
                 }
     
                 if(SimpleStringUtil.isNotEmpty(keyCodecSerial) ){
-                    Class c = Class.forName(keyCodecSerial);
-                    keyCodecSerial_ = (CodecSerial) c.getDeclaredConstructor().newInstance();
+                    keyCodecSerial_ = RocketmqCodecUtil.convertCodecSerial(keyCodecSerial,true,productorPropes);
                 }
                 else{
                     keyCodecSerial_ = new StringCodecSerial();

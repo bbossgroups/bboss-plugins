@@ -15,6 +15,8 @@ package org.frameworkset.rocketmq.codec;
  * limitations under the License.
  */
 
+import java.util.Map;
+
 /**
  * <p>Description: 数据序列化</p>
  * <p></p>
@@ -24,5 +26,13 @@ package org.frameworkset.rocketmq.codec;
  */
 public interface CodecSerial<T> {
     T serial(Object data);
+    /**
+     * Configure this class.
+     * @param configs configs in key/value pairs
+     * @param isKey whether is for key or value
+     */
+    default void configure(Map<String, Object> configs, boolean isKey) {
+        // intentionally left blank
+    }
 
 }

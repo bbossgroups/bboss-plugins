@@ -17,6 +17,8 @@ package org.frameworkset.rocketmq.codec;
 
 import org.apache.rocketmq.common.message.MessageExt;
 
+import java.util.Map;
+
 /**
  * <p>Description: 数据反序列化</p>
  * <p></p>
@@ -25,5 +27,14 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @Date 2024/11/20
  */
 public interface CodecDeserial<T> {
+    /**
+     * Configure this class.
+     * @param configs configs in key/value pairs
+     * @param isKey whether is for key or value
+     */
+    default void configure(Map<String, Object> configs, boolean isKey) {
+        // intentionally left blank
+    }
+
     RocketmqMessage<T> deserial(MessageExt data);
 }

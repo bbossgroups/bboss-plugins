@@ -24,12 +24,7 @@ public class BaseRocketMQConsumerThread extends Thread {
     private String secretKey;
     private String securityToken;
     private String signature;
-    /**
-     * proxy地址
-     * 
-     */
-    private String endpoints ;
-
+ 
 
     /**
      * namesrv地址
@@ -57,63 +52,38 @@ public class BaseRocketMQConsumerThread extends Thread {
 
 
     protected String[] topics;
-	protected long pollTimeout;
-	protected String keyDeserializer;
-//	protected String valueDeserializer;
-    protected CodecDeserial codecDeserial;
+
+
+    protected CodecDeserial keyCodecDeserial;
+    protected CodecDeserial valueCodecDeserial;
 	protected Integer maxPollRecords;
     protected Integer consumeMessageBatchMaxSize;
 	protected Integer workThreads =20;
-	protected Integer workQueue = 100;
     /**
      * 队列编号
      */
 	protected int partition;
-	protected String discardRejectMessage;
+ 
 
-    protected int warnMultsRejects = 500;
-
-
-
-	protected long blockedWaitTimeout = -1l;
-
-    public void setCodecDeserial(CodecDeserial codecDeserial) {
-        this.codecDeserial = codecDeserial;
+    public void setValueCodecDeserial(CodecDeserial valueCodecDeserial) {
+        this.valueCodecDeserial = valueCodecDeserial;
     }
 
     public Integer getConsumeMessageBatchMaxSize() {
         return consumeMessageBatchMaxSize;
     }
+    public CodecDeserial getKeyCodecDeserial() {
+        return keyCodecDeserial;
+    }
+
+    public void setKeyCodecDeserial(CodecDeserial keyCodecDeserial) {
+        this.keyCodecDeserial = keyCodecDeserial;
+    }
 
     public void setConsumeMessageBatchMaxSize(Integer consumeMessageBatchMaxSize) {
         this.consumeMessageBatchMaxSize = consumeMessageBatchMaxSize;
     }
-
-    public int getWarnMultsRejects() {
-		return warnMultsRejects;
-	}
-
-	public void setWarnMultsRejects(int warnMultsRejects) {
-		this.warnMultsRejects = warnMultsRejects;
-	}
-
-	public String getDiscardRejectMessage() {
-		return discardRejectMessage;
-	}
-
-	public void setDiscardRejectMessage(String discardRejectMessage) {
-		this.discardRejectMessage = discardRejectMessage;
-	}
-    public long getBlockedWaitTimeout() {
-        return blockedWaitTimeout;
-    }
-
-    public void setBlockedWaitTimeout(long blockedWaitTimeout) {
-        this.blockedWaitTimeout = blockedWaitTimeout;
-    }
-//	String topic,
-//	private HDFSService logstashService;
-//	protected ConsumerConnector consumer;
+   
 	public BaseRocketMQConsumerThread(int partition, BaseRocketMQConsumer consumer, String[] topics, StoreService storeService) {
 		super("RocketmqBatchConsumer-"+topicsStr(topics)+"-p"+partition);
 		workThreadname = this.getName() + "-work";
@@ -147,25 +117,12 @@ public class BaseRocketMQConsumerThread extends Thread {
 		}
 		return builder.toString();
 	}
-	public void setPollTimeout(long pollTimeout) {
-		this.pollTimeout = pollTimeout;
-	}
-
-	public long getPollTimeout() {
-		return pollTimeout;
-	}
-
-	public void setWorkQueue(Integer workQueue) {
-		this.workQueue = workQueue;
-	}
+ 
 
 	public void setWorkThreads(Integer workThreads) {
 		this.workThreads = workThreads;
 	}
 
-	public Integer getWorkQueue() {
-		return workQueue;
-	}
 
 	public Integer getWorkThreads() {
 		return workThreads;
@@ -183,13 +140,7 @@ public class BaseRocketMQConsumerThread extends Thread {
 
  
 
-	public void setKeyDeserializer(String keyDeserializer) {
-		this.keyDeserializer = keyDeserializer;
-	}
-
-	public String getKeyDeserializer() {
-		return keyDeserializer;
-	}
+ 
 	private boolean consumerClosed;
 	private void closeConsumer(){
 		synchronized (this){
@@ -239,7 +190,7 @@ public class BaseRocketMQConsumerThread extends Thread {
 //			executor = ThreadPoolFactory.buildThreadPool(workThreadname,discardRejectMessage == null?"Rocketmq consumer message handle":discardRejectMessage,
 //					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,false);
 //		}
-
+        DefaultMQPushConsumer consumer = null;
         try {
             /*
              * Instantiate with specified consumer group name.
@@ -251,7 +202,7 @@ public class BaseRocketMQConsumerThread extends Thread {
                 sessionCredentials.setSignature(signature);
                 auth = new AclClientRPCHook(sessionCredentials);
             }
-            DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(this.consumerGroup,auth);
+            consumer = new DefaultMQPushConsumer(this.consumerGroup,auth);
             if(enableSsl != null)
                 consumer.setUseTLS(enableSsl);
             consumer.setConsumeThreadMax(workThreads);
@@ -315,8 +266,17 @@ public class BaseRocketMQConsumerThread extends Thread {
             this.defaultMQPushConsumer = consumer;
         }
         catch (Exception e){
+            if(consumer != null){
+                try{
+                    consumer.shutdown();
+                }
+                catch (Exception ex){
+                    
+                }
+            }
             throw new RockemqException(e);
         }
+        
        
 	}
     
@@ -358,7 +318,7 @@ public class BaseRocketMQConsumerThread extends Thread {
 		try {
             List<RocketmqMessage> messages = new ArrayList<>(records.size());
             for(MessageExt messageExt:records){
-                messages.add(codecDeserial.deserial(messageExt));
+                messages.add(valueCodecDeserial.deserial(messageExt));
             }
 			storeService.store(messages);             
 		}
@@ -397,14 +357,7 @@ public class BaseRocketMQConsumerThread extends Thread {
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
-
-    public String getEndpoints() {
-        return endpoints;
-    }
-
-    public void setEndpoints(String endpoints) {
-        this.endpoints = endpoints;
-    }
+ 
 
     public Boolean getEnableSsl() {
         return enableSsl;
@@ -421,14 +374,7 @@ public class BaseRocketMQConsumerThread extends Thread {
     public void setTag(String tag) {
         this.tag = tag;
     }
-//
-//    public Long getAwaitDuration() {
-//        return awaitDuration;
-//    }
-//
-//    public void setAwaitDuration(Long awaitDuration) {
-//        this.awaitDuration = awaitDuration;
-//    }
+ 
     public String getNamesrvAddr() {
         return namesrvAddr;
     }

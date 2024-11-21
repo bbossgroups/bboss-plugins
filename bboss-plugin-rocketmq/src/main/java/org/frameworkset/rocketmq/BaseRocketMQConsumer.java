@@ -1,8 +1,8 @@
 package org.frameworkset.rocketmq;
 
-import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.frameworkset.rocketmq.codec.CodecDeserial;
 import org.frameworkset.rocketmq.codec.BytesCodecDeserial;
+import org.frameworkset.rocketmq.codec.RocketmqCodecUtil;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
 import org.frameworkset.util.shutdown.ShutdownUtil;
 
@@ -62,12 +62,7 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
 	//	private String zookeeperConnect;
 	protected Map<String,Object> consumerPropes;
 	private boolean autoCommit;
-//	private KafkaConsumer consumer;
-    /**
-     * 暂时废弃
-     */
-	protected long pollTimeout = 1000l;
-   
+ 
     private int oldThreads ;
 //	protected ExecutorService executor;
     /**
@@ -91,38 +86,11 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
     protected Integer consumeMessageBatchMaxSize;
 	protected Integer workThreads ;
     private Object lock = new Object();
-    protected long blockedWaitTimeout = -1;
 	
 
-	protected int warnMultsRejects = 500;
 	protected Integer workQueue = 100;
-    protected String discardRejectMessage;
  
-
-	public String getDiscardRejectMessage() {
-		return discardRejectMessage;
-	}
-    public long getBlockedWaitTimeout() {
-        return blockedWaitTimeout;
-    }
-
-    public void setBlockedWaitTimeout(long blockedWaitTimeout) {
-        this.blockedWaitTimeout = blockedWaitTimeout;
-    }
-
-
-
-    public int getWarnMultsRejects() {
-        return warnMultsRejects;
-    }
-
-    public void setWarnMultsRejects(int warnMultsRejects) {
-        this.warnMultsRejects = warnMultsRejects;
-    }
-	public void setDiscardRejectMessage(String discardRejectMessage) {
-		this.discardRejectMessage = discardRejectMessage;
-	}
-
+  
  
     public Integer getConsumeMessageBatchMaxSize() {
         return consumeMessageBatchMaxSize;
@@ -170,10 +138,7 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
 
 
 
-	public long getPollTimeout() {
-		return pollTimeout;
-	}
-
+ 
 	public void setMaxPollRecords(Integer maxPollRecords) {
 		this.maxPollRecords = maxPollRecords;
 	}
@@ -189,9 +154,7 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
 		this.topic = topic;
 	}
 
-	public void setPollTimeout(long pollTimeout) {
-		this.pollTimeout = pollTimeout;
-	}
+ 
 
 
 
@@ -304,7 +267,7 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
         synchronized (lock) {
                 BaseRocketMQConsumerThread runnable = buildRunnable(0, topics);
                 baseRocketMQConsumerThreadList.add(runnable);
-                runnable.start();
+                runnable.run();
 
         }
 
@@ -325,46 +288,26 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
 
 	}
 	
+     
 	protected BaseRocketMQConsumerThread buildRunnable(int partition, String[] topic){
 		BaseRocketMQConsumerThread baseRocketMQConsumerThread = new BaseRocketMQConsumerThread(partition,this,topic,storeService);
-		baseRocketMQConsumerThread.setKeyDeserializer(keyDeserializer);
-        CodecDeserial codecDeserial = null;
-        if(valueDeserializer != null){
-            try {
-                Class clazz = Class.forName(valueDeserializer);
-                codecDeserial = (CodecDeserial)clazz.getDeclaredConstructor().newInstance();
-            } catch (InstantiationException e) {
-                throw new RockemqException(e);
-            } catch (IllegalAccessException e) {
-                throw new RockemqException(e);
-            } catch (InvocationTargetException e) {
-                throw new RockemqException(e);
-            } catch (NoSuchMethodException e) {
-                throw new RockemqException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RockemqException(e);
-            }
+		if(keyDeserializer != null) {
+            baseRocketMQConsumerThread.setKeyCodecDeserial(RocketmqCodecUtil.convertCodecDeserial(keyDeserializer, true,consumerPropes));
         }
-        else{
+        CodecDeserial codecDeserial = RocketmqCodecUtil.convertCodecDeserial(valueDeserializer, true,consumerPropes);
+        if(codecDeserial == null){            
             codecDeserial = new BytesCodecDeserial();
         }
-		baseRocketMQConsumerThread.setCodecDeserial(codecDeserial);
+		baseRocketMQConsumerThread.setValueCodecDeserial(codecDeserial);
 		baseRocketMQConsumerThread.setMaxPollRecords(maxPollRecords);
-//		baseRocketMQConsumerThread.setPollTimeout(pollTimeout);
 		baseRocketMQConsumerThread.setWorkThreads(workThreads);
-		baseRocketMQConsumerThread.setWorkQueue(workQueue);
-//        baseRocketMQConsumerThread.setBlockedWaitTimeout(blockedWaitTimeout);
-//		baseRocketMQConsumerThread.setDiscardRejectMessage(discardRejectMessage);
-//		baseRocketMQConsumerThread.setWarnMultsRejects(warnMultsRejects);
         baseRocketMQConsumerThread.setConsumerGroup(this.consumerGroup);
         baseRocketMQConsumerThread.setAccessKey(accessKey);
         baseRocketMQConsumerThread.setSecretKey(secretKey);
         baseRocketMQConsumerThread.setSignature(signature);
         baseRocketMQConsumerThread.setSecurityToken(securityToken);
-//        baseRocketMQConsumerThread.setAwaitDuration(awaitDuration);
         baseRocketMQConsumerThread.setTag(tag);
         baseRocketMQConsumerThread.setEnableSsl(enableSsl);
-        baseRocketMQConsumerThread.setEndpoints(endpoints);
         baseRocketMQConsumerThread.setNamesrvAddr(this.namesrvAddr);
         baseRocketMQConsumerThread.setConsumeFromWhere(consumeFromWhere);
         baseRocketMQConsumerThread.setConsumeTimestamp(consumeTimestamp);

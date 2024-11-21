@@ -45,6 +45,8 @@ public class JsonMapCodecDeserial implements CodecDeserial<Map>{
         InputStream inputStream = null;
         try {
             inputStream = new ByteArrayInputStream(data.getBody());
+            rocketmqMessage.setData(SimpleStringUtil.json2Object(inputStream,Map.class));
+            return rocketmqMessage;
         }
         finally {
             if(inputStream != null){
@@ -55,7 +57,6 @@ public class JsonMapCodecDeserial implements CodecDeserial<Map>{
                 }
             }
         }
-        rocketmqMessage.setData(SimpleStringUtil.json2Object(inputStream,Map.class));
-        return rocketmqMessage;
+        
     }
 }
