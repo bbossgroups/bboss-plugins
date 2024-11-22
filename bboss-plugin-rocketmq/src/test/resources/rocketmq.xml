@@ -3,62 +3,24 @@
     <property name="consumerPropes">
         <propes>
             <!-- 
-                        <property name="request.timeout.ms" value="30000">
-                            <description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
-                        </property>
+                   消费端扩展配置，暂时不用，可用于序列化和反序列化参数配置
              -->
 
 
-            <property name="session.timeout.ms" value="30000">
-                <description> <![CDATA[ The timeout used to detect client failures when using "
-                                                        + "Kafka's group management facility. The client sends periodic heartbeats to indicate its liveness "
-                                                        + "to the broker. If no heartbeats are received by the broker before the expiration of this session timeout, "
-                                                        + "then the broker will remove this client from the group and initiate a rebalance. Note that the value "
-                                                        + "must be in the allowable range as configured in the broker configuration by <code>group.min.session.timeout.ms</code> "
-                                                        + "and <code>group.max.session.timeout.ms</code>.]]></description>
+            <property name="extendparam" value="30000">
+                <description> <![CDATA[  消费端扩展配置，暂时不用，可用于序列化和反序列化参数配置.]]></description>
             </property>
-            <property name="auto.commit.interval.ms" value="1000">
-                <description> <![CDATA[ The frequency in milliseconds that the consumer offsets are auto-committed to Kafka if <code>enable.auto.commit</code> is set to <code>true</code>.]]></description>
-            </property>
-
-
-
-            <property name="auto.offset.reset" value="latest">
-                <description> <![CDATA[ What to do when there is no initial offset in Kafka or if the current offset does not exist any more on the server (e.g. because that data has been deleted): <ul><li>earliest: automatically reset the offset to the earliest offset<li>latest: automatically reset the offset to the latest offset</li><li>none: throw exception to the consumer if no previous offset is found for the consumer's group</li><li>anything else: throw exception to the consumer.</li></ul>]]></description>
-            </property>
-            <property name="bootstrap.servers" value="10.19.85.65:19092">
-                <description> <![CDATA[ A list of host/port pairs to use for establishing the initial connection to the Kafka cluster. The client will make use of all servers irrespective of which servers are specified here for bootstrapping&mdash;this list only impacts the initial hosts used to discover the full set of servers. This list should be in the form "
-                                                       + "<code>host1:port1,host2:port2,...</code>. Since these servers are just used for the initial connection to "
-                                                       + "discover the full cluster membership (which may change dynamically), this list need not contain the full set of "
-                                                       + "servers (you may want more than one, though, in case a server is down).]]></description>
-            </property>
-            <property name="enable.auto.commit" value="true">
-                <description> <![CDATA[If true the consumer's offset will be periodically committed in the background.]]></description>
-            </property>
-
-            <!--可以在代码级覆盖的配置开始-->
-            <property name="max.poll.records" value="1000">
-                <description> <![CDATA[ 指定kafka节点列表，用于获取metadata(元数据)，不必全部指定]]></description>
-            </property>
-
-            <property name="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer">
-                <description> <![CDATA[ Deserializer class for value that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.]]></description>
-            </property>
-            <property name="key.deserializer" value="org.apache.kafka.common.serialization.LongDeserializer">
-                <description> <![CDATA[ Deserializer class for key that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.]]></description>
-            </property>
-            <property name="group.id" value="test">
-                <description> <![CDATA[ A unique string that identifies the consumer group this consumer belongs to. This property is required if the consumer uses either the group management functionality by using <code>subscribe(topic)</code> or the Kafka-based offset management strategy.]]></description>
-            </property>
-            <!--可以在代码级覆盖的配置完毕-->
+         
 
         </propes>
     </property>
  
-    <!-- 支持单条和批量多条消息消费，batchsize大于0批量消费，否则单条消费
-    threads:启动接收消息线程数，默认4，可以根据kafka topic分区总数来决定
+    <!--  
+    
     workThreads: 每个接收消息线程会派生workThreads个线程来处理接收到消息
-              f:maxPollRecords="1000"  每次从kafka拉取的消息数量
+              f:maxPollRecords="1000"  每次从Rocketmq拉取的消息数量
+              
+   consumeFromWhere：拉取消息的开始位置，取值范围
             
     CONSUME_FROM_LAST_OFFSET,
 
@@ -70,19 +32,24 @@
     CONSUME_FROM_MAX_OFFSET,
     CONSUME_FROM_FIRST_OFFSET,
     CONSUME_FROM_TIMESTAMP,
+    
+    etltopic
+    
+    f:tag="A"
+              f:topic="TestTopic"
     -->
     <property name="rocketmqconsumer"
               class="org.frameworkset.rocketmq.TestRocketmqConsumer2ndStore" 
               f:consumerPropes="attr:consumerPropes"
               f:tag="A"
-              f:topic="TestTopic"
-              f:consumerGroup="testgroup"
+              f:topic="TestTopic,TestTopic1"
+              f:consumerGroup="etlgroup"
               f:accessKey="Rocketmq"
               f:secretKey="12345678"
               f:namesrvAddr="172.24.176.18:9876"
               f:maxPollRecords="100"  
               f:consumeMessageBatchMaxSize="50"
-              f:consumeFromWhere="CONSUME_FROM_FIRST_OFFSET"
+              f:consumeFromWhere="CONSUME_FROM_LAST_OFFSET"
               f:workThreads="10"
               f:keyDeserializer="org.frameworkset.rocketmq.codec.StringCodecDeserial"
               f:valueDeserializer="org.frameworkset.rocketmq.codec.StringCodecDeserial"

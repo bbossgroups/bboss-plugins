@@ -6,17 +6,11 @@ import org.frameworkset.rocketmq.codec.RocketmqCodecUtil;
 import org.frameworkset.spi.support.ApplicationObjectSupport;
 import org.frameworkset.util.shutdown.ShutdownUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
-//import kafka.consumer.ConsumerConfig;
-//
-//import kafka.consumer.KafkaStream;
-//import kafka.javaapi.consumer.ConsumerConnector;
+ 
 
 public class BaseRocketMQConsumer extends ApplicationObjectSupport implements RocketMQListener {
-//	private BaseApplicationContext applicationContext;
-	protected List<BaseRocketMQConsumerThread> baseRocketMQConsumerThreadList = new ArrayList<>();
+	protected BaseRocketMQConsumerThread baseRocketMQConsumerThread;
 	protected String topic;
 
     protected String accessKey;
@@ -26,7 +20,6 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
     protected String endpoints ;
     protected Boolean enableSsl ;
     protected String tag  ;
-//    protected long awaitDuration = 10000l;
     
     private String consumerGroup;
 
@@ -51,6 +44,16 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
     private String consumeFromWhere;
 
 
+    /**
+     *      
+     *
+
+    BROADCASTING 
+     
+
+    CLUSTERING 
+     */
+    private String messageModel ;
     /**
      * 单位到秒
      * 20191024171201
@@ -200,18 +203,11 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
 		}
 
         synchronized (lock) {
-            if (baseRocketMQConsumerThreadList.size() > 0) {
-                for (BaseRocketMQConsumerThread baseRocketMQConsumerThread : baseRocketMQConsumerThreadList) {
-                    baseRocketMQConsumerThread.shutdown();
-                }
+            if (baseRocketMQConsumerThread != null) {
+                baseRocketMQConsumerThread.shutdown();
             }
         }
-//		if(executor != null)
-//			executor.shutdown();
-//		if(consumer != null)
-//			consumer.close();
-//		if(storeService != null)
-//			storeService.closeService();
+ 
 	}
 
 	public boolean isShutdown(){
@@ -223,52 +219,16 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
 //	String topic,String zookeeperConnect, HDFSService logstashService
 	
 	public BaseRocketMQConsumer() {
-//		this.topic = topic;
-//		props = new Properties();    
-//		this.zookeeperConnect = zookeeperConnect;
-//		props.put("zookeeper.connect", this.zookeeperConnect); 
-//		this.logstashService = logstashService;
-//        
-////		props.put("zookeeper.connect", "localhost:2181");    
-////        props.put("zookeeper.connectiontimeout.ms", "30000");    
-//        props.put("group.id","logstash");  
-//        props.put("zookeeper.session.timeout.ms", "1000");
-//        props.put("zookeeper.sync.time.ms", "200");
-//        props.put("auto.commit.enable", true);enable.auto.commit
-//        
-//        props.put("auto.commit.interval.ms", "1000"); 
-//        props.put("auto.offset.reset", "smallest");
-//        props.put("application.id", "logstash_app");
-//        
-//        props.put("value.deserializer", org.apache.kafka.common.serialization.StringDeserializer.class);
-//		props.put("key.deserializer", org.apache.kafka.common.serialization.StringDeserializer.class);
-       
 	}
 	public void init(){
 	}
 	protected StoreService storeService = null;
 
     public void run(boolean addShutdownHook){
-        Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        final String[] topics = topic.split("\\,");
-//	    for(String t:topics)
-//	    {
-//	    	String[] infos = t.split(":");
-//	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
-//	    }
-//		executor = Executors.newFixedThreadPool(a_numThreads,new ThreadFactory(){
-//			private int i = 0;
-//			@Override
-//			public Thread newThread(Runnable r) {
-//
-//				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
-//			}
-//		});
+        final String[] topics = topic.split("\\,"); 
         synchronized (lock) {
-                BaseRocketMQConsumerThread runnable = buildRunnable(0, topics);
-                baseRocketMQConsumerThreadList.add(runnable);
-                runnable.run();
-
+            BaseRocketMQConsumerThread baseRocketMQConsumerThread = buildRunnable(0, topics);
+            baseRocketMQConsumerThread.run();
         }
 
         if(addShutdownHook) {
@@ -311,6 +271,7 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
         baseRocketMQConsumerThread.setNamesrvAddr(this.namesrvAddr);
         baseRocketMQConsumerThread.setConsumeFromWhere(consumeFromWhere);
         baseRocketMQConsumerThread.setConsumeTimestamp(consumeTimestamp);
+        baseRocketMQConsumerThread.setMessageModel(messageModel);
         baseRocketMQConsumerThread.setConsumeMessageBatchMaxSize(consumeMessageBatchMaxSize == null?maxPollRecords:consumeMessageBatchMaxSize);
         
 		return baseRocketMQConsumerThread;
@@ -409,4 +370,20 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
         this.consumeTimestamp = consumeTimestamp;
     }
 
+    public String getMessageModel() {
+        return messageModel;
+    }
+
+    /**
+     *
+     *
+
+     BROADCASTING 
+
+
+     CLUSTERING 
+     */
+    public void setMessageModel(String messageModel) {
+        this.messageModel = messageModel;
+    }
 }

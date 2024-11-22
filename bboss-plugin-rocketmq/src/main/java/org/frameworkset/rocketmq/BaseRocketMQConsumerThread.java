@@ -10,6 +10,7 @@ import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.remoting.protocol.heartbeat.MessageModel;
 import org.frameworkset.rocketmq.codec.CodecDeserial;
 import org.frameworkset.rocketmq.codec.RocketmqMessage;
 import org.slf4j.Logger;
@@ -33,6 +34,10 @@ public class BaseRocketMQConsumerThread extends Thread {
     
     
     private String consumeFromWhere;
+
+
+
+    private String messageModel ;
     /**
      * 单位到秒
      * 20191024171201
@@ -184,12 +189,7 @@ public class BaseRocketMQConsumerThread extends Thread {
 	private synchronized void buildConsumerAndSubscribe()   {
         if(shutdown)
             return;
-//		Map<String,Object> properties = consumer.getConsumerPropes();
-
-//		if(workThreads != null){
-//			executor = ThreadPoolFactory.buildThreadPool(workThreadname,discardRejectMessage == null?"Rocketmq consumer message handle":discardRejectMessage,
-//					workThreads,workQueue,blockedWaitTimeout,warnMultsRejects,true,false);
-//		}
+ 
         DefaultMQPushConsumer consumer = null;
         try {
             /*
@@ -209,7 +209,6 @@ public class BaseRocketMQConsumerThread extends Thread {
             consumer.setConsumeThreadMin(workThreads);
             
             
-//            consumer.setPullInterval(pollTimeout);
             consumer.setPullBatchSize(maxPollRecords);
 
             consumer.setConsumeMessageBatchMaxSize(consumeMessageBatchMaxSize);
@@ -227,20 +226,45 @@ public class BaseRocketMQConsumerThread extends Thread {
              */
             // Uncomment the following line while debugging, namesrvAddr should be set to your local address
             consumer.setNamesrvAddr(this.getNamesrvAddr());
-
+            if(messageModel != null){
+                if(messageModel.equals(MessageModel.CLUSTERING.getModeCN())){
+                    consumer.setMessageModel(MessageModel.CLUSTERING);
+                }
+                else if(messageModel.equals(MessageModel.BROADCASTING.getModeCN())){
+                    consumer.setMessageModel(MessageModel.BROADCASTING);
+                }
+                else{
+                    logger.warn("Unsupport MessageModel:{}",messageModel);
+                }
+            }
             /*
              * Specify where to start in case the specific consumer group is a brand-new one.
              */
             consumer.setConsumeFromWhere(convertConsumeFromWhere(consumer, consumeFromWhere));
-            
+            String _tag = null;
             /*
              * Subscribe one more topic to consume.
              */
             if(SimpleStringUtil.isNotEmpty(tag)) {
-                consumer.subscribe(topics[0], tag);
+                _tag = tag;
+               
             }
             else{
-                consumer.subscribe(topics[0], "*");
+                _tag = "*";
+            }
+            
+            for(String topic:topics){
+                if(logger.isInfoEnabled()) {
+                    logger.info("Subscribe topic:{},tag:{},messageModel:{},consumeFromWhere:{},namesrvAddr:{}," +
+                                    "consumeMessageBatchMaxSize:{},maxPollRecords:{},workThreads:{},enableSsl:{},consumerGroup:{},accessKey:{}, secretKey:{}, securityToken:{},signature:{}" +
+                                    ",keyCodecDeserial:{},valueCodecDeserial:{}",
+                            topic, _tag, messageModel, consumeFromWhere, namesrvAddr, consumeMessageBatchMaxSize, maxPollRecords, workThreads, enableSsl, consumerGroup,
+                            accessKey, "******"/*secretKey*/, securityToken, signature,
+                            keyCodecDeserial != null ? keyCodecDeserial.getClass().getCanonicalName() : "",
+                            valueCodecDeserial != null ? valueCodecDeserial.getClass().getCanonicalName() : ""
+                    );
+                }
+                consumer.subscribe(topic, _tag);
             }
 
             /*
@@ -402,5 +426,13 @@ public class BaseRocketMQConsumerThread extends Thread {
 
     public void setConsumeTimestamp(String consumeTimestamp) {
         this.consumeTimestamp = consumeTimestamp;
+    }
+
+    public String getMessageModel() {
+        return messageModel;
+    }
+
+    public void setMessageModel(String messageModel) {
+        this.messageModel = messageModel;
     }
 }

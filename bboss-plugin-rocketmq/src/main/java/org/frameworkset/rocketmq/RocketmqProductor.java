@@ -139,11 +139,17 @@ public class RocketmqProductor {
                 if(enableSsl != null){
                     producer.setUseTLS(enableSsl);
                 }
-                
+                if(logger.isInfoEnabled()) {
+                    logger.info("producer namesrvAddr:{},enableSsl:{},productGroup:{},accessKey:{}, secretKey:{}, securityToken:{},signature:{}" +
+                                    ",keyCodecSerial:{},valueCodecSerial:{}", namesrvAddr, enableSsl, productGroup,
+                            accessKey, "******"/*secretKey*/, securityToken, signature,
+                            keyCodecSerial_ != null ? keyCodecSerial_.getClass().getCanonicalName() : "",
+                            valueCodecSerial_ != null ? valueCodecSerial_.getClass().getCanonicalName() : "");
+                }
                 /*
                  * Launch the instance.
                  */
-            
+                
                 producer.start();
                 this.producer = producer;
             } catch (Exception e) {

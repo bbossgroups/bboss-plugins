@@ -2,10 +2,7 @@ package org.frameworkset.rocketmq;
 
 import org.apache.rocketmq.client.producer.SendResult;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public class TestRocketmqProductorJson {
+public class TestRocketmqProductor1 {
 
 	public static void main(String[] args) {
         RocketmqUtil rocketmqUtil = new RocketmqUtil("rocketmq-productor.xml");
@@ -13,11 +10,7 @@ public class TestRocketmqProductorJson {
 
         for (int i = 0; i < 10000; i++) {
             try {
-                Map<String,Object> data = new LinkedHashMap<>();
-                data.put("name","石宇奇-"+i);
-                data.put("job","羽毛球职业运动员-"+i);
-                data.put("id",i);
-                SendResult sendResult = rocketmqProductor.send("etltopic","key-"+i,data,"json");
+                SendResult sendResult = rocketmqProductor.sendSynWithTag("TestTopic1","Hello RocketMQ " + i,"A");
                
                 /*
                  * There are different ways to send message, if you don't care about the send result,you can use this way
