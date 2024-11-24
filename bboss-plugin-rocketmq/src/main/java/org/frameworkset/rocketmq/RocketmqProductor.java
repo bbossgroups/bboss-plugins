@@ -99,6 +99,7 @@ public class RocketmqProductor {
 	
 	public void init(){
 		if(sendDatatoRocketmq) {
+            DefaultMQProducer producer = null;
             try {
                 /*
                  * Instantiate with a producer group name.
@@ -109,7 +110,7 @@ public class RocketmqProductor {
                     sessionCredentials.setSignature(signature);
                     auth = new AclClientRPCHook(sessionCredentials);
                 }
-                DefaultMQProducer producer = new DefaultMQProducer(productGroup,auth);
+                producer = new DefaultMQProducer(productGroup,auth);
                 if(SimpleStringUtil.isNotEmpty(valueCodecSerial) ){
                     valueCodecSerial_ = RocketmqCodecUtil.convertCodecSerial(valueCodecSerial,false,productorPropes);
                 }
@@ -153,6 +154,14 @@ public class RocketmqProductor {
                 producer.start();
                 this.producer = producer;
             } catch (Exception e) {
+                if(producer != null){
+                    try {
+                        producer.shutdown();
+                    }
+                    catch (Exception ex){
+                        
+                    }
+                }
                 throw new RockemqException(e);
             }
         }

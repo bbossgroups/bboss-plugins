@@ -58,6 +58,7 @@ public class TestRocketmqProductorJson {
                 e.printStackTrace();
             }
         }
+        //销毁productor
         rocketmqProductor.destroy();
 	}
 

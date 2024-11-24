@@ -40,9 +40,5 @@ public class TestRocketmqConsumer2ndStore extends RocketmqConsumer2ndStore<Strin
             long offset = message.getMessageExt().getQueueOffset();
             System.out.println("key=" + key + ",data=" + data + ",topic=" + topic + ",partition=" + qid + ",offset=" + offset);
         }
-    }
- 
-
-
- 
+    } 
 }

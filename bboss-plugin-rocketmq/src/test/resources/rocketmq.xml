@@ -6,7 +6,6 @@
                    消费端扩展配置，暂时不用，可用于序列化和反序列化参数配置
              -->
 
-
             <property name="extendparam" value="30000">
                 <description> <![CDATA[  消费端扩展配置，暂时不用，可用于序列化和反序列化参数配置.]]></description>
             </property>
