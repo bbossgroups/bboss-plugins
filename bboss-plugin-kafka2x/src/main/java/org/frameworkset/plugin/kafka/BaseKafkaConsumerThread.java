@@ -295,8 +295,7 @@ public class BaseKafkaConsumerThread extends Thread {
 					storeService.store(consumerRecord);
 				}
 			}
-            if(!autoCommit)
-                kafkaConsumer.commitSync();
+            
 		}
 		catch (ShutdownException e){
 			throw e;
@@ -308,19 +307,25 @@ public class BaseKafkaConsumerThread extends Thread {
 		}
 	}
 	protected Future handleDatas(ExecutorService executor , final ConsumerRecords<Object, Object> records){
+        Future future = null;
 		if(executor != null) {
-			return executor.submit(new Runnable() {
+            future = executor.submit(new Runnable() {
 				@Override
 				public void run() {
 					doHandle( records);
 				}
 			});
-
+            
 		}
 		else{
-			doHandle( records);
-            return null;
+			doHandle( records);            
 		}
+        if(!autoCommit) {
+            kafkaConsumer.commitSync();
+            if(logger.isInfoEnabled())
+                logger.info("commit kafkaconsumer offset:{}",this.workThreadname);
+        }
+        return future;
 
 	}
 //	protected abstract void handleData(BaseKafkaConsumer consumer,ConsumerRecord<Object, Object> record)  throws Exception;
