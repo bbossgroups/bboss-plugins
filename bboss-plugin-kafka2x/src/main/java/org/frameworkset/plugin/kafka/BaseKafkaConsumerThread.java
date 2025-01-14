@@ -184,7 +184,7 @@ public class BaseKafkaConsumerThread extends Thread {
                 kafkaConsumer.wakeup();
         }
         catch (Exception e){
-
+            logger.warn("wakeup kafkaConsumer failed:",e);
         }
 
 //            closeConsumer();
@@ -246,8 +246,7 @@ public class BaseKafkaConsumerThread extends Thread {
 					break;
 				}
 				try {
-					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);
-
+					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);                  
                     Future future = null;
 					if(records != null && !records.isEmpty()){
                         future = handleDatas( executor,   records);                        
@@ -259,30 +258,30 @@ public class BaseKafkaConsumerThread extends Thread {
                     }
 				}
                 catch (WakeupException wakeupException){
+                    logger.warn("wakeupException",wakeupException);
                     closeConsumer();
                     break;
                 }
 				catch (InterruptException e){
+                    logger.warn("InterruptException",e);
 					closeConsumer();
 					break;
 				}
                 catch (Exception wakeupException){
+                    logger.warn("Exception",wakeupException);
                     closeConsumer();
-                    throw new KafkaConsumerException(wakeupException);
-                    
+                    break;
+//                    throw new KafkaConsumerException(wakeupException);                    
                 }
-
-
-
 			}
 		}
         catch (KafkaConsumerException e){
-            throw e;
+            logger.warn("KafkaConsumerException",e);
         }
 		catch (Throwable e){
 //			if(logger.isErrorEnabled())
 //				logger.error("",e);
-            throw new KafkaConsumerException(e);
+            logger.warn("Throwable",e);
 		}
 
 	}
@@ -322,8 +321,8 @@ public class BaseKafkaConsumerThread extends Thread {
 		}
         if(!autoCommit) {
             kafkaConsumer.commitSync();
-            if(logger.isInfoEnabled())
-                logger.info("commit kafkaconsumer offset:{}",this.workThreadname);
+            if(logger.isDebugEnabled())
+                logger.debug("Commit kafkaconsumer offset:{}",this.workThreadname);
         }
         return future;
 

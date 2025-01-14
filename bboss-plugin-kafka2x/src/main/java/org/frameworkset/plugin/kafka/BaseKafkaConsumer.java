@@ -216,19 +216,7 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         final String[] topics = topic.split("\\,");
         int a_numThreads = threads;
-//	    for(String t:topics)
-//	    {
-//	    	String[] infos = t.split(":");
-//	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
-//	    }
-//		executor = Executors.newFixedThreadPool(a_numThreads,new ThreadFactory(){
-//			private int i = 0;
-//			@Override
-//			public Thread newThread(Runnable r) {
-//
-//				return new Thread(r,"BaseKafkaConsumer-"+(i ++));
-//			}
-//		});
+
         synchronized (lock) {
             for (int i = 0; i < a_numThreads; i++) {
                 BaseKafkaConsumerThread runnable = buildRunnable(i, topics);
