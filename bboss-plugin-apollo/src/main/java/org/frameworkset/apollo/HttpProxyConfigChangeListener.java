@@ -40,6 +40,8 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 	private static Logger logger = LoggerFactory.getLogger(HttpProxyConfigChangeListener.class);
 	private Set<String> httpPools;
 	String defaultHostsKey = "http.hosts";
+
+    String defaultEsHostsKey = "elasticsearch.rest.hostNames";
 	String defaultRoutingKey = "http.routing";
 	private void handleDiscoverHosts(String _hosts,String poolName,String changeRouting){
 		if(_hosts != null && !_hosts.equals("")){
@@ -59,29 +61,37 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 			}
 		}
 	}
-	private void poolChange(ConfigChangeEvent changeEvent ,String pool){
+	protected void poolChange(ConfigChangeEvent changeEvent ,String pool){
 		Set<String> changedKeys = changeEvent.changedKeys();
 		ConfigChange hostsChange = null;
 		ConfigChange routingChange = null;
 		boolean isdefault = pool == null || pool.equals("default");
 		String hostsKey = null;
+        String esHostsKey = null;
 		String routingKey = null;
 
 		if(!isdefault){
 			hostsKey = pool+".http.hosts";
 			routingKey = pool+".http.routing";
+            esHostsKey = pool+".elasticsearch.rest.hostNames";
 		}
 		else{
 			hostsKey = "default.http.hosts";
 			routingKey = "default.http.routing";
+            esHostsKey = "default.elasticsearch.rest.hostNames";
 		}
 
 		for (String key : changedKeys) {
-			if(key.equals(hostsKey) || (isdefault && key.equals(defaultHostsKey))){//schedule集群
+			if(key.equals(hostsKey) || (isdefault && key.equals(defaultHostsKey))){//集群地址变化
 				hostsChange = changeEvent.getChange(key);
 
 
 			}
+            else if(key.equals(esHostsKey) || (isdefault && key.equals(defaultEsHostsKey))){//集群地址变化
+                hostsChange = changeEvent.getChange(key);
+
+
+            }
 
 			else if(key.equals(routingKey) || (isdefault && key.equals(defaultRoutingKey))){
 				routingChange = changeEvent.getChange(key);

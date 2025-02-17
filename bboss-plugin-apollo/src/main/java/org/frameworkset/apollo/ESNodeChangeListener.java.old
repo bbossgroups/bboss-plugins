@@ -38,23 +38,39 @@ import java.util.TreeSet;
  * @author biaoping.yin
  * @version 1.0
  */
-public class ESNodeChangeListener extends HttpProxyConfigChangeListener {
+public class ESNodeChangeListener extends PropertiesChangeListener {
 	private Set<String> elasticsearchPools;
 	private static Logger logger = LoggerFactory.getLogger(ESNodeChangeListener.class);
-//	private static Method handleDiscoverHosts;
+	private static Method handleDiscoverHosts;
 	private static Method handleShowDsl;
 	static {
 		try {
 			Class clazz = Class.forName("org.frameworkset.elasticsearch.client.HostDiscoverUtil");
-//			handleDiscoverHosts = clazz.getMethod("handleDiscoverHosts", String[].class, String.class);
+			handleDiscoverHosts = clazz.getMethod("handleDiscoverHosts", String[].class, String.class);
 			handleShowDsl = clazz.getMethod("swithShowdsl", boolean.class, String.class);
 		}
 		catch (Exception e){
 
 		}
 	}
-
+	private String defaultHostsKey = "elasticsearch.rest.hostNames";
 	private String defaultShowDslKey = "elasticsearch.showTemplate";
+	private void handleDiscoverHosts(String _hosts,String poolName){
+		if(_hosts != null && !_hosts.equals("")){
+			String[] hosts = _hosts.split(",");
+
+			//将被动获取到的地址清单加入服务地址组poolName中
+			if(handleDiscoverHosts != null) {
+				try {
+					handleDiscoverHosts.invoke(null,hosts,poolName);
+				} catch (IllegalAccessException e) {
+					logger.error("handleDiscoverHosts failed:hosts["+_hosts+"],pool["+poolName+"]",e);
+				} catch (InvocationTargetException e) {
+					logger.error("handleDiscoverHosts failed:hosts["+_hosts+"],pool["+poolName+"]",e.getTargetException());
+				}
+			}
+		}
+	}
 
 	private void handleShowDsl(String showDsl,String poolName){
 		if(showDsl != null && !showDsl.equals("")){
@@ -71,27 +87,48 @@ public class ESNodeChangeListener extends HttpProxyConfigChangeListener {
 			}
 		}
 	}
-    @Override
-	protected void poolChange(ConfigChangeEvent changeEvent ,String pool){
-        super.poolChange(changeEvent,pool);
-        Set<String> changedKeys = changeEvent.changedKeys();
+	private void poolChange(ConfigChangeEvent changeEvent ,String pool){
+		Set<String> changedKeys = changeEvent.changedKeys();
+		ConfigChange hostsChange = null;
 		boolean isdefault = pool == null || pool.equals("default");
+		String hostsKey = null;
 		String showDslKey = null;
 		ConfigChange showDslChange = null;
 
 		if(!isdefault){
+			hostsKey = pool+".elasticsearch.rest.hostNames";
 			showDslKey = pool + ".elasticsearch.showTemplate";
 		}
 		else{
+			hostsKey = "default.elasticsearch.rest.hostNames";
 			showDslKey = "default.elasticsearch.showTemplate";
 		}
 
-		for (String key : changedKeys) {			
+		for (String key : changedKeys) {
+			if(key.equals(hostsKey) || (isdefault && key.equals(defaultHostsKey))){//schedule集群
+				hostsChange = changeEvent.getChange(key);
+
+
+			}
 			if(key.equals(showDslKey) || (isdefault && key.equals(defaultShowDslKey))){//schedule集群
 				showDslChange = changeEvent.getChange(key);
 			}
+
+
+
+
+
 		}
-		 
+		if(hostsChange != null && hostsChange.getChangeType() == PropertyChangeType.MODIFIED){
+			logger.info("Found change - key: {}, oldValue: {}, newValue: {}, changeType: {}",
+					hostsChange.getPropertyName(), hostsChange.getOldValue(),
+					hostsChange.getNewValue(), hostsChange.getChangeType());
+
+			String _hosts = hostsChange.getNewValue();
+			//更新hosts
+			handleDiscoverHosts(_hosts, pool);
+
+		}
 		if(showDslChange != null && showDslChange.getChangeType() == PropertyChangeType.MODIFIED){
 			logger.info("Found change - key: {}, oldValue: {}, newValue: {}, changeType: {}",
 					showDslChange.getPropertyName(), showDslChange.getOldValue(),

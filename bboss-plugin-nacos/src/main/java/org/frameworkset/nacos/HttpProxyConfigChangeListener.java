@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * <p>Description: http proxy apollo 服务自动发现和路由动态切换监听器 </p>
+ * <p>Description: http proxy nacos 服务自动发现和路由动态切换监听器 </p>
  * <p></p>
  * <p>Copyright (c) 2020</p>
  * @date 2020/8/2 20:07
@@ -38,6 +38,7 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 	private Set<String> httpPools;
 	String defaultHostsKey = "http.hosts";
 	String defaultRoutingKey = "http.routing";
+    String defaultEsHostsKey = "elasticsearch.rest.hostNames";
 	private void handleDiscoverHosts(String _hosts,String poolName,String changeRouting){
 		if(_hosts != null && !_hosts.equals("")){
 			String[] hosts = _hosts.split(",");
@@ -72,24 +73,33 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
      * HttpProxyUtil.handleDiscoverHosts("schedule",hosts);
      */
 
-    private void poolChange(Properties properties ,String pool){
+    protected void poolChange(Properties properties ,String pool){
 		boolean isdefault = pool == null || pool.equals("default");
 		String hostsKey = null;
 		String routingKey = null;
-
+        String esHostKey = null;
 		if(!isdefault){
 			hostsKey = pool+".http.hosts";
 			routingKey = pool+".http.routing";
+            esHostKey = pool+".elasticsearch.rest.hostNames";
 		}
 		else{
 			hostsKey = "default.http.hosts";
 			routingKey = "default.http.routing";
+            esHostKey = "default.elasticsearch.rest.hostNames";
 		} 
  
 
         String _hosts = properties.getProperty(hostsKey);
         if(_hosts == null) {
             _hosts = properties.getProperty(defaultHostsKey);
+        }
+        if(_hosts == null){
+            _hosts = properties.getProperty(esHostKey);
+        }
+
+        if(_hosts == null){
+            _hosts = properties.getProperty(defaultEsHostsKey);
         }
         
         String _routing = properties.getProperty(routingKey);

@@ -39,40 +39,23 @@ import java.util.TreeSet;
  * @author biaoping.yin
  * @version 1.0
  */
-public class ESNodeChangeListener extends PropertiesChangeListener {
+public class ESHttpNodeChangeListener extends HttpProxyConfigChangeListener {
 	private Set<String> elasticsearchPools;
-	private static Logger logger = LoggerFactory.getLogger(ESNodeChangeListener.class);
-	private static Method handleDiscoverHosts;
+	private static Logger logger = LoggerFactory.getLogger(ESHttpNodeChangeListener.class);
 	private static Method handleShowDsl;
     
 	static {
 		try {
 			Class clazz = Class.forName("org.frameworkset.elasticsearch.client.HostDiscoverUtil");
-			handleDiscoverHosts = clazz.getMethod("handleDiscoverHosts", String[].class, String.class);
 			handleShowDsl = clazz.getMethod("swithShowdsl", boolean.class, String.class);
 		}
 		catch (Exception e){
 
 		}
 	}
-    private String defaultHostsKey = "elasticsearch.rest.hostNames";
+    
     private String defaultShowDslKey = "elasticsearch.showTemplate";
-	private void handleDiscoverHosts(String _hosts,String poolName){
-		if(_hosts != null && !_hosts.equals("")){
-			String[] hosts = _hosts.split(",");
-
-			//将被动获取到的地址清单加入服务地址组poolName中
-			if(handleDiscoverHosts != null) {
-				try {
-					handleDiscoverHosts.invoke(null,hosts,poolName);
-				} catch (IllegalAccessException e) {
-					logger.error("handleDiscoverHosts failed:hosts["+_hosts+"],pool["+poolName+"]",e);
-				} catch (InvocationTargetException e) {
-					logger.error("handleDiscoverHosts failed:hosts["+_hosts+"],pool["+poolName+"]",e.getTargetException());
-				}
-			}
-		}
-	}
+ 
 
 	private void handleShowDsl(String showDsl,String poolName){
 		if(showDsl != null && !showDsl.equals("")){
@@ -89,27 +72,21 @@ public class ESNodeChangeListener extends PropertiesChangeListener {
 			}
 		}
 	}
-	private void poolChange(Properties properties ,String pool){
+    @Override
+	protected void poolChange(Properties properties ,String pool){
+        super.poolChange(properties,pool);
 		boolean isdefault = pool == null || pool.equals("default");
-		String hostsKey = null;
 		String showDslKey = null;
 
 		if(!isdefault){
-			hostsKey = pool+".elasticsearch.rest.hostNames";
 			showDslKey = pool + ".elasticsearch.showTemplate";
 		}
 		else{
-			hostsKey = "default.elasticsearch.rest.hostNames";
 			showDslKey = "default.elasticsearch.showTemplate";
 		}
  
 
-        String _hosts = properties.getProperty(hostsKey);
-        if(_hosts == null) {
-            _hosts = properties.getProperty(defaultHostsKey);
-        }
-        //更新hosts
-        handleDiscoverHosts(_hosts, pool); 
+         
 
         String _showDsl = properties.getProperty(showDslKey);
         if(_showDsl == null){
