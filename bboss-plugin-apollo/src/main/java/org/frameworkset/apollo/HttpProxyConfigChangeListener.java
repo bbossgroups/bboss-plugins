@@ -82,12 +82,12 @@ public class HttpProxyConfigChangeListener extends PropertiesChangeListener {
 		}
 
 		for (String key : changedKeys) {
-			if(key.equals(hostsKey) || (isdefault && key.equals(defaultHostsKey))){//集群地址变化
+			if(key.equals(hostsKey) || (isdefault && key.equals(defaultHostsKey))){//httpproxy集群地址变化
 				hostsChange = changeEvent.getChange(key);
 
 
 			}
-            else if(key.equals(esHostsKey) || (isdefault && key.equals(defaultEsHostsKey))){//集群地址变化
+            else if(key.equals(esHostsKey) || (isdefault && key.equals(defaultEsHostsKey))){//Elasticsearch集群地址变化
                 hostsChange = changeEvent.getChange(key);
 
 
