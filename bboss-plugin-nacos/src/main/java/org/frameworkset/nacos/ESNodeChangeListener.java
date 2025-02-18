@@ -39,9 +39,9 @@ import java.util.TreeSet;
  * @author biaoping.yin
  * @version 1.0
  */
-public class ESHttpNodeChangeListener extends HttpProxyConfigChangeListener {
+public class ESNodeChangeListener extends HttpProxyConfigChangeListener {
 	private Set<String> elasticsearchPools;
-	private static Logger logger = LoggerFactory.getLogger(ESHttpNodeChangeListener.class);
+	private static Logger logger = LoggerFactory.getLogger(ESNodeChangeListener.class);
 	private static Method handleShowDsl;
     
 	static {
