@@ -11,29 +11,6 @@ gradle clean publishToMavenLocal
 https://esdoc.bbossgroups.com/#/bboss-build
 
 
-# bboss hibernate插件工程
-
-hihernate插件包含以下两个功能：
-
-1.通过bboss初始化hibernate并加载hibernate o/r mapping文件
-
-2.hibernate延迟加载对象序列化插件
-
-# bboss wordpdf插件工程
-
-1.通过gretty gradle插件运行demo工程bboss-plugin-wordpdf-web
-
-2.运行前先执行/bboss-plugins的install任务，编译构建所有插件模块：
-
-cd bboss-plugins
-
-gradle install
-
-构建成功后，先启用gretty插件（注意：第一次构建工程，需要关闭gretty插件，默认关闭）
-
-修改/bboss-plugins/gradle.properties中属性为true，即可启用插件：
-
-enable_gretty=true
 
 然后运行以下指令,启动tomcat和demo应用
 
@@ -69,8 +46,6 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 ```
 
 
-# bboss dubbo插件工程
-提供dubbo服务发布功能和dubbo服务消费者配置功能
 
 # 联系我们
 
@@ -103,3 +78,8 @@ http://localhost/bboss-plugin-wordpdf-web/FlexPaper_2.0.3/index_ooo.html
 The BBoss Framework is released under version 2.0 of the [Apache License][].
 
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
+
+# Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=bbossgroups/bboss-plugins&type=Date)](https://star-history.com/#bbossgroups/bboss-plugins&Date)
+
