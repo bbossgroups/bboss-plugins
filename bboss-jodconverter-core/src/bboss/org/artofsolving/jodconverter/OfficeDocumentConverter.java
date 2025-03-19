@@ -89,8 +89,8 @@ public class OfficeDocumentConverter {
          DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
          WorkBookmarkConvertorTask conversionTask = new WorkBookmarkConvertorTask(wordtemplate, wordfile, bookdatas,outputFormat);
          Map<String,Object> defaultLoadProperties = new HashMap<String,Object>();
-         defaultLoadProperties.put("AsTemplate",new Boolean (true));
-    	 defaultLoadProperties.put("Hidden",new Boolean (true));
+         defaultLoadProperties.put("AsTemplate",true);
+    	 defaultLoadProperties.put("Hidden",true);
          conversionTask.setDefaultLoadProperties(defaultLoadProperties);
 //         conversionTask.setDefaultStroreProperties(defaultLoadProperties);
          conversionTask.setInputFormat(inputFormat);
@@ -102,8 +102,8 @@ public class OfficeDocumentConverter {
 			String[] bookmarks,Object[] bookdatas) throws Exception
 	{
     	 Map<String,Object> defaultLoadProperties = new HashMap<String,Object>();
-    	 defaultLoadProperties.put("AsTemplate",new Boolean (true));
-    	 defaultLoadProperties.put("Hidden",new Boolean (true));
+    	 defaultLoadProperties.put("AsTemplate",true);
+    	 defaultLoadProperties.put("Hidden",true);
     	 String outputExtension = FilenameUtils.getExtension(wordfile);
          DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);
          String inputExtension = FilenameUtils.getExtension(outputExtension);

@@ -10,6 +10,7 @@ import org.frameworkset.util.concurrent.ThreadPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -240,13 +241,14 @@ public class BaseKafkaConsumerThread extends Thread {
 			buildConsumerAndSubscribe();
 //					Map<String, List<PartitionInfo>> listMap = consumer.listTopics();
 
+            Duration duration = Duration.ofMillis(pollTimeout);
 			while (true) {
 				if (shutdown) {
 					closeConsumer();
 					break;
 				}
 				try {
-					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(pollTimeout);                  
+					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(duration);                  
                     Future future = null;
 					if(records != null && !records.isEmpty()){
                         future = handleDatas( executor,   records);                        
