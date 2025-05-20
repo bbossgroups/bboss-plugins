@@ -261,17 +261,34 @@ public class BaseKafkaConsumerThread extends Thread {
 				}
                 catch (WakeupException wakeupException){
                     logger.warn("wakeupException",wakeupException);
+                    //唤醒时，主动关闭消费端
                     closeConsumer();
                     break;
                 }
 				catch (InterruptException e){
                     logger.warn("InterruptException",e);
+                    //中断时，主动关闭消费端
 					closeConsumer();
 					break;
 				}
-                catch (Exception wakeupException){
+                catch (KafkaConsumerException wakeupException){
+                    //出现业务异常，无需关闭消费端
                     logger.warn("Exception",wakeupException);
-                    closeConsumer();
+//                    closeConsumer();
+//                    break;
+//                    throw new KafkaConsumerException(wakeupException);                    
+                }                
+                catch (Exception wakeupException){
+                    //出现其他异常无需关闭消费端
+                    logger.warn("Exception",wakeupException);
+//                    closeConsumer();
+//                    break;
+//                    throw new KafkaConsumerException(wakeupException);                    
+                }
+                catch (Throwable wakeupException){
+                    //出现系统级异常需关闭消费端
+                    logger.warn("Throwable",wakeupException);
+//                    closeConsumer();
                     break;
 //                    throw new KafkaConsumerException(wakeupException);                    
                 }
