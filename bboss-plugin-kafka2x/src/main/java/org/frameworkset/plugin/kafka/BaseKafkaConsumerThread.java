@@ -25,6 +25,7 @@ public class BaseKafkaConsumerThread extends Thread {
 	protected BaseKafkaConsumer consumer;
     protected boolean autoCommit = true;
 	private KafkaConsumer kafkaConsumer;
+    private PollFunction pollFunction;
 	protected  String[] topics;
 	protected long pollTimeout;
 	protected String keyDeserializer;
@@ -233,6 +234,7 @@ public class BaseKafkaConsumerThread extends Thread {
         this.autoCommit = consumer.isAutoCommit();
 		kafkaConsumer = new KafkaConsumer(threadProperties);
 		kafkaConsumer.subscribe(Arrays.asList(topics));
+        pollFunction = PollFunctionFactory.build(kafkaConsumer,pollTimeout);
 	}
 
 	@Override
@@ -241,14 +243,13 @@ public class BaseKafkaConsumerThread extends Thread {
 			buildConsumerAndSubscribe();
 //					Map<String, List<PartitionInfo>> listMap = consumer.listTopics();
 
-            Duration duration = Duration.ofMillis(pollTimeout);
 			while (true) {
 				if (shutdown) {
 					closeConsumer();
 					break;
 				}
 				try {
-					ConsumerRecords<Object, Object> records = kafkaConsumer.poll(duration);                  
+					ConsumerRecords<Object, Object> records = pollFunction.poll();                  
                     Future future = null;
 					if(records != null && !records.isEmpty()){
                         future = handleDatas( executor,   records);                        

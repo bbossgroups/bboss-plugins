@@ -164,7 +164,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_int(int value_int)
     {
-        this.object = new Integer(value_int);
+        this.object = value_int;
         VALUE_int = value_int;
     }
 
@@ -175,7 +175,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_short(short value_short)
     {
-        this.object = new Short(value_short);
+        this.object = value_short;
         VALUE_short = value_short;
     }
 
@@ -186,7 +186,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_long(long value_long)
     {
-        this.object = new Long(value_long);
+        this.object = value_long;
         VALUE_long = value_long;
     }
 
@@ -197,7 +197,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_double(double value_double)
     {
-        this.object = new Double(value_double);
+        this.object = value_double;
         VALUE_double = value_double;
     }
 
@@ -219,7 +219,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_BOOLEAN(boolean value_boolean)
     {
-        this.object = new Boolean(value_boolean);
+        this.object = value_boolean;
         VALUE_BOOLEAN = value_boolean;
     }
 
@@ -259,7 +259,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_byte(byte value_byte)
     {
-        this.object = new Byte(value_byte);
+        this.object = value_byte;
         VALUE_byte = value_byte;
     }
 
@@ -270,7 +270,7 @@ public class HeaderProperty implements java.io.Serializable
 
     public void setVALUE_float(float value_float)
     {
-        this.object = new Float(value_float);
+        this.object = value_float;
         VALUE_float = value_float;
     }
 
