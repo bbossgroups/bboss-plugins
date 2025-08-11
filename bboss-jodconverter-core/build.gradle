@@ -22,7 +22,7 @@ dependencies {
     api(
     				
             [group: 'commons-cli', name: 'commons-cli', version: "1.6.0", transitive: false],
-             [group: 'commons-io', name: 'commons-io', version: "2.15.1", transitive: false],
+             [group: 'commons-io', name: 'commons-io', version: "2.18.0", transitive: false],
              [group: 'org.json', name: 'json', version: "20160212", transitive: false],
           [group: 'org.openoffice', name: 'unoil', version: '4.1.2', transitive: true],
            

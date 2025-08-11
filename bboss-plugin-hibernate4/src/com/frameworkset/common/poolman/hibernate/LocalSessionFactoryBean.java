@@ -42,7 +42,6 @@ import java.util.Properties;
 
 
 /**
- * {@link org.springframework.beans.factory.FactoryBean} that creates a
  * Hibernate {@link org.hibernate.SessionFactory}. This is the usual way to
  * set up a shared Hibernate SessionFactory in a Spring application context;
  * the SessionFactory can then be passed to Hibernate-based DAOs via
@@ -58,8 +57,6 @@ import java.util.Properties;
  *
  * <p>This SessionFactory handling strategy is appropriate for most types of
  * applications, from Hibernate-only single database apps to ones that need
- * distributed transactions. Either {@link HibernateTransactionManager} or
- * {@link org.springframework.transaction.jta.JtaTransactionManager} can be
  * used for transaction demarcation, with the latter only necessary for
  * transactions which span multiple databases.
  *
@@ -71,8 +68,6 @@ import java.util.Properties;
  * synchronization mechanism, either Spring or JTA. Furthermore,
  * <code>getCurrentSession()</code> will also seamlessly work with
  * a request-scoped Session managed by
- * {@link org.springframework.orm.hibernate3.support.OpenSessionInViewFilter} /
- * {@link org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor}.
  *
  * <p><b>Requires Hibernate 3.2 or later; tested with 3.3, 3.5 and 3.6.</b>
  * Note that this factory will use "on_close" as default Hibernate connection
@@ -82,12 +77,7 @@ import java.util.Properties;
  *
  * @author Juergen Hoeller
  * @since 1.2
- * @see HibernateTemplate#setSessionFactory
- * @see HibernateTransactionManager#setSessionFactory
- * @see #setExposeTransactionAwareSessionFactory
- * @see #setJtaTransactionManager
  * @see org.hibernate.SessionFactory#getCurrentSession()
- * @see HibernateTransactionManager
  */
 public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 
@@ -302,9 +292,6 @@ public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 	 * HibernateInterceptor, and HibernateTransactionManager. It's preferable to set
 	 * it on LocalSessionFactoryBean or HibernateTransactionManager to avoid repeated
 	 * configuration and guarantee consistent behavior in transactions.
-	 * @see HibernateTemplate#setEntityInterceptor
-	 * @see HibernateInterceptor#setEntityInterceptor
-	 * @see HibernateTransactionManager#setEntityInterceptor
 	 * @see org.hibernate.cfg.Configuration#setInterceptor
 	 */
 	public void setEntityInterceptor(Interceptor entityInterceptor) {
@@ -370,7 +357,6 @@ public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 	 * and associated listener interfaces.
 	 * @param eventListeners Map with listener type Strings as keys and
 	 * listener objects as values
-	 * @see org.hibernate.cfg.Configuration#setListener(String, Object)
 	 */
 	public void setEventListeners(Map<String, Object> eventListeners) {
 		this.eventListeners = eventListeners;

@@ -251,7 +251,8 @@ public class BaseKafkaConsumerThread extends Thread {
 				try {
 					ConsumerRecords<Object, Object> records = pollFunction.poll();                  
                     Future future = null;
-					if(records != null && !records.isEmpty()){
+                    boolean hasData = records != null && !records.isEmpty();
+					if(hasData){
                         future = handleDatas( executor,   records);                        
 					}
                     if (shutdown) {

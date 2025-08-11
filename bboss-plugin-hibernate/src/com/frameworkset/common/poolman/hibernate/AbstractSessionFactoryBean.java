@@ -28,15 +28,15 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Abstract {@link org.springframework.beans.factory.FactoryBean} that creates
+ * Abstract FactoryBean that creates
  * a Hibernate {@link org.hibernate.SessionFactory} within a Spring application
  * context, providing general infrastructure not related to Hibernate's
  * specific configuration API.
  *
  * <p>This class implements the
- * {@link org.springframework.dao.support.PersistenceExceptionTranslator}
+ * PersistenceExceptionTranslator
  * interface, as autodetected by Spring's
- * {@link org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor},
+ * PersistenceExceptionTranslationPostProcessor,
  * for AOP-based translation of native exceptions to Spring DataAccessExceptions.
  * Hence, the presence of e.g. LocalSessionFactoryBean automatically enables
  * a PersistenceExceptionTranslationPostProcessor to translate Hibernate exceptions.
@@ -46,9 +46,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Juergen Hoeller
  * @since 2.0
- * @see #setExposeTransactionAwareSessionFactory
  * @see org.hibernate.SessionFactory#getCurrentSession()
- * @see org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor
  */
 public abstract class AbstractSessionFactoryBean implements InitializingBean,DisposableBean {
 
@@ -77,10 +75,6 @@ public abstract class AbstractSessionFactoryBean implements InitializingBean,Dis
 	 * <p>As JTA and transactional JNDI DataSources already provide lazy enlistment
 	 * of JDBC Connections, LazyConnectionDataSourceProxy does not add value with
 	 * JTA (i.e. Spring's JtaTransactionManager) as transaction strategy.
-	 * @see #setUseTransactionAwareDataSource
-	 * @see HibernateTransactionManager
-	 * @see org.springframework.transaction.jta.JtaTransactionManager
-	 * @see org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy
 	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
