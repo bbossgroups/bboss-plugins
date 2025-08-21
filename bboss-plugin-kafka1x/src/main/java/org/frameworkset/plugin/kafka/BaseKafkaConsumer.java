@@ -130,7 +130,7 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 	    for(String t:topics)
 	    {
 	    	String[] infos = t.split(":");
-	    	topicCountMap.put(infos[0], new Integer(a_numThreads));
+	    	topicCountMap.put(infos[0], a_numThreads);
 	    }
 		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(consumerConfig);
 	    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
