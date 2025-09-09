@@ -39,4 +39,6 @@ dependencies {
     
      
 }
-webAppDirName = 'WebRoot'  
+ war {
+     webAppDirectory = file('WebRoot')
+ }
