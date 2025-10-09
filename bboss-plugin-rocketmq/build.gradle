@@ -35,6 +35,10 @@ dependencies {
         exclude group: 'io.opentelemetry', module: 'opentelemetry-exporter-prometheus'
         exclude group: 'io.opentelemetry', module: 'opentelemetry-sdk'
         exclude group: 'org.apache.tomcat', module: 'annotations-api'
+        exclude group: 'commons-beanutils', module: 'commons-beanutils'
+        exclude group: 'commons-logging', module: 'commons-logging'
+
+
     }
 
     api ([group: 'org.apache.rocketmq', name: 'rocketmq-acl', version: "${rocketmq_version}", transitive: true]) {

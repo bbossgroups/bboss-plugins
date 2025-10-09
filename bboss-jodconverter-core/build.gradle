@@ -14,15 +14,15 @@ sourceSets {
 }
 dependencies {
     api(
-            [group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4j2_version}", transitive: false],
-            [group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4j2_version}", transitive: false],
-            [group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2_version}", transitive: true],
+            [group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j2_version, transitive: false],
+            [group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j2_version, transitive: false],
+            [group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4j2_version, transitive: true],
     )
 	
     api(
     				
             [group: 'commons-cli', name: 'commons-cli', version: "1.6.0", transitive: false],
-             [group: 'commons-io', name: 'commons-io', version: "2.18.0", transitive: false],
+             [group: 'commons-io', name: 'commons-io', version: "2.20.0", transitive: false],
              [group: 'org.json', name: 'json', version: "20160212", transitive: false],
           [group: 'org.openoffice', name: 'unoil', version: '4.1.2', transitive: true],
            
