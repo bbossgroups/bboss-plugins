@@ -27,14 +27,16 @@ sourceSets {
 dependencies {
     api project(":bboss-plugin-config")
  
-    api ([group: 'com.alibaba.nacos', name: 'nacos-client', version: "${nacos_version}", transitive: true])
+    api ([group: 'com.alibaba.nacos', name: 'nacos-client', version: nacos_version, transitive: true])
     {
         exclude group: 'log4j', module: 'log4j'
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
         exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
-        exclude group: 'org.apache.httpcomponents', module: 'httpcore'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+//        exclude group: 'org.apache.httpcomponents', module: 'httpcore'
+//        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.httpcomponents.client5', module: 'httpclient5'
+        exclude group: 'org.apache.httpcomponents.core5', module: 'httpcore5'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
