@@ -156,12 +156,12 @@ public abstract class BaseKafkaConsumer extends ApplicationObjectSupport impleme
 		        executor.submit(buildRunnable(stream,infos[0]+"-"+i));
 		    }
 	    }
-		ShutdownUtil.addShutdownHook(new Runnable() {
-			@Override
-			public void run() {
-				shutdown();
-			}
-		});
+//		ShutdownUtil.addShutdownHook(new Runnable() {
+//			@Override
+//			public void run() {
+//				shutdown();
+//			}
+//		});
 
 	}
 	

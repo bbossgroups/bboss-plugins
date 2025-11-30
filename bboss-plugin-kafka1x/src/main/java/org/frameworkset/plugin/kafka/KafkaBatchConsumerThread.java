@@ -74,12 +74,12 @@ public class KafkaBatchConsumerThread extends BaseKafkaConsumerThread{
 //
 //		}
 
-		ShutdownUtil.addShutdownHook(new Runnable() {
-			@Override
-			public void run() {
-				shutdown();
-			}
-		});
+//		ShutdownUtil.addShutdownHook(new Runnable() {
+//			@Override
+//			public void run() {
+//				shutdown();
+//			}
+//		});
 		if(logger.isDebugEnabled()){
 			StringBuilder builder = new StringBuilder();
 			builder.append("KafkaBatchConsumerThread:batchsize=").append(batchsize).append(",checkinterval=").append(checkinterval)

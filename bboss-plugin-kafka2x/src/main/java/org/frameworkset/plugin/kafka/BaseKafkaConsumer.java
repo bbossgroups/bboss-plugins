@@ -226,14 +226,14 @@ public class BaseKafkaConsumer extends ApplicationObjectSupport implements Kafka
             }
         }
 
-        if(addShutdownHook) {
-            ShutdownUtil.addShutdownHook(new Runnable() {
-                @Override
-                public void run() {
-                    shutdown();
-                }
-            });
-        }
+//        if(addShutdownHook) {
+//            ShutdownUtil.addShutdownHook(new Runnable() {
+//                @Override
+//                public void run() {
+//                    shutdown();
+//                }
+//            });
+//        }
     }
 
     /**

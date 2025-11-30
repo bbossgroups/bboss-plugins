@@ -538,15 +538,15 @@ public class LocalSessionFactoryBean extends AbstractSessionFactoryBean {
 			logger.info("Building new Hibernate SessionFactory");
 			this.configuration = config;
 			final SessionFactory SessionFactory = newSessionFactory(config);
-			ShutdownUtil.addShutdownHook(new Runnable(){
-
-				@Override
-				public void run() {
-					SessionFactory.close();
-					
-				}
-				
-			});
+//			ShutdownUtil.addShutdownHook(new Runnable(){
+//
+//				@Override
+//				public void run() {
+//					SessionFactory.close();
+//					
+//				}
+//				
+//			});
 			return SessionFactory;
 		}
 

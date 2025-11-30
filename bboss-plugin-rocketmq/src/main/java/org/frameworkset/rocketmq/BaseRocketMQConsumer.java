@@ -232,12 +232,12 @@ public class BaseRocketMQConsumer extends ApplicationObjectSupport implements Ro
         }
 
         if(addShutdownHook) {
-            ShutdownUtil.addShutdownHook(new Runnable() {
-                @Override
-                public void run() {
-                    shutdown();
-                }
-            });
+//            ShutdownUtil.addShutdownHook(new Runnable() {
+//                @Override
+//                public void run() {
+//                    shutdown();
+//                }
+//            });
         }
     }
 

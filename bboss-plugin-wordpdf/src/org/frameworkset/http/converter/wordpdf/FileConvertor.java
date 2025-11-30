@@ -66,18 +66,18 @@ public class FileConvertor {
 							config.setOfficeHome(officeHome);
 						officeManager = config.buildOfficeManager();
 						officeManager.start();
-						ShutdownUtil.addShutdownHook(new Runnable(){
-
-							@Override
-							public void run() {
-								if(officeManager != null)
-								{
-									officeManager.stop();
-								}
-								
-							}
-							
-						});
+//						ShutdownUtil.addShutdownHook(new Runnable(){
+//
+//							@Override
+//							public void run() {
+//								if(officeManager != null)
+//								{
+//									officeManager.stop();
+//								}
+//								
+//							}
+//							
+//						});
 					}
 				} catch (NullPointerException e) {
 					// TODO Auto-generated catch block
