@@ -23,7 +23,9 @@ sourceSets {
     }
     
 }
-
+processTestResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
 dependencies {
     api (
 
