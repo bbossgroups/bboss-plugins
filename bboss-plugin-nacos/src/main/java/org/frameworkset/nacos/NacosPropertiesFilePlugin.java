@@ -28,6 +28,7 @@ import org.frameworkset.spi.assemble.AssembleException;
 import org.frameworkset.spi.assemble.GetProperties;
 import org.frameworkset.spi.assemble.PropertiesContainer;
 import org.frameworkset.spi.assemble.plugin.PropertiesFilePlugin;
+import org.frameworkset.util.yml.FlatYamlParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,12 +57,17 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 	private Listener configChangeListener;
     private ConfigService configService = null;
 	private boolean changeReload;
+	private String configFileFormat;
     private Map<String,String> extendsAttributes;
 	@Override
 	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 		return extendsAttributes.get(PropertiesContainer.nacosNamespaceName);
 	}
-
+	
+	@Override
+	public  String getConfigFileFormat(){
+		return configFileFormat;
+	}
  
     public Properties getProperties(String configInfo) throws IOException {
         StringReader reader = null;
@@ -69,8 +75,15 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
             Properties properties1 = new Properties();
             if(configInfo == null)
                 return properties1;
-            reader = new StringReader(configInfo);
-            properties1.load(reader);
+            
+			if(!isYaml(configFileFormat)) {
+				reader = new StringReader(configInfo);
+				properties1.load(reader);
+			}
+			else{
+				Map<String, Object> yaml = FlatYamlParser.parseFlat(configInfo);
+				properties1.putAll(yaml);
+			}
             return properties1;
         }
         finally {
@@ -247,8 +260,8 @@ public class NacosPropertiesFilePlugin implements PropertiesFilePlugin {
 		this.changeReload = changeReload;
 		String _configChangeListener  = extendsAttributes.get("configChangeListener");
 
-		String _configFileFormat = extendsAttributes.get("configFileFormat");
-		 
+		String _configFileFormat = extendsAttributes.get("configFileFormat");//yaml或者properties（默认值）
+		this.configFileFormat = _configFileFormat;
 		Listener configChangeListener = null;
 		if(this.configChangeListener == null && _configChangeListener != null && !_configChangeListener.equals("")){
 			try {

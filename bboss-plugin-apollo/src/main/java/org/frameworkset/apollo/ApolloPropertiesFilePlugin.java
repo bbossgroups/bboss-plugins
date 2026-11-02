@@ -47,9 +47,17 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 	private String[] namespaces;
 	private ConfigChangeListener configChangeListener;
 	private boolean changeReload;
+	/**
+	 * 配置文件格式:properties（默认值）,yaml
+	 */
+	private String configFileFormat;
 	@Override
 	public String getFiles(BaseApplicationContext applicationContext,Map<String,String> extendsAttributes, PropertiesContainer propertiesContainer) {
 		return extendsAttributes.get(PropertiesContainer.apolloNamespaceName);
+	}
+	@Override
+	public  String getConfigFileFormat(){
+		return configFileFormat;
 	}
 
 	private String[] parserNamespaces(String namespace){
@@ -99,7 +107,13 @@ public class ApolloPropertiesFilePlugin implements PropertiesFilePlugin {
 		ConfigFileFormat configFileFormat = null;
 		if(_configFileFormat != null)
 		{
-			configFileFormat = ConfigFileFormat.fromString(_configFileFormat);
+			this.configFileFormat = _configFileFormat;
+			try {
+				configFileFormat = ConfigFileFormat.fromString(_configFileFormat);
+			}
+			catch (Exception e){
+				logger.error("configFileFormat:"+configFileFormat +" failed:",e);
+			}
 		}
 		ConfigChangeListener configChangeListener = null;
 		if(this.configChangeListener != null && _configChangeListener != null && !_configChangeListener.equals("")){
