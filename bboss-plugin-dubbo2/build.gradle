@@ -1,0 +1,77 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            
+        }
+       
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources{
+        	srcDir 'resources'
+        }
+    }
+    
+}
+
+dependencies {
+    api (
+              
+            [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
+            // javassist 自 3.22 起不再发布到 javassist:javassist 旧坐标（3.23.1-GA 只能从 org.javassist 解析），
+            // 且 dubbo 的 AdaptiveCompiler/JavassistProxyFactory 需要用 javassist 读写应用类，
+            // 版本过低时无法解析 JDK 17+ 编译的 class 文件
+            [group: 'org.javassist', name: 'javassist', version: "3.30.2-GA" ],
+
+            [group: 'io.netty', name: 'netty-all', version: "4.1.66.Final"],
+
+            [group: 'com.alibaba.nacos', name: 'nacos-client', version: "2.0.4"]     
+               
+    )
+    // dubbo 2.7.x 的 dubbo-common 会传递引入 log4j 1.x，而 dubbo 的 LoggerFactory 自动探测顺序是
+    // log4j(1.x) -> slf4j -> log4j2，只要 classpath 上存在 log4j 1.x 就会优先选中它，
+    // 导致 log4j2.xml 不生效并输出 "log4j:WARN No appenders could be found for logger" 告警。
+    // 这里统一排除 log4j 1.x，让 dubbo 回退到 slf4j 门面（由 log4j-slf4j2-impl 桥接到 log4j2）
+    api([group: 'org.apache.dubbo', name: 'dubbo', version: "2.7.20"]) {
+        exclude group: 'log4j', module: 'log4j'
+    }
+    api([group: 'org.apache.dubbo', name: 'dubbo-registry-nacos', version: "2.7.20"]) {
+        exclude group: 'log4j', module: 'log4j'
+    }
+    api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
+
+//    api([group: 'com.github.sgroschupf', name: 'zkclient', version: "0.1", transitive: true],   )
+//    {
+//   		exclude group: 'log4j', module: 'log4j'
+//    }
+  
+     
+}
+
+// 运行期 JVM 参数（测试和示例启动都需要）：
+// 1. dubbo 2.7.x 的 LoggerFactory 只读 System property，显式指定走 slf4j 门面，
+//    最终由 log4j-slf4j2-impl 桥接到 log4j2，避免被自动探测成其它日志实现
+// 2. JDK 16+ 强封装后，javassist 反射调用 ClassLoader.defineClass 会抛 InaccessibleObjectException，
+//    dubbo 生成 Adaptive/Proxy/Wrapper 类之前必须放开 java.lang 包
+def dubboRuntimeJvmArgs = [
+        '-Ddubbo.application.logger=slf4j',
+        '--add-opens=java.base/java.lang=ALL-UNNAMED'
+]
+tasks.withType(Test) {
+    jvmArgs dubboRuntimeJvmArgs
+}
+tasks.withType(JavaExec) {
+    jvmArgs dubboRuntimeJvmArgs
+}
+
+// 通过 Gradle 启动 dubbo 服务提供者示例，无需手工配置 IDE 运行配置的 VM options：
+// gradle :bboss-plugin-dubbo2:startProvider
+tasks.register('startProvider', JavaExec) {
+    group = 'application'
+    description = '启动 dubbo 服务提供者示例（自动附加上面定义的 dubboRuntimeJvmArgs）'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'org.frameworkset.spi.remote.dubbo.StartServerTest'
+}

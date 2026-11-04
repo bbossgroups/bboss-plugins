@@ -1,0 +1,23 @@
+<properties>
+    <config file="dubbo.properties"/>
+    <!--
+    <property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo.DubboPluginConfig" 
+			f:applicationName="test"
+			f:applicationOwner="test"
+			f:registryAddress="zookeeper://localhost:2181"
+			f:registryUserName="test"
+			f:registryPassword="test"		
+			init-method="init"/> 
+    -->
+	<property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo.DubboPluginConfig" 
+			f:applicationName="${dubbo.application.name}"
+			f:applicationOwner="${dubbo.application.owner}"
+			f:registryAddress="${dubbo.registry.address}" 
+            f:applicationQosPort="${dubbo.application.consumer.qos.port}"
+            f:applicationQosEnable="${dubbo.application.consumer.qos.enable}"
+            init-method="init"/> 
+	<property name="testservice" 
+		 factory-class="org.frameworkset.spi.remote.dubbo.DubboConsumerFactory"
+		 factory-method="buildDubboConsumer"
+		 f:reference="org.frameworkset.spi.remote.dubbo.TestProviderInf"/>
+</properties>
