@@ -9,15 +9,16 @@
 			f:registryPassword="test"		
 			init-method="init"/> 
     -->
-	<property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo.DubboPluginConfig" 
+	<property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo2.DubboPluginConfig" 
 			f:applicationName="${dubbo.application.name}"
 			f:applicationOwner="${dubbo.application.owner}"
+            f:version="${dubbo.consumer.version}"
 			f:registryAddress="${dubbo.registry.address}" 
             f:applicationQosPort="${dubbo.application.consumer.qos.port}"
             f:applicationQosEnable="${dubbo.application.consumer.qos.enable}"
             init-method="init"/> 
 	<property name="testservice" 
-		 factory-class="org.frameworkset.spi.remote.dubbo.DubboConsumerFactory"
+		 factory-class="org.frameworkset.spi.remote.dubbo2.DubboConsumerFactory"
 		 factory-method="buildDubboConsumer"
-		 f:reference="org.frameworkset.spi.remote.dubbo.TestProviderInf"/>
+		 f:reference="org.frameworkset.spi.remote.dubbo2.TestProviderInf"/>
 </properties>

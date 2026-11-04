@@ -16,13 +16,14 @@
 			dubbo:enable="true"
 			dubbo:version="1111"/>
     -->
-	<property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo.DubboPluginConfig" 
-			f:applicationName="${dubbo.application.name}    "
+	<property name="dubboconfig" class="org.frameworkset.spi.remote.dubbo2.DubboPluginConfig" 
+			f:applicationName="${dubbo.application.name}"
 			f:applicationOwner="${dubbo.application.owner}"
+			f:version="${dubbo.provider.version}"
 			f:registryAddress="${dubbo.registry.address}"		  
 			f:protocolThreads="200"
               f:applicationQosPort="${dubbo.application.server.qos.port}"
               f:applicationQosEnable="${dubbo.application.server.qos.enable}"
 			init-method="init"/> 
-	<property name="testservice" class="org.frameworkset.spi.remote.dubbo.TestProvider" dubbo:enable="true"/>
+	<property name="testservice" class="org.frameworkset.spi.remote.dubbo2.TestProvider" dubbo:enable="true"/>
 </properties>

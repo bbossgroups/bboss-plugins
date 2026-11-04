@@ -38,9 +38,9 @@ dependencies {
     api([group: 'org.apache.dubbo', name: 'dubbo', version: "2.7.20"]) {
         exclude group: 'log4j', module: 'log4j'
     }
-    api([group: 'org.apache.dubbo', name: 'dubbo-registry-nacos', version: "2.7.20"]) {
-        exclude group: 'log4j', module: 'log4j'
-    }
+//    api([group: 'org.apache.dubbo', name: 'dubbo-registry-nacos', version: "2.7.20"]) {
+//        exclude group: 'log4j', module: 'log4j'
+//    }
     api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
 
 //    api([group: 'com.github.sgroschupf', name: 'zkclient', version: "0.1", transitive: true],   )
@@ -73,5 +73,5 @@ tasks.register('startProvider', JavaExec) {
     group = 'application'
     description = '启动 dubbo 服务提供者示例（自动附加上面定义的 dubboRuntimeJvmArgs）'
     classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'org.frameworkset.spi.remote.dubbo.StartServerTest'
+    mainClass = 'org.frameworkset.spi.remote.dubbo2.StartServerTest'
 }

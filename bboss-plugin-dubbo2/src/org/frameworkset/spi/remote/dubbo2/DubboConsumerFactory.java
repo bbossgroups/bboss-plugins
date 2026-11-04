@@ -1,4 +1,4 @@
-package org.frameworkset.spi.remote.dubbo;
+package org.frameworkset.spi.remote.dubbo2;
 
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.BeanInfoAware;
@@ -19,9 +19,10 @@ public class DubboConsumerFactory extends BeanInfoAware {
 		} catch (Exception e) {
 			log.warn(e.getMessage(), e);
 		}
-		String providerVersion = pluginConfig.getDubboProviderVersion();
+		
 		if(pluginConfig == null)
 			pluginConfig = DubboPluginConfig.getDefaultDubboPluginConfig();
+		String providerVersion = pluginConfig.getVersion();
 		ReferenceConfig reference_ = new ReferenceConfig(); // 此实例很重，封装了与注册中心的连接以及与提供者的连接，请自行缓存，否则可能造成内存和连接泄漏
 		reference_.setApplication(pluginConfig.getApplication());
 		reference_.setRegistry(pluginConfig.getRegistry()); // 多个注册中心可以用setRegistries()

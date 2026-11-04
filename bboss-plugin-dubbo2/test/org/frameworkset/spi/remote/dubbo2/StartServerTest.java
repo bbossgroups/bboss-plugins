@@ -1,4 +1,4 @@
-package org.frameworkset.spi.remote.dubbo;
+package org.frameworkset.spi.remote.dubbo2;
 /**
  * Copyright 2026 bboss
  * <p>

@@ -1,4 +1,4 @@
-package org.frameworkset.spi.remote.dubbo;
+package org.frameworkset.spi.remote.dubbo2;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ProtocolConfig;
@@ -12,7 +12,7 @@ public class DubboPluginConfig {
 	private String registryAddress;
 	private String registryUserName;
 	private String registryPassword;
-	private String dubboProviderVersion;	
+	private String version;	
 	private int applicationQosPort;
 	
 	private boolean applicationQosEnable;
@@ -52,9 +52,7 @@ public class DubboPluginConfig {
 		if(SimpleStringUtil.isNotEmpty(registryPassword)) {
 			registry.setPassword(registryPassword);
 		}
-		if(dubboProviderVersion != null && !dubboProviderVersion.equals("")){
-			registry.setVersion(dubboProviderVersion);
-		}
+		 
 		application.setQosEnable(applicationQosEnable);
 		if(applicationQosPort > 0){
 			application.setQosPort(applicationQosPort);
@@ -116,12 +114,12 @@ public class DubboPluginConfig {
 		this.registryPassword = registryPassword;
 	}
 	
-	public String getDubboProviderVersion() {
-		return dubboProviderVersion;
+	public String getVersion() {
+		return version;
 	}
 	
-	public void setDubboProviderVersion(String dubboProviderVersion) {
-		this.dubboProviderVersion = dubboProviderVersion;
+	public void setVersion(String version) {
+		this.version = version;
 	}
 	
 	public String getProtocolPort() {

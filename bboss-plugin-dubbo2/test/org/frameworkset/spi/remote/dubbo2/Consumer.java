@@ -1,4 +1,4 @@
-package org.frameworkset.spi.remote.dubbo;
+package org.frameworkset.spi.remote.dubbo2;
 
 import org.frameworkset.spi.BaseApplicationContext;
 import org.frameworkset.spi.DefaultApplicationContext;

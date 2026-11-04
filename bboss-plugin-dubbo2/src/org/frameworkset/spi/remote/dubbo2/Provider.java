@@ -1,9 +1,9 @@
-package org.frameworkset.spi.remote.dubbo;
+package org.frameworkset.spi.remote.dubbo2;
 
 
 public class Provider {
 	private static volatile boolean running = true;
-	public static final String SHUTDOWN_HOOK_KEY = "dubbo.shutdown.hook";
+//	public static final String SHUTDOWN_HOOK_KEY = "dubbo.shutdown.hook";
 	
 	public static void main(String[] args) {
 		DubboHandlerContainer container = new DubboHandlerContainer("dubbo-service.xml");
