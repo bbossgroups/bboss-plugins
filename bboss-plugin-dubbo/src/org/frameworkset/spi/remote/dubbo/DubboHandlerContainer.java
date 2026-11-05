@@ -36,6 +36,13 @@ public class DubboHandlerContainer {
 	public DubboHandlerContainer(BaseApplicationContext context) {
 	
 		this.context = context;
+		try {
+			dubboPluginConfig = context.getTBeanObject("dubboconfig", DubboPluginConfig.class);
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+		}
+		if(dubboPluginConfig == null)
+			dubboPluginConfig = DubboPluginConfig.getDefaultDubboPluginConfig();
 	}
 	/**
 	 * ServiceConfig<XxxService> service = new ServiceConfig<XxxService>(); // 此实例很重，封装了与注册中心的连接，请自行缓存，否则可能造成内存和连接泄漏
@@ -73,7 +80,7 @@ service.export();
 						if(interfaceClass == null)
 							continue;
 					}
-					if(enabledubbo.equals("false") )
+					if(enabledubbo !=null && enabledubbo.equals("false") )
 					{
 						continue;
 					}
@@ -90,7 +97,9 @@ service.export();
 						
 						Class serviceClass = _service.getClass();
 						serviceapi = this.findRemoteAPI(serviceClass);
-						interfaceClass = serviceapi.getName();
+						if(serviceapi != null) {
+							interfaceClass = serviceapi.getName();
+						}
 					}
 					this.dubboServices.put(interfaceClass, pro);
 					 
