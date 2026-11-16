@@ -1,0 +1,3 @@
+config-logging=org.apache.dubbo.config.event.listener.LoggingEventListener
+
+registry-logging=org.apache.dubbo.registry.client.event.listener.LoggingEventListener

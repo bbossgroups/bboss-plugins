@@ -1,0 +1,6 @@
+default=org.apache.dubbo.registry.client.DefaultServiceDiscoveryFactory
+zookeeper=org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscoveryFactory
+consul=org.apache.dubbo.registry.consul.ConsulServiceDiscoveryFactory
+nacos=org.apache.dubbo.registry.nacos.NacosServiceDiscoveryFactory
+sofa=org.apache.dubbo.registry.sofa.SofaRegistryServiceDiscoveryFactory
+multiple=org.apache.dubbo.registry.multiple.MultipleRegistryServiceDiscoveryFactory

@@ -1,0 +1,696 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+dubbo-all
+
+
+From: 'Alibaba Group' (https://github.com/alibaba)
+  - fastjson (https://github.com/alibaba/fastjson) com.alibaba:fastjson:jar:1.2.83
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - nacos-api 1.4.2 (http://nacos.io) com.alibaba.nacos:nacos-api:jar:1.4.2
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - nacos-client 1.4.2 (http://nacos.io) com.alibaba.nacos:nacos-client:jar:1.4.2
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - nacos-common 1.4.2 (http://nacos.io) com.alibaba.nacos:nacos-common:jar:1.4.2
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'an unknown organization'
+  - AntLR Parser Generator (http://www.antlr.org/) antlr:antlr:jar:2.7.7
+    License: BSD License  (http://www.antlr.org/license.html)
+  - AOP alliance (http://aopalliance.sourceforge.net) aopalliance:aopalliance:jar:1.0
+    License: Public Domain 
+  - metrics-common (https://github.com/dubbo/metrics/metrics-common) com.alibaba.middleware:metrics-common:jar:2.0.1
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - metrics-core-api (https://github.com/dubbo/metrics/metrics-core-api) com.alibaba.middleware:metrics-core-api:jar:2.0.1
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - metrics-core-impl (https://github.com/dubbo/metrics/metrics-core-impl) com.alibaba.middleware:metrics-core-impl:jar:2.0.1
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - spring-context-support (http://nexus.sonatype.org/oss-repository-hosting.html/spring-context-support) com.alibaba.spring:spring-context-support:jar:1.0.11
+
+  - com.alipay.sofa:bolt (https://github.com/alipay/sofa-bolt) com.alipay.sofa:bolt:jar:1.4.6
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - com.alipay.sofa.common:sofa-common-tools (https://github.com/sofastack/sofa-common-tools) com.alipay.sofa.common:sofa-common-tools:jar:1.0.12
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - lookout-api (https://github.com/sofastack/sofa-lookout/lookout-api) com.alipay.sofa.lookout:lookout-api:jar:1.5.2
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - AWS Java SDK for Auto Scaling (https://aws.amazon.com/sdkforjava) com.amazonaws:aws-java-sdk-autoscaling:jar:1.11.277
+    License: Apache License, Version 2.0  (https://aws.amazon.com/apache2.0)
+  - AWS SDK for Java - Core (https://aws.amazon.com/sdkforjava) com.amazonaws:aws-java-sdk-core:jar:1.11.277
+    License: Apache License, Version 2.0  (https://aws.amazon.com/apache2.0)
+  - AWS Java SDK for Amazon EC2 (https://aws.amazon.com/sdkforjava) com.amazonaws:aws-java-sdk-ec2:jar:1.11.277
+    License: Apache License, Version 2.0  (https://aws.amazon.com/apache2.0)
+  - AWS Java SDK for Amazon Route53 (https://aws.amazon.com/sdkforjava) com.amazonaws:aws-java-sdk-route53:jar:1.11.277
+    License: Apache License, Version 2.0  (https://aws.amazon.com/apache2.0)
+  - AWS Java SDK for AWS STS (https://aws.amazon.com/sdkforjava) com.amazonaws:aws-java-sdk-sts:jar:1.11.277
+    License: Apache License, Version 2.0  (https://aws.amazon.com/apache2.0)
+  - JMES Path Query library (https://aws.amazon.com/sdkforjava) com.amazonaws:jmespath-java:jar:1.11.277
+    License: Apache License, Version 2.0  (https://aws.amazon.com/apache2.0)
+  - java-util (https://github.com/jdereg/java-util) com.cedarsoftware:java-util:jar:1.9.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - json-io (https://github.com/jdereg/json-io) com.cedarsoftware:json-io:jar:2.5.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Ecwid Consul API (https://github.com/Ecwid/consul-api) com.ecwid.consul:consul-api:jar:1.4.2
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Kryo (https://github.com/EsotericSoftware/kryo/kryo) com.esotericsoftware:kryo:bundle:4.0.2
+    License: 3-Clause BSD License  (https://opensource.org/licenses/BSD-3-Clause)
+  - MinLog (https://github.com/EsotericSoftware/minlog) com.esotericsoftware:minlog:bundle:1.3.0
+    License: New BSD License  (http://www.opensource.org/licenses/bsd-license.php)
+  - ReflectASM (https://github.com/EsotericSoftware/reflectasm) com.esotericsoftware:reflectasm:bundle:1.11.3
+    License: New BSD License  (http://www.opensource.org/licenses/bsd-license.php)
+  - Dexx collections (https://github.com/andrewoma/dexx/dexx-collections) com.github.andrewoma.dexx:dexx-collections:jar:0.2
+    License: The MIT License  (http://www.opensource.org/licenses/mit-license.php)
+  - JSON-RPC for java (https://github.com/briandilley/jsonrpc4j) com.github.briandilley.jsonrpc4j:jsonrpc4j:jar:1.2.0
+    License: The MIT License (MIT)  (http://opensource.org/licenses/MIT)
+  - Compact HashMap (https://github.com/vlsi/compactmap/compactmap) com.github.vlsi.compactmap:compactmap:jar:1.2.1
+    License: LGPL 3.0 license  (http://www.opensource.org/licenses/lgpl-3.0.html)
+  - Google Android Annotations Library (http://source.android.com/) com.google.android:annotations:jar:4.1.1.4
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - FindBugs-jsr305 (http://findbugs.sourceforge.net/) com.google.code.findbugs:jsr305:jar:3.0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Gson (https://github.com/google/gson/gson) com.google.code.gson:gson:jar:2.8.5
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - error-prone annotations (http://nexus.sonatype.org/oss-repository-hosting.html/error_prone_parent/error_prone_annotations) com.google.errorprone:error_prone_annotations:jar:2.3.4
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Guava InternalFutureFailureAccess and InternalFutures (https://github.com/google/guava/failureaccess) com.google.guava:failureaccess:bundle:1.0.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Guava: Google Core Libraries for Java (https://github.com/google/guava/guava) com.google.guava:guava:bundle:29.0-android
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Guava ListenableFuture only (https://github.com/google/guava/listenablefuture) com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - J2ObjC Annotations (https://github.com/google/j2objc/) com.google.j2objc:j2objc-annotations:jar:1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - xmemcached (http://code.google.com/p/xmemcached/) com.googlecode.xmemcached:xmemcached:jar:1.3.6
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - archaius-core (https://github.com/Netflix/archaius) com.netflix.archaius:archaius-core:jar:0.7.6
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - eureka-client (https://github.com/Netflix/eureka) com.netflix.eureka:eureka-client:jar:1.9.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - eureka-core (https://github.com/Netflix/eureka) com.netflix.eureka:eureka-core:jar:1.9.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - netflix-eventbus (https://github.com/Netflix/netflix-commons) com.netflix.netflix-commons:netflix-eventbus:jar:0.3.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - netflix-infix (https://github.com/Netflix/netflix-commons) com.netflix.netflix-commons:netflix-infix:jar:0.3.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - servo-core (https://github.com/Netflix/servo) com.netflix.servo:servo-core:jar:0.12.21
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - consul-client (http://maven.apache.org) com.orbitz.consul:consul-client:jar:1.3.7
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - OkHttp (https://github.com/square/okhttp/okhttp) com.squareup.okhttp3:okhttp:jar:3.12.2
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Okio (https://github.com/square/okio/okio) com.squareup.okio:okio:jar:1.15.0
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - ParaNamer Core (http://paranamer.codehaus.org/paranamer) com.thoughtworks.paranamer:paranamer:bundle:2.7
+    License: BSD  (LICENSE.txt)
+  - kryo serializers (https://github.com/magro/kryo-serializers) de.javakaffee:kryo-serializers:bundle:0.42
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - fst (http://ruedigermoeller.github.io/fast-serialization/) de.ruedigermoeller:fst:bundle:2.48-jdk-6
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
+  - jetcd-common (https://github.com/etcd-io/jetcd/jetcd-common) io.etcd:jetcd-common:jar:0.5.7
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - jetcd-core (https://github.com/etcd-io/jetcd/jetcd-core) io.etcd:jetcd-core:jar:0.5.7
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - io.grpc:grpc-api (https://github.com/grpc/grpc-java) io.grpc:grpc-api:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-context (https://github.com/grpc/grpc-java) io.grpc:grpc-context:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-core (https://github.com/grpc/grpc-java) io.grpc:grpc-core:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-grpclb (https://github.com/grpc/grpc-java) io.grpc:grpc-grpclb:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-netty (https://github.com/grpc/grpc-java) io.grpc:grpc-netty:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-protobuf (https://github.com/grpc/grpc-java) io.grpc:grpc-protobuf:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-protobuf-lite (https://github.com/grpc/grpc-java) io.grpc:grpc-protobuf-lite:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - io.grpc:grpc-stub (https://github.com/grpc/grpc-java) io.grpc:grpc-stub:jar:1.31.1
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - perfmark:perfmark-api (https://github.com/perfmark/perfmark) io.perfmark:perfmark-api:jar:0.19.0
+    License: Apache 2.0  (https://opensource.org/licenses/Apache-2.0)
+  - Prometheus Java Simpleclient (http://github.com/prometheus/client_java/simpleclient) io.prometheus:simpleclient:bundle:0.5.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - protostuff :: api (https://protostuff.github.io/protostuff-api) io.protostuff:protostuff-api:jar:1.5.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - protostuff :: collectionschema (https://protostuff.github.io/protostuff-collectionschema) io.protostuff:protostuff-collectionschema:jar:1.5.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - protostuff :: core (https://protostuff.github.io/protostuff-core) io.protostuff:protostuff-core:jar:1.5.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - protostuff :: runtime (https://protostuff.github.io/protostuff-runtime) io.protostuff:protostuff-runtime:jar:1.5.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - swagger-annotations (https://github.com/swagger-api/swagger-core/modules/swagger-annotations) io.swagger:swagger-annotations:bundle:1.5.19
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
+  - swagger-core (https://github.com/swagger-api/swagger-core/modules/swagger-core) io.swagger:swagger-core:bundle:1.5.19
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
+  - swagger-jaxrs (https://github.com/swagger-api/swagger-core/modules/swagger-jaxrs) io.swagger:swagger-jaxrs:bundle:1.5.19
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
+  - swagger-models (https://github.com/swagger-api/swagger-core/modules/swagger-models) io.swagger:swagger-models:bundle:1.5.19
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
+  - JavaBeans(TM) Activation Framework (http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp) javax.activation:activation:jar:1.1.1
+    License: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0  (https://glassfish.dev.java.net/public/CDDLv1.0.html)
+  - JSR107 API and SPI (https://github.com/jsr107/jsr107spec) javax.cache:cache-api:jar:1.0.0
+    License: JSR-000107 JCACHE 2.9 Public Review - Updated Specification
+                License  (https://raw.github.com/jsr107/jsr107spec/master/LICENSE.txt)
+  - javax.inject (http://code.google.com/p/atinject/) javax.inject:javax.inject:jar:1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Java Portlet Specification V2.0 (http://www.jcp.org/en/jsr/detail?id=286) javax.portlet:portlet-api:jar:2.0
+
+  - servlet-api  javax.servlet:servlet-api:jar:2.5
+
+  - Bean Validation API (http://beanvalidation.org) javax.validation:validation-api:jar:1.1.0.Final
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - jsr173_api  javax.xml.bind:jsr173_api:jar:1.0
+
+  - JLine (http://jline.sourceforge.net) jline:jline:jar:0.9.94
+    License: BSD  (LICENSE.txt)
+  - base64 (http://iharder.net/base64/) net.iharder:base64:jar:2.3.8
+    License: Public domain 
+  - "Java Concurrency in Practice" book annotations (http://jcip.net/) net.jcip:jcip-annotations:jar:1.0
+
+  - Failsafe (http://github.com/jhalterman/failsafe/) net.jodah:failsafe:jar:2.4.0
+    License: Apache License, Version 2.0  (http://apache.org/licenses/LICENSE-2.0)
+  - Antlr 3.4 Runtime (http://www.antlr.org) org.antlr:antlr-runtime:jar:3.4
+
+  - ANTLR StringTemplate (http://www.stringtemplate.org) org.antlr:stringtemplate:jar:3.2.1
+    License: BSD licence  (http://antlr.org/license.html)
+  - Apache Thrift (http://thrift.apache.org) org.apache.thrift:libthrift:jar:0.12.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-annotations-api (https://tomcat.apache.org/) org.apache.tomcat:tomcat-annotations-api:jar:9.0.48
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - tomcat-embed-core (https://tomcat.apache.org/) org.apache.tomcat.embed:tomcat-embed-core:jar:9.0.48
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - zookeeper  org.apache.zookeeper:zookeeper:pom:3.4.13
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Checker Qual (https://checkerframework.org) org.checkerframework:checker-compat-qual:jar:2.5.5
+    License: GNU General Public License, version 2 (GPL2), with the classpath exception  (http://www.gnu.org/software/classpath/license.html)    License: The MIT License  (http://opensource.org/licenses/MIT)
+  - Jettison (http://codehaus.org/jettison/) org.codehaus.jettison:jettison:bundle:1.3.7
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Reflections (http://github.com/ronmamo/reflections) org.reflections:reflections:jar:0.9.11
+    License: WTFPL  (http://www.wtfpl.net/)    License: The New BSD License  (http://www.opensource.org/licenses/bsd-license.html)
+  - XZ for Java (http://tukaani.org/xz/java.html) org.tukaani:xz:jar:1.5
+    License: Public Domain 
+  - SnakeYAML (http://www.snakeyaml.org) org.yaml:snakeyaml:bundle:1.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jedis (https://github.com/redis/jedis) redis.clients:jedis:jar:3.7.0
+    License: MIT  (http://github.com/redis/jedis/raw/master/LICENSE.txt)
+  - software.amazon.ion:ion-java (https://github.com/amznlabs/ion-java/) software.amazon.ion:ion-java:bundle:1.0.2
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - StAX API (http://stax.codehaus.org/) stax:stax-api:jar:1.0.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - WSDL4J (http://sf.net/projects/wsdl4j) wsdl4j:wsdl4j:jar:1.6.3
+    License: CPL  (http://www.opensource.org/licenses/cpl1.0.txt)
+  - XML Pull Parsing API (http://www.xmlpull.org) xmlpull:xmlpull:jar:1.1.3.1
+    License: Public Domain  (http://www.xmlpull.org/v1/download/unpacked/LICENSE.txt)
+
+From: 'Ant Financial' (http://www.antfin.com/)
+  - com.alipay.sofa:hessian (http://github.com/alipay/sofa-hessian) com.alipay.sofa:hessian:jar:3.3.6
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Apache MINA Project' (http://mina.apache.org/)
+  - Apache MINA Core API (http://mina.apache.org/mina-core/) org.apache.mina:mina-core:jar:1.1.7
+    License: Apache 2.0 License  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'Apache Software Foundation' (http://www.apache.org)
+  - Apache Log4j (http://logging.apache.org/log4j/1.2/) log4j:log4j:bundle:1.2.17
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Apache Software Foundation' (http://www.apache.org/)
+  - Apache WebServices Common Utilities (http://ws.apache.org/commons/util) org.apache.ws.commons.util:ws-commons-util:jar:1.0.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - XML Commons External Components XML APIs (http://xml.apache.org/commons/#external) xml-apis:xml-apis:jar:1.0.b2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Caucho Technology, Inc' (http://caucho.com)
+  - Hessian (http://hessian.caucho.com) com.caucho:hessian:jar:4.0.51
+    License: The Apache Software License, Version 1.1  (http://www.apache.org/licenses/LICENSE-1.1.txt)
+
+From: 'Codehaus' (http://www.codehaus.org/)
+  - Woodstox (http://woodstox.codehaus.org) org.codehaus.woodstox:woodstox-core-asl:jar:4.4.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Ctrip, Inc.' (http://www.ctrip.com)
+  - Apollo Client (https://github.com/ctripcorp/apollo/apollo-client) com.ctrip.framework.apollo:apollo-client:jar:1.8.0
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Apollo Core (https://github.com/ctripcorp/apollo/apollo-core) com.ctrip.framework.apollo:apollo-core:jar:1.8.0
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'Extreme! Lab, Indiana University' (http://www.extreme.indiana.edu/)
+  - MXP1: Xml Pull Parser 3rd Edition (XPP3) (http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/) xpp3:xpp3_min:jar:1.1.4c
+    License: Indiana University Extreme! Lab Software License, vesion 1.1.1  (http://www.extreme.indiana.edu/viewcvs/~checkout~/XPP3/java/LICENSE.txt)    License: Public Domain  (http://creativecommons.org/licenses/publicdomain)
+
+From: 'FasterXML' (http://fasterxml.com)
+  - Woodstox (https://github.com/FasterXML/woodstox) com.fasterxml.woodstox:woodstox-core:bundle:5.2.1
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson (http://jackson.codehaus.org) org.codehaus.jackson:jackson-core-asl:jar:1.9.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - JAX-RS provider for JSON content type (http://jackson.codehaus.org) org.codehaus.jackson:jackson-jaxrs:jar:1.9.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)    License: GNU Lesser General Public License (LGPL), Version 2.1  (http://www.fsf.org/licensing/licenses/lgpl.txt)
+  - Data Mapper for Jackson (http://jackson.codehaus.org) org.codehaus.jackson:jackson-mapper-asl:jar:1.9.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Xml Compatibility extensions for Jackson (http://jackson.codehaus.org) org.codehaus.jackson:jackson-xc:jar:1.9.12
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)    License: GNU Lesser General Public License (LGPL), Version 2.1  (http://www.fsf.org/licensing/licenses/lgpl.txt)
+
+From: 'FasterXML' (http://fasterxml.com/)
+  - Jackson-annotations (http://github.com/FasterXML/jackson) com.fasterxml.jackson.core:jackson-annotations:bundle:2.9.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson-core (https://github.com/FasterXML/jackson) com.fasterxml.jackson.core:jackson-core:bundle:2.5.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - jackson-databind (http://github.com/FasterXML/jackson) com.fasterxml.jackson.core:jackson-databind:bundle:2.5.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson-dataformat-CBOR (http://wiki.fasterxml.com/JacksonForCbor) com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:bundle:2.6.7
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson-dataformat-XML (http://wiki.fasterxml.com/JacksonExtensionXmlDataBinding) com.fasterxml.jackson.dataformat:jackson-dataformat-xml:bundle:2.9.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson-dataformat-YAML (https://github.com/FasterXML/jackson-dataformats-text) com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:bundle:2.9.5
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson datatype: Guava (https://github.com/FasterXML/jackson-datatypes-collections) com.fasterxml.jackson.datatype:jackson-datatype-guava:bundle:2.9.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson datatype: jdk8 (https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jdk8) com.fasterxml.jackson.datatype:jackson-datatype-jdk8:bundle:2.9.9
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Jackson module: JAXB Annotations (https://github.com/FasterXML/jackson-modules-base) com.fasterxml.jackson.module:jackson-module-jaxb-annotations:bundle:2.9.4
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'fasterxml.com' (http://fasterxml.com)
+  - Stax2 API (http://github.com/FasterXML/stax2-api) org.codehaus.woodstox:stax2-api:bundle:4.2
+    License: The BSD License  (http://www.opensource.org/licenses/bsd-license.php)
+
+From: 'GlassFish Community' (https://glassfish.dev.java.net)
+  - Java Servlet API (http://servlet-spec.java.net) javax.servlet:javax.servlet-api:jar:3.1.0
+    License: CDDL + GPLv2 with classpath exception  (https://glassfish.dev.java.net/nonav/public/CDDL+GPL.html)
+
+From: 'GlassFish Community' (https://javaee.github.io/glassfish)
+  - javax.annotation API (http://jcp.org/en/jsr/detail?id=250) javax.annotation:javax.annotation-api:jar:1.3.2
+    License: CDDL + GPLv2 with classpath exception  (https://github.com/javaee/javax.annotation/blob/master/LICENSE)
+
+From: 'Google' (http://www.google.com/)
+  - Protocol Buffers [Core] (https://developers.google.com/protocol-buffers/protobuf-java/) com.google.protobuf:protobuf-java:bundle:3.6.0
+    License: 3-Clause BSD License  (https://opensource.org/licenses/BSD-3-Clause)
+  - Protocol Buffers [Util] (https://developers.google.com/protocol-buffers/protobuf-java-util/) com.google.protobuf:protobuf-java-util:bundle:3.6.0
+    License: 3-Clause BSD License  (https://opensource.org/licenses/BSD-3-Clause)
+
+From: 'Google LLC' (http://www.google.com)
+  - AutoService (https://github.com/google/auto/tree/master/service) com.google.auto.service:auto-service-annotations:jar:1.0
+    License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Google LLC'
+  - proto-google-common-protos (https://github.com/googleapis/api-client-staging) com.google.api.grpc:proto-google-common-protos:jar:1.17.0
+    License: Apache-2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Google, Inc.' (http://www.google.com)
+  - Google Guice - Core Library (https://github.com/google/guice/guice) com.google.inject:guice:jar:4.1.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'JBoss by Red Hat' (http://www.jboss.org)
+  - JBoss Logging 3 (http://www.jboss.org) org.jboss.logging:jboss-logging:jar:3.1.4.GA
+    License: Apache License, version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - RESTEasy JAX-RS Client (http://rest-easy.org/resteasy-client) org.jboss.resteasy:resteasy-client:jar:3.0.19.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Resteasy Jackson Provider (http://rest-easy.org/resteasy-jackson-provider) org.jboss.resteasy:resteasy-jackson-provider:jar:3.0.19.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Resteasy JAXB Provider (http://rest-easy.org/resteasy-jaxb-provider) org.jboss.resteasy:resteasy-jaxb-provider:jar:3.0.19.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - RESTEasy JAX-RS Implementation (http://rest-easy.org/resteasy-jaxrs) org.jboss.resteasy:resteasy-jaxrs:jar:3.0.19.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - RESTEasy Sun JDK HTTP Server Integration (http://rest-easy.org/resteasy-jdk-http) org.jboss.resteasy:resteasy-jdk-http:jar:3.0.19.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - RESTEasy Netty 4 Integration (http://rest-easy.org/resteasy-netty4) org.jboss.resteasy:resteasy-netty4:jar:3.0.19.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Common Annotations 1.2 API (http://www.jboss.org/jboss-annotations-api_1.2_spec) org.jboss.spec.javax.annotation:jboss-annotations-api_1.2_spec:jar:1.0.0.Final
+    License: CDDL or GPLv2 with exceptions  (https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html)
+  - JAX-RS 2.0: The Java(TM) API for RESTful Web Services (http://www.jboss.org/jboss-jaxrs-api_2.0_spec) org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.0_spec:jar:1.0.0.Final
+    License: Common Development and Distribution License  (http://repository.jboss.org/licenses/cddl.txt)    License: GNU General Public License, Version 2 with the Classpath Exception  (http://repository.jboss.org/licenses/gpl-2.0-ce.txt)
+
+From: 'JBoss, a division of Red Hat, Inc.' (http://www.jboss.org)
+  - The Netty Project (http://www.jboss.org/netty/) org.jboss.netty:netty:bundle:3.2.5.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'Joda.org' (http://www.joda.org)
+  - Joda-Time (http://www.joda.org/joda-time/) joda-time:joda-time:jar:2.8.1
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Joe Walnes, Henri Tremblay, Leonardo Mesquita'
+  - Objenesis (http://objenesis.org) org.objenesis:objenesis:jar:3.1
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'JUnit' (http://www.junit.org)
+  - JUnit (http://junit.org) junit:junit:jar:3.8.1
+    License: Common Public License Version 1.0  (http://www.opensource.org/licenses/cpl1.0.txt)
+
+From: 'MessagePack' (http://msgpack.org/)
+  - jackson-dataformat-msgpack (http://msgpack.org/) org.msgpack:jackson-dataformat-msgpack:jar:0.8.22
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - msgpack-core (http://msgpack.org/) org.msgpack:msgpack-core:jar:0.8.22
+    License: Apache 2  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'MojoHaus' (http://www.mojohaus.org)
+  - Animal Sniffer Annotations (http://www.mojohaus.org/animal-sniffer/animal-sniffer-annotations) org.codehaus.mojo:animal-sniffer-annotations:jar:1.18
+    License: MIT license  (http://www.opensource.org/licenses/mit-license.php)
+
+From: 'ObjectWeb' (http://www.objectweb.org/)
+  - ASM Core (http://asm.objectweb.org/asm/) org.ow2.asm:asm:jar:5.0.4
+    License: BSD  (http://asm.objectweb.org/license.html)
+
+From: 'Oracle' (http://www.oracle.com)
+  - JavaBeans Activation Framework (http://java.net/all/javax.activation/) com.sun.activation:javax.activation:jar:1.2.0
+    License: CDDL/GPLv2+CE  (https://github.com/javaee/activation/blob/master/LICENSE.txt)
+  - JavaBeans Activation Framework API jar (http://java.net/all/javax.activation-api/) javax.activation:javax.activation-api:jar:1.2.0
+    License: CDDL/GPLv2+CE  (https://github.com/javaee/activation/blob/master/LICENSE.txt)
+
+From: 'Oracle Corporation' (http://www.oracle.com)
+  - grizzly-core (https://projects.eclipse.org/projects/ee4j.grizzly/grizzly-core) org.glassfish.grizzly:grizzly-core:jar:2.4.4
+    License: EPL-2.0  (http://www.eclipse.org/legal/epl-2.0)
+  - grizzly-framework (https://projects.eclipse.org/projects/ee4j.grizzly/grizzly-framework) org.glassfish.grizzly:grizzly-framework:bundle:2.4.4
+    License: EPL-2.0  (http://www.eclipse.org/legal/epl-2.0)
+  - grizzly-portunif (https://projects.eclipse.org/projects/ee4j.grizzly/grizzly-portunif) org.glassfish.grizzly:grizzly-portunif:bundle:2.4.4
+    License: EPL-2.0  (http://www.eclipse.org/legal/epl-2.0)
+
+From: 'Oracle Corporation' (http://www.oracle.com/)
+  - istack common utility code runtime (http://java.net/istack-commons/istack-commons-runtime/) com.sun.istack:istack-commons-runtime:jar:2.16
+    License: CDDL 1.1  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)
+  - jersey-client (https://jersey.java.net/jersey-client/) com.sun.jersey:jersey-client:jar:1.19.1
+    License: CDDL 1.1  (http://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (http://glassfish.java.net/public/CDDL+GPL_1_1.html)
+  - jersey-core (https://jersey.java.net/jersey-core/) com.sun.jersey:jersey-core:jar:1.19.1
+    License: CDDL 1.1  (http://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (http://glassfish.java.net/public/CDDL+GPL_1_1.html)
+  - Jersey Apache HTTP Client 4.x (https://jersey.java.net/jersey-contribs/jersey-apache-client4/) com.sun.jersey.contribs:jersey-apache-client4:jar:1.19.1
+    License: CDDL 1.1  (http://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (http://glassfish.java.net/public/CDDL+GPL_1_1.html)
+  - JAXB CORE (http://jaxb.java.net/) com.sun.xml.bind:jaxb-core:jar:2.2.7
+    License: CDDL 1.1  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)
+  - JAXB Reference Implementation (http://jaxb.java.net/) com.sun.xml.bind:jaxb-impl:jar:2.2.7
+    License: CDDL 1.1  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)
+  - Java Architecture for XML Binding (http://jaxb.java.net/) javax.xml.bind:jaxb-api:jar:2.2.7
+    License: CDDL 1.1  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)    License: GPL2 w/ CPE  (https://glassfish.java.net/public/CDDL+GPL_1_1.html)
+
+From: 'Oracle Corpration' (http://www.oracle.com)
+  - fastinfoset (http://fi.java.net) com.sun.xml.fastinfoset:FastInfoset:jar:1.2.12
+    License: Apache License, Version 2.0  (http://www.opensource.org/licenses/apache2.0.php)
+
+From: 'QOS.ch' (http://www.qos.ch)
+  - Logback Classic Module (http://logback.qos.ch/logback-classic) ch.qos.logback:logback-classic:jar:1.2.11
+    License: Eclipse Public License - v 1.0  (http://www.eclipse.org/legal/epl-v10.html)    License: GNU Lesser General Public License  (http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+  - Logback Core Module (http://logback.qos.ch/logback-core) ch.qos.logback:logback-core:jar:1.2.11
+    License: Eclipse Public License - v 1.0  (http://www.eclipse.org/legal/epl-v10.html)    License: GNU Lesser General Public License  (http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+  - SLF4J API Module (http://www.slf4j.org) org.slf4j:slf4j-api:jar:1.7.25
+    License: MIT License  (http://www.opensource.org/licenses/mit-license.php)
+  - SLF4J LOG4J-12 Binding (http://www.slf4j.org) org.slf4j:slf4j-log4j12:jar:1.7.25
+    License: MIT License  (http://www.opensource.org/licenses/mit-license.php)
+
+From: 'Shigeru Chiba, www.javassist.org'
+  - Javassist (http://www.javassist.org/) org.javassist:javassist:bundle:3.23.1-GA
+    License: MPL 1.1  (http://www.mozilla.org/MPL/MPL-1.1.html)    License: LGPL 2.1  (http://www.gnu.org/licenses/lgpl-2.1.html)    License: Apache License 2.0  (http://www.apache.org/licenses/)
+
+From: 'Spring IO' (https://spring.io/projects/spring-framework)
+  - Spring AOP (https://github.com/spring-projects/spring-framework) org.springframework:spring-aop:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Spring Beans (https://github.com/spring-projects/spring-framework) org.springframework:spring-beans:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Spring Context (https://github.com/spring-projects/spring-framework) org.springframework:spring-context:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Spring Core (https://github.com/spring-projects/spring-framework) org.springframework:spring-core:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Spring Expression Language (SpEL) (https://github.com/spring-projects/spring-framework) org.springframework:spring-expression:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Spring Commons Logging Bridge (https://github.com/spring-projects/spring-framework) org.springframework:spring-jcl:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Spring Web (https://github.com/spring-projects/spring-framework) org.springframework:spring-web:jar:5.2.8.RELEASE
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'Square, Inc.' (https://squareup.com)
+  - Converter: Jackson (https://github.com/square/retrofit/retrofit-converters/converter-jackson/) com.squareup.retrofit2:converter-jackson:jar:2.5.0
+    License: Apache 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Retrofit (https://github.com/square/retrofit/retrofit/) com.squareup.retrofit2:retrofit:jar:2.5.0
+    License: Apache 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'Sun Microsystems, Inc' (http://www.sun.com/)
+  - jsr311-api (https://jsr311.dev.java.net) javax.ws.rs:jsr311-api:jar:1.1.1
+    License: CDDL License  (http://www.opensource.org/licenses/cddl1.php)
+
+From: 'The Ant Financial' (http://www.antfin.com/)
+  - com.alipay.sofa:registry-client-all (http://github.com/alipay/sofa-registry) com.alipay.sofa:registry-client-all:jar:5.2.0
+    License: The Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'The Apache Software Foundation' (http://www.apache.org/)
+  - Hessian Lite(Dubbo embed version) (https://github.com/dubbo/hessian-lite) com.alibaba:hessian-lite:jar:3.2.13
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Commons Configuration (http://commons.apache.org/configuration/) commons-configuration:commons-configuration:jar:1.8
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons JXPath (http://commons.apache.org/jxpath/) commons-jxpath:commons-jxpath:jar:1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Lang (http://commons.apache.org/lang/) commons-lang:commons-lang:jar:2.6
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Commons Logging (http://commons.apache.org/proper/commons-logging/) commons-logging:commons-logging:jar:1.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Avro (http://avro.apache.org) org.apache.avro:avro:bundle:1.8.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Commons Compress (http://commons.apache.org/proper/commons-compress/) org.apache.commons:commons-compress:jar:1.8.1
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Commons Math (http://commons.apache.org/math/) org.apache.commons:commons-math:jar:2.2
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Curator Client (http://curator.apache.org/curator-client) org.apache.curator:curator-client:bundle:4.2.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Curator Framework (http://curator.apache.org/curator-framework) org.apache.curator:curator-framework:bundle:4.2.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Curator Recipes (http://curator.apache.org/curator-recipes) org.apache.curator:curator-recipes:bundle:4.2.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Curator Service Discovery (http://curator.apache.org/curator-x-discovery) org.apache.curator:curator-x-discovery:bundle:4.2.0
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache CXF Core (http://cxf.apache.org) org.apache.cxf:cxf-core:bundle:3.1.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache CXF Runtime SOAP Binding (http://cxf.apache.org) org.apache.cxf:cxf-rt-bindings-soap:bundle:3.1.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache CXF Runtime JAXB DataBinding (http://cxf.apache.org) org.apache.cxf:cxf-rt-databinding-jaxb:bundle:3.1.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache CXF Runtime Simple Frontend (http://cxf.apache.org) org.apache.cxf:cxf-rt-frontend-simple:bundle:3.1.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache CXF Runtime HTTP Transport (http://cxf.apache.org) org.apache.cxf:cxf-rt-transports-http:bundle:3.1.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache CXF Runtime Core for WSDL (http://cxf.apache.org) org.apache.cxf:cxf-rt-wsdl:bundle:3.1.15
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - dubbo-cluster (https://github.com/apache/dubbo/dubbo-cluster) org.apache.dubbo:dubbo-cluster:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-common (https://github.com/apache/dubbo/dubbo-common) org.apache.dubbo:dubbo-common:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-compatible (https://github.com/apache/dubbo/dubbo-compatible) org.apache.dubbo:dubbo-compatible:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-config-api (https://github.com/apache/dubbo/dubbo-config/dubbo-config-api) org.apache.dubbo:dubbo-config-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-config-spring (https://github.com/apache/dubbo/dubbo-config/dubbo-config-spring) org.apache.dubbo:dubbo-config-spring:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-configcenter-apollo (https://github.com/apache/dubbo/dubbo-configcenter/dubbo-configcenter-apollo) org.apache.dubbo:dubbo-configcenter-apollo:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-configcenter-consul (https://github.com/apache/dubbo/dubbo-configcenter/dubbo-configcenter-consul) org.apache.dubbo:dubbo-configcenter-consul:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-configcenter-etcd (https://github.com/apache/dubbo/dubbo-configcenter/dubbo-configcenter-etcd) org.apache.dubbo:dubbo-configcenter-etcd:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-configcenter-nacos (https://github.com/apache/dubbo/dubbo-configcenter/dubbo-configcenter-nacos) org.apache.dubbo:dubbo-configcenter-nacos:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-configcenter-zookeeper (https://github.com/apache/dubbo/dubbo-configcenter/dubbo-configcenter-zookeeper) org.apache.dubbo:dubbo-configcenter-zookeeper:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-container-api (https://github.com/apache/dubbo/dubbo-container/dubbo-container-api) org.apache.dubbo:dubbo-container-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-container-log4j (https://github.com/apache/dubbo/dubbo-container/dubbo-container-log4j) org.apache.dubbo:dubbo-container-log4j:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-container-logback (https://github.com/apache/dubbo/dubbo-container/dubbo-container-logback) org.apache.dubbo:dubbo-container-logback:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-container-spring (https://github.com/apache/dubbo/dubbo-container/dubbo-container-spring) org.apache.dubbo:dubbo-container-spring:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-filter-cache (https://github.com/apache/dubbo/dubbo-filter/dubbo-filter-cache) org.apache.dubbo:dubbo-filter-cache:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-filter-validation (https://github.com/apache/dubbo/dubbo-filter/dubbo-filter-validation) org.apache.dubbo:dubbo-filter-validation:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-api (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-api) org.apache.dubbo:dubbo-metadata-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-report-consul (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-report-consul) org.apache.dubbo:dubbo-metadata-report-consul:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-report-etcd (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-report-etcd) org.apache.dubbo:dubbo-metadata-report-etcd:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-report-failover (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-report-failover) org.apache.dubbo:dubbo-metadata-report-failover:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-report-nacos (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-report-nacos) org.apache.dubbo:dubbo-metadata-report-nacos:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-report-redis (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-report-redis) org.apache.dubbo:dubbo-metadata-report-redis:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-metadata-report-zookeeper (https://github.com/apache/dubbo/dubbo-metadata/dubbo-metadata-report-zookeeper) org.apache.dubbo:dubbo-metadata-report-zookeeper:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-monitor-api (https://github.com/apache/dubbo/dubbo-monitor/dubbo-monitor-api) org.apache.dubbo:dubbo-monitor-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-monitor-default (https://github.com/apache/dubbo/dubbo-monitor/dubbo-monitor-default) org.apache.dubbo:dubbo-monitor-default:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-qos (https://github.com/apache/dubbo/dubbo-plugin/dubbo-qos) org.apache.dubbo:dubbo-qos:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-api (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-api) org.apache.dubbo:dubbo-registry-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-consul (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-consul) org.apache.dubbo:dubbo-registry-consul:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-default (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-default) org.apache.dubbo:dubbo-registry-default:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-etcd3 (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-etcd3) org.apache.dubbo:dubbo-registry-etcd3:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-eureka (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-eureka) org.apache.dubbo:dubbo-registry-eureka:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-multicast (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-multicast) org.apache.dubbo:dubbo-registry-multicast:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-multiple (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-multiple) org.apache.dubbo:dubbo-registry-multiple:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-nacos (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-nacos) org.apache.dubbo:dubbo-registry-nacos:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-redis (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-redis) org.apache.dubbo:dubbo-registry-redis:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-sofa (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-sofa) org.apache.dubbo:dubbo-registry-sofa:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-registry-zookeeper (https://github.com/apache/dubbo/dubbo-registry/dubbo-registry-zookeeper) org.apache.dubbo:dubbo-registry-zookeeper:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-api (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-api) org.apache.dubbo:dubbo-remoting-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-etcd3 (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-etcd3) org.apache.dubbo:dubbo-remoting-etcd3:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-grizzly (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-grizzly) org.apache.dubbo:dubbo-remoting-grizzly:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-http (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-http) org.apache.dubbo:dubbo-remoting-http:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-mina (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-mina) org.apache.dubbo:dubbo-remoting-mina:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-netty (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-netty) org.apache.dubbo:dubbo-remoting-netty:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-netty4 (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-netty4) org.apache.dubbo:dubbo-remoting-netty4:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-p2p (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-p2p) org.apache.dubbo:dubbo-remoting-p2p:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-redis (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-redis) org.apache.dubbo:dubbo-remoting-redis:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-zookeeper (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-zookeeper) org.apache.dubbo:dubbo-remoting-zookeeper:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-remoting-zookeeper-curator5 (https://github.com/apache/dubbo/dubbo-remoting/dubbo-remoting-zookeeper-curator5) org.apache.dubbo:dubbo-remoting-zookeeper-curator5:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-api (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-api) org.apache.dubbo:dubbo-rpc-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-dubbo (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-dubbo) org.apache.dubbo:dubbo-rpc-dubbo:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-grpc (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-grpc) org.apache.dubbo:dubbo-rpc-grpc:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-hessian (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-hessian) org.apache.dubbo:dubbo-rpc-hessian:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-http (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-http) org.apache.dubbo:dubbo-rpc-http:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-injvm (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-injvm) org.apache.dubbo:dubbo-rpc-injvm:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-memcached (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-memcached) org.apache.dubbo:dubbo-rpc-memcached:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-native-thrift (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-native-thrift) org.apache.dubbo:dubbo-rpc-native-thrift:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-redis (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-redis) org.apache.dubbo:dubbo-rpc-redis:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-rest (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-rest) org.apache.dubbo:dubbo-rpc-rest:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-rmi (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-rmi) org.apache.dubbo:dubbo-rpc-rmi:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-thrift (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-thrift) org.apache.dubbo:dubbo-rpc-thrift:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-webservice (https://github.com/apache/dubbo/dubbo-rpc/dubbo-rpc-webservice) org.apache.dubbo:dubbo-rpc-webservice:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-rpc-xml (https://github.com/apache/dubbo) org.apache.dubbo:dubbo-rpc-xml:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-api (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-api) org.apache.dubbo:dubbo-serialization-api:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-avro (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-avro) org.apache.dubbo:dubbo-serialization-avro:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-fastjson (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-fastjson) org.apache.dubbo:dubbo-serialization-fastjson:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-fst (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-fst) org.apache.dubbo:dubbo-serialization-fst:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-gson (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-gson) org.apache.dubbo:dubbo-serialization-gson:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-hessian2 (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-hessian2) org.apache.dubbo:dubbo-serialization-hessian2:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-jdk (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-jdk) org.apache.dubbo:dubbo-serialization-jdk:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-kryo (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-kryo) org.apache.dubbo:dubbo-serialization-kryo:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-msgpack (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-msgpack) org.apache.dubbo:dubbo-serialization-msgpack:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-native-hession (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-native-hession) org.apache.dubbo:dubbo-serialization-native-hession:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-protobuf (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-protobuf) org.apache.dubbo:dubbo-serialization-protobuf:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - dubbo-serialization-protostuff (https://github.com/apache/dubbo/dubbo-serialization/dubbo-serialization-protostuff) org.apache.dubbo:dubbo-serialization-protostuff:jar:2.7.20
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Apache HttpAsyncClient (http://hc.apache.org/httpcomponents-asyncclient) org.apache.httpcomponents:httpasyncclient:jar:4.1.3
+    License: Apache License, Version 2.0  (LICENSE.txt)
+  - Apache HttpClient (http://hc.apache.org/httpcomponents-client) org.apache.httpcomponents:httpclient:jar:4.5.13
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache HttpCore (http://hc.apache.org/httpcomponents-core-ga) org.apache.httpcomponents:httpcore:jar:4.4.6
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache HttpCore NIO (http://hc.apache.org/httpcomponents-core-ga) org.apache.httpcomponents:httpcore-nio:jar:4.4.6
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - XmlSchema Core (http://ws.apache.org/commons/xmlschema20/xmlschema-core/) org.apache.ws.xmlschema:xmlschema-core:bundle:2.2.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache XML-RPC Client Library (http://ws.apache.org/xmlrpc/xmlrpc-client/) org.apache.xmlrpc:xmlrpc-client:jar:3.1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache XML-RPC Common Library (http://ws.apache.org/xmlrpc/xmlrpc-common/) org.apache.xmlrpc:xmlrpc-common:jar:3.1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache XML-RPC Server Library (http://ws.apache.org/xmlrpc/xmlrpc-server/) org.apache.xmlrpc:xmlrpc-server:jar:3.1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Yetus - Audience Annotations (https://yetus.apache.org/audience-annotations) org.apache.yetus:audience-annotations:jar:0.5.0
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'The Apache Software Foundation' (https://www.apache.org/)
+  - Apache Commons Codec (http://commons.apache.org/proper/commons-codec/) commons-codec:commons-codec:jar:1.11
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Commons IO (https://commons.apache.org/proper/commons-io/) commons-io:commons-io:jar:2.7
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Commons Lang (http://commons.apache.org/proper/commons-lang/) org.apache.commons:commons-lang3:jar:3.8.1
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+  - Apache Commons Pool (https://commons.apache.org/proper/commons-pool/) org.apache.commons:commons-pool2:jar:2.10.0
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'The Netty Project' (https://netty.io/)
+  - Netty/All-in-One (https://netty.io/netty-all/) io.netty:netty-all:jar:4.1.66.Final
+    License: Apache License, Version 2.0  (https://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Buffer (https://netty.io/netty-buffer/) io.netty:netty-buffer:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Codec (https://netty.io/netty-codec/) io.netty:netty-codec:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Codec/HTTP (https://netty.io/netty-codec-http/) io.netty:netty-codec-http:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Codec/HTTP2 (https://netty.io/netty-codec-http2/) io.netty:netty-codec-http2:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Codec/Socks (https://netty.io/netty-codec-socks/) io.netty:netty-codec-socks:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Common (https://netty.io/netty-common/) io.netty:netty-common:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Handler (https://netty.io/netty-handler/) io.netty:netty-handler:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Handler/Proxy (https://netty.io/netty-handler-proxy/) io.netty:netty-handler-proxy:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Resolver (https://netty.io/netty-resolver/) io.netty:netty-resolver:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+  - Netty/Transport (https://netty.io/netty-transport/) io.netty:netty-transport:jar:4.1.48.Final
+    License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
+
+From: 'Webtide' (https://webtide.com)
+  - Jetty :: Http Utility (https://eclipse.org/jetty/jetty-http) org.eclipse.jetty:jetty-http:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+  - Jetty :: IO Utility (https://eclipse.org/jetty/jetty-io) org.eclipse.jetty:jetty-io:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+  - Jetty :: Security (https://eclipse.org/jetty/jetty-security) org.eclipse.jetty:jetty-security:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+  - Jetty :: Server Core (https://eclipse.org/jetty/jetty-server) org.eclipse.jetty:jetty-server:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+  - Jetty :: Servlet Handling (https://eclipse.org/jetty/jetty-servlet) org.eclipse.jetty:jetty-servlet:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+  - Jetty :: Utilities (https://eclipse.org/jetty/jetty-util) org.eclipse.jetty:jetty-util:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+  - Jetty :: Utilities :: Ajax(JSON) (https://eclipse.org/jetty/jetty-util-ajax) org.eclipse.jetty:jetty-util-ajax:jar:9.4.43.v20210629
+    License: Apache Software License - Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)    License: Eclipse Public License - Version 1.0  (https://www.eclipse.org/org/documents/epl-v10.php)
+
+From: 'xerial.org'
+  - snappy-java (https://github.comm/xerial/snappy-java) org.xerial.snappy:snappy-java:bundle:1.1.1.3
+    License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'XStream' (http://x-stream.github.io)
+  - XStream Core (http://x-stream.github.io/xstream) com.thoughtworks.xstream:xstream:jar:1.4.12
+    License: BSD-3-Clause  (http://x-stream.github.io/license.html)
+
+
+
+

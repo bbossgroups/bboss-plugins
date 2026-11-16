@@ -1,0 +1,250 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            
+        }
+       
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources{
+        	srcDir 'resources'
+        }
+    }
+    
+}
+
+dependencies {
+    api (
+              
+            [group: 'com.bbossgroups', name: 'bboss-util', version: "${PROJ_BBOSS_VERSION}", transitive: false],
+            // javassist 自 3.22 起不再发布到 javassist:javassist 旧坐标（3.23.1-GA 只能从 org.javassist 解析），
+            // 且 dubbo 的 AdaptiveCompiler/JavassistProxyFactory 需要用 javassist 读写应用类，
+            // 版本过低时无法解析 JDK 17+ 编译的 class 文件
+            [group: 'org.javassist', name: 'javassist', version: "3.30.2-GA" ],
+
+            [group: 'io.netty', name: 'netty-all', version: "4.1.66.Final"],
+
+//            [group: 'com.alibaba.nacos', name: 'nacos-client', version: "2.0.4"]
+            [group: 'com.alibaba.nacos', name: 'nacos-client', version: "3.1.1"]
+
+
+    )
+    api 'com.google.guava:guava:33.8.0-jre'
+    api 'com.google.code.gson:gson:2.13.2'
+    api 'com.alibaba:fastjson:1.2.83'
+    // dubbo 2.7.x 的 dubbo-common 会传递引入 log4j 1.x，而 dubbo 的 LoggerFactory 自动探测顺序是
+    // log4j(1.x) -> slf4j -> log4j2，只要 classpath 上存在 log4j 1.x 就会优先选中它，
+    // 导致 log4j2.xml 不生效并输出 "log4j:WARN No appenders could be found for logger" 告警。
+    // 这里统一排除 log4j 1.x，让 dubbo 回退到 slf4j 门面（由 log4j-slf4j2-impl 桥接到 log4j2）
+//    api([group: 'org.apache.dubbo', name: 'dubbo', version: "2.7.20",transitive: false]) {
+//        exclude group: 'log4j', module: 'log4j'
+//    }
+//    api([group: 'org.apache.dubbo', name: 'dubbo-registry-nacos', version: "2.7.20"]) {
+//        exclude group: 'log4j', module: 'log4j'
+//    }
+    api([group: 'com.bbossgroups', name: 'bboss-core', version: "${PROJ_BBOSS_VERSION}", transitive: true], )
+
+//    api([group: 'com.github.sgroschupf', name: 'zkclient', version: "0.1", transitive: true],   )
+//    {
+//   		exclude group: 'log4j', module: 'log4j'
+//    }
+
+    // 1. Spring Framework 核心上下文（解决 org.springframework.* 相关包不存在）
+    compileOnly("org.springframework:spring-context:5.3.20")
+
+// 2. 阿里巴巴的 Spring 扩展支持（解决 com.alibaba.spring.* 相关包不存在）
+    compileOnly("com.alibaba.spring:spring-context-support:1.0.11")
+
+//    etcd3 注册中心：注意 jetcd 0.3.0+ 已将 CloseableClient/Observers 由 io.etcd.jetcd.support 移到 io.etcd.jetcd 根包，
+//    而源码 JEtcdClientWrapper 仍引用 support 子包（旧版 0.0.2 的 API，该版本未发布到公共仓库），
+//    因此编译前需同步调整该类的 import，或提供 0.0.2 版本 jar
+    compileOnly("io.etcd:jetcd-core:0.7.1")
+    compileOnly("javax.annotation:javax.annotation-api:1.3.2")
+    // 编译时需要，但运行时由容器（如 Tomcat）或框架提供
+    compileOnly("javax.servlet:javax.servlet-api:3.1.0")
+
+// 1. Kryo 序列化 (解决 com.esotericsoftware.kryo 包不存在)
+//    注意：AbstractKryoFactory/PooledKryoFactory 使用的是 com.esotericsoftware.kryo.pool.KryoPool，
+//    该 API 只存在于 kryo 3.x（4.x 起改为 com.esotericsoftware.kryo.util.Pool），故必须固定为 3.0.3，
+//    配套的 kryo-serializers 也需使用 0.42（0.45 会传递引入 kryo 5）
+//    compileOnly("com.esotericsoftware:kryo:5.4.0")
+    compileOnly("com.esotericsoftware:kryo:3.0.3")
+
+// 2. Avro 序列化 (解决 AvroObjectInput/Output 报错)
+    compileOnly("org.apache.avro:avro:1.11.1")
+
+// 3. FST 序列化 (解决 FstFactory/FstObjectInput 报错)
+    compileOnly("de.ruedigermoeller:fst:3.0.3")
+
+// 4. Log4j 日志实现 (解决 Log4jLogger/Adapter 报错，注意是 log4j 1.x 桥接或 2.x 核心)
+// 如果 Dubbo 代码里引用的是 org.apache.log4j.*，则需要：
+    compileOnly("log4j:log4j:1.2.17")
+// 如果引用的是 org.apache.logging.log4j.*，则用：
+// compileOnly("org.apache.logging.log4j:log4j-core:2.17.2")
+
+// 5. JCache 缓存标准 (解决 JCache/JCacheFactory 报错)
+    compileOnly("javax.cache:cache-api:1.1.1")
+
+// 6. JDK 编译器 (解决 JdkCompiler 报错，通常来自 tools.jar 或 ecj)
+    compileOnly("org.eclipse.jdt:ecj:3.33.0") // 或根据你 JDK 版本使用 tools.jar
+
+// 7. WebService 核心包 (解决 javax.ws.rs.core 报错，ContentType.java)
+    compileOnly("javax.ws.rs:javax.ws.rs-api:2.1.1")
+
+    // 依据 depends.xml（org.apache.dubbo:dubbo:2.7.20 即 dubbo-all 聚合 POM）中 scope=test 的依赖清单，
+    // 下面这些依赖仅用于编译测试代码，且均为可选依赖，统一以 testCompileOnly 引入，
+    // 既不出现在发布 POM，也不进入测试运行期 classpath
+    testCompileOnly (
+            [group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "5.12.2"],
+            [group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "5.12.2"],
+            [group: 'cglib', name: 'cglib-nodep', version: "3.3.0", transitive: false]
+    )
+
+    compileOnly("io.protostuff:protostuff-core:1.8.0")
+    compileOnly("io.protostuff:protostuff-api:1.8.0")
+    compileOnly("io.protostuff:protostuff-runtime:1.8.0")
+
+    // Redis 客户端 Jedis
+    compileOnly("redis.clients:jedis:3.9.0")
+
+// Jedis 连接池依赖的对象池库
+    compileOnly("org.apache.commons:commons-pool2:2.11.1")
+
+    compileOnly("com.ecwid.consul:consul-api:1.4.5")
+    compileOnly("com.alipay.sofa:registry-client-all:5.4.3")
+    compileOnly("org.apache.curator:curator-x-discovery:4.2.0")
+
+    // Jetty 核心服务
+    compileOnly("org.eclipse.jetty:jetty-server:9.4.58.v20250814")
+// Jetty Servlet 支持（提供 ServletContextHandler 等）
+    compileOnly("org.eclipse.jetty:jetty-servlet:9.4.58.v20250814")
+// Jetty 工具类（提供 Log、QueuedThreadPool 等）
+    compileOnly("org.eclipse.jetty:jetty-util:9.4.58.v20250814")
+
+// ==================== 以下依赖依据 src/main/java 全量 import 扫描结果补充（dubbo 2.7.x 的可选依赖，仅编译期需要） ====================
+
+// 8. Spring 体系：dubbo 的 spring 扩展、配置中心、注解处理器等大量使用 spring-beans/core/aop/expression
+//    spring-context 已在上方声明（其传递依赖已包含上述四个模块），此处显式声明便于版本对齐
+    compileOnly("org.springframework:spring-beans:5.3.20")
+    compileOnly("org.springframework:spring-core:5.3.20")
+    compileOnly("org.springframework:spring-aop:5.3.20")
+    compileOnly("org.springframework:spring-expression:5.3.20")
+//    GenericWebApplicationContext（dubbo 内嵌 jetty/tomcat 容器使用）
+    compileOnly("org.springframework:spring-web:5.3.20")
+//    org.aopalliance.intercept.MethodInterceptor/MethodInvocation（spring AOP 依赖）
+    compileOnly("aopalliance:aopalliance:1.0")
+
+// 9. Hessian：dubbo-serialization-native-hession 使用原生 caucho hessian
+//    （com.alibaba.com.caucho.* 重定位包已包含在源码中，无需再引入 hessian-lite；
+//     但源码内的 hessian-lite 版本偏旧，ClassFactory 缺少 setWhitelist/allow/deny，
+//     WhitelistHessian2FactoryInitializer 需配套将 hessian-lite 源码升级到 3.2.12 及以上）
+//    compileOnly("com.caucho:hessian:3.2.12")
+
+    compileOnly ("com.alibaba:hessian-lite:3.2.13")
+
+    // Gradle
+    compileOnly("com.caucho:hessian:4.0.51")
+
+// 10. Kryo 附加序列化器（de.javakaffee.kryoserializers.*）
+    compileOnly("de.javakaffee:kryo-serializers:0.42")
+
+// 11. MsgPack 序列化（org.msgpack.jackson.dataformat.MessagePackFactory）
+    compileOnly("org.msgpack:jackson-dataformat-msgpack:0.8.16")
+
+// 12. Protobuf 序列化（com.google.protobuf.*，JsonFormat 需要 protobuf-java-util）
+    compileOnly("com.google.protobuf:protobuf-java:3.7.1")
+    compileOnly("com.google.protobuf:protobuf-java-util:3.7.1")
+
+// 13. Jackson（com.fasterxml.jackson.core/databind，dubbo 的 json 工具与 qos 模块使用）
+    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.4.2")
+
+    compileOnly("javax.portlet:portlet-api:2.0")    
+
+// 15. 注册中心：consul（orbitz consul-client，区别于上方 ecwid 的 consul-api）
+    compileOnly("com.orbitz.consul:consul-client:1.3.3")
+//    apollo 配置中心（com.ctrip.framework.apollo.*）
+    compileOnly("com.ctrip.framework.apollo:apollo-client:${apollo_version}")
+//    eureka 注册中心（com.netflix.appinfo/discovery/archaius）
+    compileOnly("com.netflix.eureka:eureka-client:1.9.8")
+//    archaius（提供 com.netflix.config.ConfigurationManager，eureka-client 未传递，需显式声明）
+    compileOnly("com.netflix.archaius:archaius-core:0.7.6")
+//    zookeeper 注册中心（org.apache.zookeeper.*）
+    compileOnly("org.apache.zookeeper:zookeeper:3.4.13")
+//    curator framework/recipes（curator-x-discovery 已在上方声明，此处显式声明便于版本对齐）
+    compileOnly("org.apache.curator:curator-framework:4.2.0")
+    compileOnly("org.apache.curator:curator-recipes:4.2.0")
+
+// 16. 传输层：thrift（org.apache.thrift.*，dubbo-rpc-thrift/native-thrift）
+    compileOnly("org.apache.thrift:libthrift:0.12.0")
+//    netty3（org.jboss.netty.*，与上方 io.netty 4.x 包名不同，可共存）
+    compileOnly("io.netty:netty:3.10.6.Final")
+//    mina1（org.apache.mina.common.*，dubbo-remoting-mina）
+    compileOnly("org.apache.mina:mina-core:1.1.7")
+//    grizzly（org.glassfish.grizzly.*，dubbo-remoting-grizzly）
+    compileOnly("org.glassfish.grizzly:grizzly-framework:2.4.4")
+//    内嵌 Tomcat（org.apache.catalina.*，dubbo-remoting-http 的 tomcat 实现）
+    compileOnly("org.apache.tomcat.embed:tomcat-embed-core:9.0.98")
+
+// 17. WebService：CXF（org.apache.cxf.*，dubbo-rpc-webservice）
+    compileOnly("org.apache.cxf:cxf-core:3.1.15")
+    compileOnly("org.apache.cxf:cxf-rt-frontend-simple:3.1.15")
+    compileOnly("org.apache.cxf:cxf-rt-frontend-jaxws:3.1.15")
+    compileOnly("org.apache.cxf:cxf-rt-transports-http:3.1.15")
+
+// 18. REST：RESTEasy（org.jboss.resteasy.*，dubbo-rpc-rest）
+    compileOnly("org.jboss.resteasy:resteasy-jaxrs:3.6.3.Final")
+    compileOnly("org.jboss.resteasy:resteasy-client:3.6.3.Final")
+//    NettyJaxrsServer（resteasy 的 netty4 容器实现，提供 setChildChannelOptions 等方法；
+//    resteasy-netty 为 netty3 实现，同名类缺少 setChildChannelOptions，二者不可同时引入）
+    compileOnly("org.jboss.resteasy:resteasy-netty4:3.6.3.Final")
+//    swagger-jaxrs（io.swagger.jaxrs.listing.BaseApiListingResource）
+    compileOnly("io.swagger:swagger-jaxrs:1.5.22")
+
+// 19. XML-RPC（org.apache.xmlrpc.*，dubbo-rpc-xml）
+    compileOnly("org.apache.xmlrpc:xmlrpc-common:3.1.3")
+    compileOnly("org.apache.xmlrpc:xmlrpc-client:3.1.3")
+    compileOnly("org.apache.xmlrpc:xmlrpc-server:3.1.3")
+
+// 20. gRPC（io.grpc.*，dubbo-rpc-grpc / etcd3 注册中心，jetcd-core 会传递，此处显式声明便于版本对齐）
+    compileOnly("io.grpc:grpc-core:1.31.1")
+    compileOnly("io.grpc:grpc-netty:1.31.1")
+    compileOnly("io.grpc:grpc-stub:1.31.1")
+    compileOnly("io.grpc:grpc-protobuf:1.31.1")
+
+// 21. 监控指标（com.alibaba.metrics.*，dubbo-monitor-default 的 MetricsFilter）
+//    该库（com.alibaba.metrics:metrics-core，dubbo 官方用 3.2.5）未发布到 Maven Central 与阿里云公共仓库，
+//    无内部私服时无法解析，故默认注释；有私服时放开即可，否则需移除 MetricsFilter 及 SPI 中对应注册
+//    compileOnly("com.alibaba.metrics:metrics-core:3.2.5")
+
+// 22. Memcached 客户端（net.rubyeye.xmemcached.*，dubbo-rpc-memcached）
+    compileOnly("com.googlecode.xmemcached:xmemcached:2.4.7")
+
+// 23. YAML 解析（org.yaml.snakeyaml.*，dubbo 的 yaml 配置支持）
+    compileOnly("org.yaml:snakeyaml:1.25")
+
+// 24. 其它工具：commons-io（org.apache.commons.io.*）、httpclient 4.x（org.apache.http.*，webservice/rest 客户端）
+    compileOnly("commons-io:commons-io:2.11.0")
+    compileOnly("org.apache.httpcomponents:httpclient:4.5.13")
+
+// 25. 日志：logback（ch.qos.logback.*，dubbo 的 LogbackLoggerAdapter）
+    compileOnly("ch.qos.logback:logback-classic:1.2.13")
+
+// 26. 标准 API：Bean Validation（javax.validation.*）、JAXB（javax.xml.bind.*，JDK 9+ 已从 JDK 中移除）
+    compileOnly("javax.validation:validation-api:2.0.1.Final")
+    compileOnly("javax.xml.bind:jaxb-api:2.3.1")
+
+    // Gradle
+    compileOnly("com.alibaba.middleware:metrics-core-api:2.0.6")
+    compileOnly("com.alibaba.middleware:metrics-common:2.0.6")
+
+    compileOnly("com.github.briandilley.jsonrpc4j:jsonrpc4j:1.2.0")
+
+    
+}
+
+ 
+ 

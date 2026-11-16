@@ -1,0 +1,2 @@
+metadata=org.apache.dubbo.registry.client.metadata.MetadataServiceNameMapping
+config=org.apache.dubbo.metadata.DynamicConfigurationServiceNameMapping

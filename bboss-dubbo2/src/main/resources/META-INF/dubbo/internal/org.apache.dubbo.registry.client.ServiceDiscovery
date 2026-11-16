@@ -1,0 +1,8 @@
+file=org.apache.dubbo.registry.client.FileSystemServiceDiscovery
+zookeeper=org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery
+etcd3=org.apache.dubbo.registry.etcd.EtcdServiceDiscovery
+
+eureka=org.apache.dubbo.registry.eureka.EurekaServiceDiscovery
+nacos=org.apache.dubbo.registry.nacos.NacosServiceDiscovery
+sofa=org.apache.dubbo.registry.sofa.SofaRegistryServiceDiscovery
+multiple=org.apache.dubbo.registry.multiple.MultipleRegistryServiceDiscovery

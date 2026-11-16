@@ -15,6 +15,10 @@ package org.frameworkset.spi.remote.dubbo2;
  * limitations under the License.
  */
 
+import com.alibaba.nacos.api.config.ConfigService;
+import com.alibaba.nacos.client.config.NacosConfigService;
+import org.apache.dubbo.serialize.hessian.dubbo.WhitelistHessian2FactoryInitializer;
+
 /**
  *
  * @author biaoping.yin
@@ -22,6 +26,8 @@ package org.frameworkset.spi.remote.dubbo2;
  */
 public class StartServerTest {
 	public static void main(String[] args){
+		NacosConfigService configService;
+		WhitelistHessian2FactoryInitializer s;
 		Provider.startServer();
 	}
 }
