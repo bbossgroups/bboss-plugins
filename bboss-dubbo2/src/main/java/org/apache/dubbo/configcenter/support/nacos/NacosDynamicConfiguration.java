@@ -266,11 +266,13 @@ public class NacosDynamicConfiguration implements DynamicConfiguration {
 
             String encoding = getProperty(ENCODE, "UTF-8");
 
-            HttpRestResult<String> result = httpAgent.httpGet(GET_CONFIG_KEYS_PATH, emptyMap(), paramsValues, encoding, 5 * 1000);
-            Stream<String> keysStream = toKeysStream(result.getData());
-            if (keysStream != null) {
-                keysStream.forEach(keys::add);
-            }
+			if(httpAgent != null) {
+				HttpRestResult<String> result = httpAgent.httpGet(GET_CONFIG_KEYS_PATH, emptyMap(), paramsValues, encoding, 5 * 1000);
+				Stream<String> keysStream = toKeysStream(result.getData());
+				if (keysStream != null) {
+					keysStream.forEach(keys::add);
+				}
+			}
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
                 logger.error(e.getMessage(), e);
