@@ -85,9 +85,7 @@ dependencies {
 // 3. FST 序列化 (解决 FstFactory/FstObjectInput 报错)
     compileOnly("de.ruedigermoeller:fst:3.0.3")
 
-// 4. Log4j 日志实现 (解决 Log4jLogger/Adapter 报错，注意是 log4j 1.x 桥接或 2.x 核心)
-// 如果 Dubbo 代码里引用的是 org.apache.log4j.*，则需要：
-    compileOnly("log4j:log4j:1.2.17")
+ 
 // 如果引用的是 org.apache.logging.log4j.*，则用：
 // compileOnly("org.apache.logging.log4j:log4j-core:2.17.2")
 
@@ -189,8 +187,7 @@ dependencies {
 
 // 16. 传输层：thrift（org.apache.thrift.*，dubbo-rpc-thrift/native-thrift）
     compileOnly("org.apache.thrift:libthrift:0.12.0")
-//    netty3（org.jboss.netty.*，与上方 io.netty 4.x 包名不同，可共存）
-    compileOnly("io.netty:netty:3.10.6.Final")
+ 
 //    mina1（org.apache.mina.common.*，dubbo-remoting-mina）
     compileOnly("org.apache.mina:mina-core:1.1.7")
 //    grizzly（org.glassfish.grizzly.*，dubbo-remoting-grizzly）
