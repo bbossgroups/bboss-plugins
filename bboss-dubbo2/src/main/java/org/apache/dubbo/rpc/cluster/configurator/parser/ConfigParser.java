@@ -25,6 +25,7 @@ import org.apache.dubbo.rpc.cluster.configurator.parser.model.ConfiguratorConfig
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONValidator;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
@@ -73,7 +74,13 @@ public class ConfigParser {
     }
 
     private static <T> T parseObject(String rawConfig) throws Exception {
-        Yaml yaml = new Yaml(new SafeConstructor());
+		LoaderOptions loaderOptions = new LoaderOptions();
+// 可选：在这里配置安全限制，例如：
+// loaderOptions.setMaxAliasesForCollections(50);
+// loaderOptions.setNestingDepthLimit(50);
+// loaderOptions.setCodePointLimit(3 * 1024 * 1024);
+		
+		Yaml yaml = new Yaml(new SafeConstructor(loaderOptions));
         Map<String, Object> map = yaml.load(rawConfig);
         return (T) PojoUtils.mapToPojo(map, ConfiguratorConfig.class);
     }

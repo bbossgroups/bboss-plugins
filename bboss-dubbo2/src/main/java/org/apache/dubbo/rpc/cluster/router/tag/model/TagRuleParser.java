@@ -19,6 +19,7 @@ package org.apache.dubbo.rpc.cluster.router.tag.model;
 import org.apache.dubbo.common.utils.CollectionUtils;
 import org.apache.dubbo.common.utils.PojoUtils;
 
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
@@ -30,7 +31,13 @@ import java.util.Map;
 public class TagRuleParser {
 
     public static TagRouterRule parse(String rawRule) throws Exception {
-        Yaml yaml = new Yaml(new SafeConstructor());
+		LoaderOptions loaderOptions = new LoaderOptions();
+// 可选：在这里配置安全限制，例如：
+// loaderOptions.setMaxAliasesForCollections(50);
+// loaderOptions.setNestingDepthLimit(50);
+// loaderOptions.setCodePointLimit(3 * 1024 * 1024);
+		
+		Yaml yaml = new Yaml(new SafeConstructor(loaderOptions));
         Map<String, Object> map = yaml.load(rawRule);
         TagRouterRule rule = PojoUtils.mapToPojo(map, TagRouterRule.class);
         rule.setRawRule(rawRule);

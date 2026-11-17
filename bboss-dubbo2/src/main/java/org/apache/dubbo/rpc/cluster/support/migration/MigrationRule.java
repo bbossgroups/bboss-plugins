@@ -23,6 +23,7 @@ import org.apache.dubbo.common.utils.PojoUtils;
 import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.rpc.model.ApplicationModel;
 
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
@@ -74,8 +75,14 @@ public class MigrationRule {
             return getMigrationRule(step);
 
         }
-
-        Yaml yaml = new Yaml(new SafeConstructor());
+		
+		LoaderOptions loaderOptions = new LoaderOptions();
+// 可选：在这里配置安全限制，例如：
+// loaderOptions.setMaxAliasesForCollections(50);
+// loaderOptions.setNestingDepthLimit(50);
+// loaderOptions.setCodePointLimit(3 * 1024 * 1024);
+		
+		Yaml yaml = new Yaml(new SafeConstructor(loaderOptions));
         MigrationRule migrationRule = null;
         try {
             Map<String, Object> map = yaml.load(rawRule);
