@@ -37,7 +37,7 @@
   </licenses>
   <properties>
     <skip_maven_deploy>false</skip_maven_deploy>
-    <zookeeper_version>3.6.0</zookeeper_version>
+    <zookeeper_version>3.8.6</zookeeper_version>
     <curator5_version>5.1.0</curator5_version>
   </properties>
   <dependencies>
