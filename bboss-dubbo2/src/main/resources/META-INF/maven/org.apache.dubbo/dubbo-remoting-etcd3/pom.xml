@@ -38,7 +38,7 @@
   <properties>
     <skipIntegrationTests>true</skipIntegrationTests>
     <skip_maven_deploy>false</skip_maven_deploy>
-    <assertj.version>3.13.2</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
   </properties>
   <dependencies>
     <dependency>
