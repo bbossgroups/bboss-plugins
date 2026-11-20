@@ -136,7 +136,7 @@ service.export();
 	    if (implClass == null || implClass.equals(GenericService.class))
 	      return null;	    
 	    Class []interfaces = implClass.getInterfaces();
-	    if (interfaces.length == 1)
+	    if (interfaces.length >= 1)
 	      return interfaces[0];
 
 	    return findRemoteAPI(implClass.getSuperclass());
